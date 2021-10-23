@@ -13,6 +13,8 @@ import {
   deleteQuestion,
   updateQuestion,
 } from "../controlers/questions.js";
+import { addUser , deleteUser, getUsers, updateUser} from "../controlers/users.js";
+import { addAnswer } from "../controlers/answers.js";
 
 const router = express.Router();
 // Router: Home page
@@ -45,4 +47,12 @@ router.post("/api/questions", addQuestion);
 router.delete("/api/questions/:id", deleteQuestion);
 router.put("/api/questions/:id", updateQuestion);
 
+// Users Apis 
+router.get('/api/users', getUsers)
+router.post('/api/users' , addUser)
+router.put('/api/users/:id' , updateUser)
+router.delete('/api/users/:id' , deleteUser)
+
+// answers apis 
+router.post('/api/answers' , addAnswer)
 export default router;

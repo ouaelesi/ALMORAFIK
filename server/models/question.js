@@ -16,6 +16,6 @@ const postSchema = mongoose.Schema({
     answers : [String]
 })
 
-var question = mongoose.model( 'question', postSchema);
+var question = mongoose.model('question', postSchema);
 
 export default question;

@@ -64,10 +64,19 @@ export const updateQuestion = (req, res) => {
 };
 
 export const findQuestion = (req, res) => {
-  questionModel
+
+  if (req.query.id){
+    const id = req.query.id ; 
+    questionModel.findById(id)
+      .then(question=>res.send(question))
+  }else{
+    questionModel
     .find()
     .then((question) => res.send(question))
     .catch((err) =>
       res.status(400).send({ message: err.message || "error occured !!" })
     );
+  }
+
+ 
 };

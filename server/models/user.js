@@ -1,6 +1,6 @@
 import mongoose from 'mongoose' ; 
 
-const postShema = mongoose.Schema({
+const postSchema = mongoose.Schema({
     firstName : String , 
     lastName : String , 
     email : String , 

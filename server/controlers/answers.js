@@ -25,7 +25,7 @@ export const addAnswer = (req, res) => {
       questionModel.findByIdAndUpdate(req.body.question, {answers : newAnswers})
       .then((question) => {
     if (!question) {
-      console.log("yaw makanch question");
+      console.log("yaw makanch questions ");
     } else {
       console.log(question);
     }
@@ -35,5 +35,46 @@ export const addAnswer = (req, res) => {
 
 // delete answer 
 export const deleteAnswer = (req , res)=>{
-    
+     const id = req.params.id ; 
+     answerModel.findByIdAndDelete(id)
+        .then(res.send(`answer ${id} deleted succesfully !!`))
+        .catch(err=> {
+            res.status(400).send({massage : err.massage})
+        })
+}
+
+// get answers
+export const getAnswers = (req , res)=>{
+    if (req.query.id){
+         const id = req.query.id ; 
+         answerModel
+           .findById(id)
+           .then(answer => {
+               res.send(answer) ; 
+           })
+           .catch(err=> {
+               res.status(400).send({message : err.massage})
+           })
+    }else{
+        answerModel
+        .find()
+        .then(answers => {
+            res.send(answers)
+        })
+    }
+  
+}
+
+// update answer 
+export const updateAnswer = (req ,res )=>{
+    const id = req.params.id ; 
+
+    answerModel
+      .findByIdAndUpdate(id , req.body , {useFindAndModify : false })
+      .then(answer => {
+          res.send(answer)
+      })
+      .catch(err => {
+          res.status(400).send({message : err.message})
+      })
 }

@@ -14,7 +14,7 @@ import {
   updateQuestion,
 } from "../controlers/questions.js";
 import { addUser , deleteUser, getUsers, updateUser} from "../controlers/users.js";
-import { addAnswer } from "../controlers/answers.js";
+import { addAnswer, deleteAnswer , getAnswers, updateAnswer} from "../controlers/answers.js";
 
 const router = express.Router();
 // Router: Home page
@@ -55,4 +55,7 @@ router.delete('/api/users/:id' , deleteUser)
 
 // answers apis 
 router.post('/api/answers' , addAnswer)
+router.delete('/api/answers/:id' , deleteAnswer )
+router.get('/api/answers' , getAnswers)
+router.put('/api/answers/:id' , updateAnswer)
 export default router;

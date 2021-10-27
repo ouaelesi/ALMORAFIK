@@ -3,6 +3,10 @@ import questionModel from "../models/question.js";
 
 // add answer
 export const addAnswer = (req, res) => {
+    if(!req.body){
+        res.sattus(400).send({message : "request body is empty !!"})
+        return ; 
+    }
   const answer = new answerModel({
     answer: req.body.answer,
     creator: req.body.creator,
@@ -15,6 +19,8 @@ export const addAnswer = (req, res) => {
     .save()
     .then((answer) => res.send(answer))
     .catch((err) => res.send({ message: err.message }));
+
+    // Adding the andswer Id to its question 
   let newAnswers = [] ; 
   questionModel.findById(req.body.question)
     .then(question => {
@@ -39,7 +45,7 @@ export const deleteAnswer = (req , res)=>{
      answerModel.findByIdAndDelete(id)
         .then(res.send(`answer ${id} deleted succesfully !!`))
         .catch(err=> {
-            res.status(400).send({massage : err.massage})
+            res.status(400).send({massage : err.massage || "error occured"})
         })
 }
 

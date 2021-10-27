@@ -1,0 +1,630 @@
+:root{
+  --blue-color: #2A2F6D; 
+  --yellow-color: #FFD600;
+  --yellow-hover:#ECC600; 
+  --blue-hover: #40479B; 
+}
+
+/* Navbar  */
+.navbar-nav{
+  display: flex;
+  justify-content: center;
+}
+
+.nav{
+text-align: center;
+white-space: nowrap;
+width:100%;
+font-weight: bolder;
+font-size: 18px ;
+}
+.signbutton{
+  
+  width:130px;
+  border:none; 
+  font-weight: bold;
+}
+.signbutton:hover{
+  box-shadow:0px 0px 15px 2px rgba(200,200 ,200, 1);
+}
+.signup{
+  background-color:var(--yellow-color);
+}
+.login{
+  background-color:var(--blue-color);
+}
+.signup:hover{
+  background-color:var(--yellow-hover);
+}
+.login:hover{
+  background-color:var(--blue-hover);
+}
+
+/* footer  */
+
+.footerlogo{
+display: block;
+margin-left: auto;
+margin-right: auto;
+width:200px;
+
+}
+.footer{
+  padding:30px 50px 10px 50px;
+  background-color: var(--blue-color);
+  width: 100%;
+}
+.footer_nav{
+text-align: center;
+color:white;
+font-weight: 500;
+font-size: 18px ;
+}
+.footer_row{
+  margin:10px 0 10px 0;
+ 
+}
+.socialmedia > div >img{
+ width:90px;
+}
+
+/* Welcome section */
+.welcom{
+ padding: 12% 9% 10% 9%;
+ /* background-image: url('./assets/imgs/welcom_b.png'); */
+ background-size: cover;
+ background-repeat: none;
+ height: 670px;
+ width: 100%;
+}
+.welcome_title{
+  margin: 0 0 40px 0;
+
+  font-size: 40px;
+  font-weight: bolder;
+}
+
+.welcome_text{
+ margin:10px 0 40px 0;
+ font-size: 25px;
+}
+.explore_btn{
+  border: none;
+  width:200px;
+  height: 50px;
+  font-size: 20px;
+  font-weight: bolder;
+}
+.yellow_line{
+  width: 100px;
+  height: 5px;
+  border-radius: 50px;
+  margin-left:auto;
+  margin-right: auto;
+  margin-top: 5px;
+  background-color: var(--yellow-color);
+}
+/* .how_it_works{
+
+} */
+.works_title{
+  text-align: center;
+  font-size: 40px;
+  margin:20px 0 0px 0; 
+  font-weight: bolder;
+}
+.asking_path{
+  margin: 90px 0px 50px 0px;
+  /* background-image: url("./assets/imgs/path_bg.png"); */
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  height: 373px;
+}
+.PathCard{
+  text-align: center;
+  font-size: 40px;
+  font-weight: bolder;
+  border-color: grey;
+  background-color: white;
+  border-style:solid;
+  border-width: 2px;
+  width:250px;
+  height: 260px;
+  margin:0 100px 0 100px;
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.CardTitle{
+  font-size: 20px;
+  margin: 20px 0 20px 0;
+
+}
+.CardText{
+  font-size: 15px;
+}
+.down{
+  padding-top: 50px;
+}
+.ask_ur_ques{
+  padding:0 300px 0 300px;
+  font-size: 30x; 
+  margin: 20px 0 50px 0;
+  
+}
+.ask_ur_ques > Button{
+  background-color: var(--blue-color);
+  width:358px;
+  height: 60px;
+  font-size: 25px;
+  font-weight: bolder;
+  border-radius: 10px;
+}
+.Motivation{
+  /* background-image: url("./assets/imgs/motivation.png"); */
+  background-size: cover;
+  padding:100px 0px 100px 0px ; 
+
+}
+.Motivation > .box {
+  background-color: white;
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 20px;
+  width: 80%; 
+  margin-left: auto;
+  margin-right: auto;
+  padding:10px 30px 50px 30px;
+  font-size: 28px;
+
+}
+.Motivation > .box > .title{
+  margin:20px 0 20px 0;
+  font-size: 40px;
+}
+.Motivation > .box > .content{
+  text-align: left;
+  color: var(--blue-color);
+  font-weight: bold;
+}
+.Motivation > .box > .content >b {
+  color:var(--yellow-color);
+}
+.Motivation > .box > Button{
+  background-color: var(--blue-color);
+  margin: 20px 0 0px 0;
+  width:200px;
+  height: 50px; 
+  font-weight: bold;
+  font-size: 20px;
+
+}
+.Motivation > .box > Button:hover{
+  background-color: var(--blue-hover);
+}
+.whoarewe{
+  padding: 150px 70px 100px 70px;
+  /* background-image: url('./assets/imgs/welcom_b.png'); */
+  background-size: cover;
+  background-repeat: none;
+}
+.whoarewe{
+  /* background-image: url("./assets/imgs/who_are_we_bg.png"); */
+  background-size: 100% 100%;
+  height: 630px;
+}
+.stat{
+padding : 0 20px 0 20px ; 
+background-color: #E4E4E4;
+border-radius: 10px;
+height: 50px;
+align-items: center;
+}
+.info_row{
+  height: 100%;
+}
+.info_row > div:nth-child(1) > button ,.info_row > div:nth-child(2) > button{
+  background-color: white;
+  color: grey;
+  border-radius: 10px;
+  display: flex;
+}
+.btn_answer {
+  background-color:var(--yellow-color);
+  width: 150px;
+  font-size: 18px;
+  font-weight: bold; 
+}
+.Question_Statistics{
+  width: 100%;
+} 
+.Question_info > img{
+  width:9% ; 
+}
+.question_section{
+  padding-left: 9%;
+}
+.question{
+  font-size: 25px;
+  font-weight: bold;
+}
+.question_details,.Question_info{
+  font-size: 18px;
+  color: gray;
+}
+.categories{
+
+  padding: 0 0px 0 10%;
+}
+.fields > button {
+  background-color: transparent;
+ height : 50px ; 
+ font-weight: bold;
+ color: grey;
+}
+.fields{
+  width: 90%;
+  margin: 20px auto;
+}
+.search-form{
+  width: 70%;
+margin: 0px auto;
+}
+.ask_btn{
+  width: 80%;
+  font-size: 15px;
+  background-color: var(--blue-color);
+  color: white ; 
+  font-weight: bold;
+  height: 40px;
+  width: 200px;
+}
+.ask_btn:hover{
+  background-color: var(--blue-hover);
+  color: white;
+}
+.ask_text{
+  font-size: 25px;
+}
+.pagination > button {
+  background-color: transparent;
+  color: grey;
+  border:1px solid;
+}
+.pagination{
+  margin: 0px auto;
+  width: 200px;
+
+}
+.pagination > .Next {
+  width: 120px;
+  margin-left: 30px;
+}
+.Question_container{
+  background-color: #E4E4E4;
+  position:relative;
+  width: 100%;
+}
+.Questions_section{
+  width: 68%;
+  margin: 0 auto;
+  background-color: white;
+  padding: 2%;
+}
+
+.nav_container{
+  background-color:white;
+  box-shadow:rgba(0 , 0 , 0 , 0.2) 0px 0px 10px 0px ;
+}
+/* Login  */
+.Loginstitles{
+  font-size: 20px;
+  font-weight: bold;
+}
+.login_container{
+  padding: 20px 0;
+}
+.login_with_google, .login_with_facebook {
+  background-color:white;
+  width: 100%;
+  margin: 0px auto;
+  text-align: center;
+  font-size: 20px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  
+}
+.login_with_google > img, .login_with_facebook > img {
+  width: 15px ;
+  position: relative;
+  left: -11%;
+}
+.login_with_facebook{
+    background-color:var(--blue-color);
+    color: white;
+  
+}
+.login_form{
+  background-color: white;
+  box-shadow: grey 0px 0px 5px 0px;
+  border-radius: 8px;
+  padding: 10px 0px 10px 25px;
+}
+.login_form >div > input{
+  width: 90%;
+  margin:10px 0;
+}
+.singinbtn , .loginbtn{
+  width: 90%;
+  margin:15px auto 0 auto ; 
+  background-color: var(--yellow-color);
+  box-shadow: rgba(0 , 0 , 0 , 0.2) 0px 0px 10px 0px;
+  color: white;
+  font-weight: bold;
+}
+.loginbtn{
+  background-color: var(--blue-color);
+}
+.singinbtn:hover{
+  background-color: var(--yellow-hover);
+  color: white;
+}
+.page_container{
+
+  width: 100%;
+  height: 100%;
+  background-color: #E4E4E4;
+  padding:5%;
+}
+
+/* Login Steps */
+.loginstepsContainer{
+ padding: 80px 0 50px 0;
+}
+.loginstep{
+ font-size: 18px;
+ font-weight: 500;
+}
+.JOINUS{
+  font-size: 55px;
+  font-weight: bold;
+}
+/* Question Body  */
+.ASKYOURQUES{
+  font-size: 30px;
+  font-weight: bold;
+  margin: 0 0 10px 0;
+}
+.QuestionBody {
+  width: 100%;
+  background-color: white;
+  padding: 20px 4%;
+  border-radius: 10px;
+  box-shadow: rgba(0 , 0 , 0 , 0.2) 0px 0px 10px 0px;
+
+}
+.AskQuestions{
+  padding: 0 10%;
+}
+.QuestionTitle{
+  font-weight: bold;
+  font-size: 25px;
+}
+.Question_text{
+  height: 300px;
+}
+.quesstepicon{
+  display: block;
+  margin: 0 auto;
+}
+.QuestionStepscontainer{
+  background-color: #E4E4E4;
+  padding: 30px 0;
+}
+.ques_step_txt{
+  color: gray;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 20px;
+  box-shadow: rgba(0 , 0 , 0 , 0.2) 0px 0px 10px 0px;
+}
+.card_steps{
+  font-size: 20px;
+  color: black;
+}
+.steps{
+  height: 80px;
+}
+.review_btn{
+  width: 35%;
+  background-color: var(--blue-color);
+  color: white ; 
+  font-weight: bold;
+  margin: 20px 0;
+}
+.review_btn:hover{
+  background-color: var(--blue-hover);
+  color: white;
+}
+
+
+/* //////////////////////////////////////////////////////////////////////// */ 
+
+   /* Respensive */
+
+  @media only screen and (max-width:1100px) and (min-width:800px){
+    /* navbar */ 
+    .navitem{
+      font-size: 15px;
+    }
+    .signbutton{
+      width: 100px;
+      margin-left: 0;
+    }
+
+    /* Questions section */ 
+    .ask_btn{
+      font-size: 12px;
+      width: 150px;
+    }
+    .Questions_section{
+      width: 80%;
+    }
+    .btn_answer {
+      width: 100px;
+      font-size: 17px;
+    }
+    .question{
+      font-size: 20px;
+    }
+    .question_details,.Question_info{
+      font-size: 15px;
+    }
+    .fields > button {
+     font-size: 15px;
+    }
+    .ask_btn:hover{
+      background-color: var(--blue-hover);
+      color: white;
+    }
+    .ask_text{
+      font-size: 22px;
+    }
+
+    /* Question Body */
+    .ques_step_txt {
+      font-size: 14px;
+    }
+    .AskQuestions{
+      padding: 0 4%;
+    }
+    .review_btn{
+      width: 280px;
+    }
+  }
+
+  @media only screen and (max-width:800px) and (min-width:620px){
+    .navitem{
+      font-size: 15px;
+    }
+    .ask_btn{
+      font-size: 12px;
+      width: 130px;
+    }
+    .Questions_section{
+      width: 95%;
+    }
+    .btn_answer {
+      width: 90px;
+      font-size: 17px;
+    }
+    .question{
+      font-size: 18px;
+    }
+    .question_details,.Question_info{
+      font-size: 14px;
+    }
+    .fields > button {
+     font-size: 15px;
+    }
+    .ask_text{
+      font-size: 22px;
+    }
+    /* navbar */
+         
+    .navlogo{
+      width :150px ; 
+    }
+
+    /* questionbody */ 
+    .review_btn{
+      width: 250px;
+    }
+
+  }
+
+/* Respensive Phone */ 
+  @media only screen and (max-width:620px) and (min-width:0px){
+    .ask_btn{
+      font-size: 10px;
+      width: 100px;
+    }
+    .Questions_section{
+      width: 100%;
+    }
+    .btn_answer {
+      width: 70px;
+      font-size: 12px;
+    }
+    .question{
+      font-size: 15px;
+    }
+    .question_details,.Question_info{
+      font-size: 12px;
+    }
+    .fields > button {
+     font-size: 10px;
+    }
+    .ask_text{
+      font-size: 18px;
+    }
+    .Question_Statistics{
+      font-size: 10px;
+      
+    }
+    .separator{
+      display: none;
+    }
+
+    /*Footer */
+    .socialmedia > div > div >img{
+      width:100%;
+     } 
+     .footer_nav{
+       font-size: 14px;
+     }
+     .footerlogo{
+       width: 150px;
+     }
+
+     /* navbar */
+     .navlogo{
+       width :120px ; 
+     }
+     /* questionbody */ 
+     .AskQuestions{
+      padding: 0 5%;
+    }
+    .QuestionTitle{
+      font-weight: 500;
+      font-size: 20px;
+    }
+    .QuestionBody{
+      font-size: 15px;
+    }
+    .review_btn{
+      width: 200px;
+      font-size: 15px;
+    }
+    .login_container{
+      padding: 20px 0;
+      width: 300px;
+    }
+
+    /* home page */ 
+    .Motivation > .box{
+      font-size: 16px;
+      font-weight: 500;
+    }
+    .Motivation > .box > .title{
+      font-size: 25px;
+      font-weight: 800;
+    }
+    .Motivation > .box > button{
+      font-size: 17px;
+    }
+    .welcome_title{
+      font-size: 25px;
+    }
+  }

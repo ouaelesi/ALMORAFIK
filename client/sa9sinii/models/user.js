@@ -7,7 +7,7 @@ const postSchema = mongoose.Schema({
     profilPic : String , 
 }) ; 
 
-let user = mongoose.model( 'user', postSchema);
+let user = mongoose.models.user || mongoose.model( 'user', postSchema);
 
 export default user;
 

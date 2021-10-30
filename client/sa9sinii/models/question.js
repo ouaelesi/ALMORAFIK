@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const postSchema = mongoose.Schema({
+const postSchema = new  mongoose.Schema({
     question: String,
     creator: String,
     tags: [String],
@@ -16,6 +16,6 @@ const postSchema = mongoose.Schema({
     answers : [String]
 })
 
-let question = mongoose.model('question', postSchema);
+let question = mongoose.models.question || mongoose.model('question', postSchema);
 
 export default question;

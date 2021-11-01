@@ -77,14 +77,15 @@ const QuestionBody = () => {
                 onChange={handleChange}
               ></textarea>
 
-              <p className="QuestionTitle mb-0 mt-2">Field</p>
+              <p className="QuestionTitle mb-0 mt-2">Tags</p>
               <p className="QuestionEXP mb-2">
-                Add to describe what your question is about
+                Add some tags to describe what your question is about
               </p>
               <Input
                 type="text"
-                name="QuestionTitle"
+                name="tags"
                 id="QuestionTitle"
+                onChange={handleChange}
               ></Input>
               <button className="btn review_btn" type="submit">
                 ADD QUESTION

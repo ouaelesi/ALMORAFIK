@@ -12,12 +12,14 @@ const Questions = ({questions}) => {
           <div className="Questions_section">
             <QuestionsMenu></QuestionsMenu>
             {questions.map(elem=><QuestionBox
-                Time={elem.Time}
+                id ={elem._id}
+                Time={elem.createdAt}
                 user_photo={elem.user_photo}
+                creator = {elem.creator}
                 More_details={elem.More_details}
                 Question={elem.question}
-                number_of_answers={elem.likeCount}
-                number_of_views={elem.number_of_views}
+                number_of_answers={elem.answers.length}
+                number_of_likes={elem.likeCount}
              />)}
             <NextPrevious></NextPrevious>
           </div>

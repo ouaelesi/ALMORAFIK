@@ -26,7 +26,7 @@ import { Nav, Navbar, NavbarBrand, NavbarToggler, Collapse, NavItem, Jumbotron, 
     return (
       <div>
         <Navbar className="nav_container" light expand="md">
-          <NavbarBrand href="/home"><img src='/assets/imgs/logo.png' className="navlogo"/></NavbarBrand>
+          <NavbarBrand href="/home" className="px-2"><img src='/assets/imgs/logo.png' className="navlogo" width="115px"/></NavbarBrand>
           <NavbarToggler onClick={toggle} />
           <Collapse isOpen={isOpen} navbar>
             <Nav className="mr-auto row nav" navbar>

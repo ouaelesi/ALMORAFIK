@@ -398,7 +398,7 @@ margin: 0px auto;
 .QuestionBody {
   width: 100%;
   background-color: white;
-  padding: 20px 4%;
+  padding: 10px 4%;
   border-radius: 10px;
   box-shadow: rgba(0 , 0 , 0 , 0.2) 0px 0px 10px 0px;
 
@@ -534,7 +534,7 @@ margin: 0px auto;
     /* navbar */
          
     .navlogo{
-      width :150px ; 
+      width :120px ; 
     }
 
     /* questionbody */ 

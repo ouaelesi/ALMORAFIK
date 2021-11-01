@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { FormGroup, Input, Spinner } from "reactstrap";
+import router from 'next/router'
 
 const QuestionBody = () => {
   // State
-  const [form, setForm] = useState({ question: "" });
+  const [form, setForm] = useState({ question: "",
+    creator: "ouael",
+    tags: ["String"],
+    selectedFile: "String",
+    likeCount: 0,
+    createdAt: new Date(),
+    answers : [] });
   const [isSubmiting, setIsSubmiting] = useState(false);
   //
   useEffect(() => {
@@ -12,13 +19,30 @@ const QuestionBody = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmiting(true);
+    createQuestion() ; 
+    router.push('/questions')
   };
   const handleChange = (e) => {
     setForm({
       ...form,
       [e.target.name]: e.target.value,
     });
-  };
+  }; 
+  const createQuestion = async () =>{
+     try{
+        const res = await fetch('http://localhost:3000/api/questions' , {
+          method: 'POST' , 
+          headers : {
+            "Accept" : "application/json" , 
+            "Content-Type" : "application/json"
+          } , 
+          body : JSON.stringify(form)
+        })
+        alert("done")
+     }catch(err){
+            
+     }
+  }
   return (
     <div>
       {isSubmiting ? (
@@ -28,12 +52,11 @@ const QuestionBody = () => {
           <div className="ASKYOURQUES">Ask Your Question</div>
           <div className="QuestionBody">
             <form onSubmit={handleSubmit}>
-              <p className="QuestionTitle">Title</p>
-              <p className="QuestionEXP">
+              <p className="QuestionTitle mb-0 ">Title</p>
+              <p className="QuestionEXP mb-2">
                 Be specific and imagine you’re asking a question to another
                 person
               </p>
-
               <Input
                 type="text"
                 name="QuestionTitle"
@@ -41,8 +64,8 @@ const QuestionBody = () => {
                 onChange={handleChange}
               ></Input>
 
-              <p className="QuestionTitle">Body</p>
-              <p className="QuestionEXP">
+              <p className="QuestionTitle mb-0 mt-2">Body</p>
+              <p className="QuestionEXP mb-2">
                 Include all the information someone would need to answer your
                 question
               </p>
@@ -54,8 +77,8 @@ const QuestionBody = () => {
                 onChange={handleChange}
               ></textarea>
 
-              <p className="QuestionTitle">Field</p>
-              <p className="QuestionEXP">
+              <p className="QuestionTitle mb-0 mt-2">Field</p>
+              <p className="QuestionEXP mb-2">
                 Add to describe what your question is about
               </p>
               <Input
@@ -64,7 +87,7 @@ const QuestionBody = () => {
                 id="QuestionTitle"
               ></Input>
               <button className="btn review_btn" type="submit">
-                Add Question
+                ADD QUESTION
               </button>
             </form>
           </div>

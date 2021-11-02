@@ -93,25 +93,26 @@ export const test = (req, res) => {
 export const findQuestionsAnswers =async (req , res)=>{
   const id = req.query.id ; 
   var table = []
-  await questionModel.findById(id).then(question=>{
-    //res.send(getAnswers(question))
-    // answerModel.findById(question.answers[1]).then(answer=>{table[0] = answer ; res.send()})
-    question.answers.map( (answerID)=>{
-      answerModel.findById(answerID).then(answer=>{
-          res.send([...res , answer])
-    })
-  })
+  await questionModel.findById(id).then((question)=>{
+    answerModel.find({question : question._id } , (err , answers)=>{
+        console.log(answers)
+        res.send(answers)
+    });
   })
 }
 
 const getAnswers =(question)=>{
   var repose = [] ; 
+  var queue = Promise.resolve(); 
   question.answers.map( (answerID)=>{
+    queue = queue.then(()=>{
      answerModel.findById(answerID).then(answer=>{
-        repose.push(answer)
-        console.log(repose)
+        console.log("morad")
+        repose.push(answer) ; 
      })
-   })
-   
-  return(repose)
+    })
+   }) 
+   queue.then(()=>{
+    console.log("ouael"); 
+    return(repose)}) ; 
 }

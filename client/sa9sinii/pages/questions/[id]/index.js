@@ -1,31 +1,78 @@
-import React from 'react' ; 
-import fetch from 'isomorphic-unfetch'
-import QuestionBox from '../../../partials/QuestionBox';
+import React, { useState } from "react";
+import fetch from "isomorphic-unfetch";
+import QuestionBox from "../../../partials/QuestionBox";
+import router from "next/router";
 
-const QuestionDetails = ({questionData}) => {
-    return (
-        <div>
-            <QuestionBox   id ={questionData._id}
-                Time={questionData.createdAt}
-                user_photo={questionData.user_photo}
-                creator = {questionData.creator}
-                More_details={questionData.More_details}
-                Question={questionData.question}
-                number_of_answers={questionData.answers.length}
-                number_of_likes={questionData.likeCount}></QuestionBox>
-        </div>
+const answerQuestion = ({ questionData, answers }) => {
+  const [answerBody, setAnswerBody] = useState({
+    answer: "",
+    creator: "sahbi",
+    question: "61703e51ef4b6e525ada0d1e",
+    sharedFile: String,
+    likes: 1,
+  });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    createAnswer();
+    router.push('/questions/61703e51ef4b6e525ada0d1e')
+  };
+  const handleChange = (e) => {
+    setAnswerBody({
+      ...answerBody,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-    );
+  // create question
+  const createAnswer = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/api/answers", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(answerBody),
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  return (
+    <div className=''>
+      <QuestionBox
+        id={questionData._id}
+        Time={questionData.createdAt}
+        user_photo={questionData.user_photo}
+        creator={questionData.creator}
+        More_details={questionData.More_details}
+        Question={questionData.question}
+        number_of_answers={questionData.answers.length}
+        number_of_likes={questionData.likeCount}
+      ></QuestionBox>
+
+      <h1>Answers</h1>
+      {answers.map((elem) => (
+        <div>{elem.answer}</div>
+      ))}
+
+      <form onSubmit={handleSubmit}>
+        <input name="answer" onChange={handleChange}></input>
+        <button type="submit">submit</button>
+      </form>
+    </div>
+  );
 };
 
+export default answerQuestion;
 
-export default QuestionDetails;
+answerQuestion.getInitialProps = async ({ query: { id } }) => {
+  const res = await fetch(`http://localhost:3000/api/questions/${id}`);
+  const Data = await res.json();
 
-QuestionDetails.getInitialProps = async ({query : {id}})=>{
-     //fetching the question[id] 
-      const res = await fetch(`http://localhost:3000/api/questions/${id}`)
-      const Data = await res.json() ;
-      // fetching the answers of the question[id]
-
-      return{questionData : Data }
-}
+  // fetching the answers data
+  const res2 = await fetch(`http://localhost:3000/api/answers/answerQu/${id}`);
+  const data2 = await res2.json();
+  return { questionData: Data, answers: data2 };
+};

@@ -1,4 +1,5 @@
 import questionModel from "../models/question";
+import answerModel from '../models/answer'
 
 // add question 
 export const addQuestion = (req, res) => {
@@ -87,3 +88,30 @@ export const findQuestion = (req, res) => {
 export const test = (req, res) => {
   res.send("this is working from the tast function ! ");
 };
+
+// find all the answers of the question
+export const findQuestionsAnswers =async (req , res)=>{
+  const id = req.query.id ; 
+  var table = []
+  await questionModel.findById(id).then(question=>{
+    //res.send(getAnswers(question))
+    // answerModel.findById(question.answers[1]).then(answer=>{table[0] = answer ; res.send()})
+    question.answers.map( (answerID)=>{
+      answerModel.findById(answerID).then(answer=>{
+          res.send([...res , answer])
+    })
+  })
+  })
+}
+
+const getAnswers =(question)=>{
+  var repose = [] ; 
+  question.answers.map( (answerID)=>{
+     answerModel.findById(answerID).then(answer=>{
+        repose.push(answer)
+        console.log(repose)
+     })
+   })
+   
+  return(repose)
+}

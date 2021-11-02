@@ -1,6 +1,5 @@
 import dbConnection from "../../../utils/dbConnect";
 import {findQuestion , addQuestion} from '../../../controlers/questions'
-import questionModel from '../../../models/question'
 
 dbConnection()
 export default async (req ,res) =>{
@@ -19,13 +18,5 @@ export default async (req ,res) =>{
         case 'POST': 
              addQuestion(req ,res) ; 
         break ;
-        case 'PUT': 
-          res.send('this is a ^put method ') ; 
-         break ; 
-        case 'DELETE':
-         deleteQuestion(req , res) ; 
-
-         break ; 
-
    }
 }

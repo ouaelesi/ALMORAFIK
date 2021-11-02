@@ -11,7 +11,7 @@ const Questions = ({questions}) => {
         <div className="Question_container">
           <div className="Questions_section">
             <QuestionsMenu></QuestionsMenu>
-            {questions.map(elem=><QuestionBox
+            {questions.map(( elem)=><QuestionBox
                 id ={elem._id}
                 Time={elem.createdAt}
                 user_photo={elem.user_photo}

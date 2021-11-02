@@ -1,6 +1,5 @@
-import dbConnection from "../../../utils/dbConnect";
-import { updateQuestion, deleteQuestion , findOneQuestion } from "../../../controlers/questions";
-import questionModel from "../../../models/question";
+import dbConnection from "../../../../utils/dbConnect";
+import { updateQuestion, deleteQuestion , findOneQuestion } from "../../../../controlers/questions";
 
 dbConnection();
 export default async (req, res) => {

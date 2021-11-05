@@ -376,6 +376,14 @@ margin: 0px auto;
   background-color: #E4E4E4;
   padding:5%;
 }
+/* Answers Box */
+.answerBox{
+  background-color: rgba(200,200 ,200, 0.1);
+  margin: 5px ; 
+  border-radius: 5px; 
+  padding : 5px
+} 
+
 
 /* Login Steps */
 .loginstepsContainer{

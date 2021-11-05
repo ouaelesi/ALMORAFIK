@@ -24,7 +24,7 @@ const QuestionBox = (props) => {
       <button onClick={()=>supQuestion(props.id)}>Delete</button>
       <div className="question_section">
         <p className="question" onClick={getQuestion}>
-          {props.Question}
+          {props.Question} 
         </p>
         <p className="question_details">{props.More_details}</p>
         <div className="stat ">

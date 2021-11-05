@@ -9,10 +9,12 @@ const BoxAnswer = (props) => {
         router.push('/questions')
     }
     return (
-        <div>
-            <div>{props.data.answer}</div>
-            <button>edit</button>
+        <div className="answerBox">
+            <div>Answered by: {props.data.creator}</div>
+            <div className="">{props.data.answer}</div>
+            <button className="">edit</button>
             <button onClick={supAnswer}>delete</button>
+            <div>likes: {props.data.likes}</div>
         </div>
     );
 };

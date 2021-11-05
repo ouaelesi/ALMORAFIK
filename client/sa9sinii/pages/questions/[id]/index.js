@@ -42,7 +42,8 @@ const answerQuestion = ({ questionData, answers }) => {
   };
 
   return (
-    <div className=''>
+    <div className='Question_container'>
+      <div className='Questions_section' >
       <QuestionBox
         id={questionData._id}
         Time={questionData.createdAt}
@@ -59,11 +60,17 @@ const answerQuestion = ({ questionData, answers }) => {
          //<div>{elem.answer}</div>
         <BoxAnswer data={elem}></BoxAnswer>
       ))}
-
+      {/* ADD answer */}
+      <div>
+        <h4>Answer Question</h4>
       <form onSubmit={handleSubmit}>
         <input name="answer" onChange={handleChange}></input>
         <button type="submit">submit</button>
       </form>
+      </div>
+     
+      </div>
+    
     </div>
   );
 };

@@ -7,14 +7,15 @@ const answerQuestion = ({ questionData, answers }) => {
   const [answerBody, setAnswerBody] = useState({
     answer: "",
     creator: "sahbi",
-    question: "61703e51ef4b6e525ada0d1e",
+    question: questionData._id,
     sharedFile: String,
     likes: 1,
   });
   const handleSubmit = (e) => {
     e.preventDefault();
     createAnswer();
-    router.push('/questions/61703e51ef4b6e525ada0d1e')
+    alert(questionData._id)
+    router.push(`/questions/${questionData._id}`)
   };
   const handleChange = (e) => {
     setAnswerBody({

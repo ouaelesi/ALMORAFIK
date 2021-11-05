@@ -31,15 +31,28 @@ export const addQuestion = (req, res) => {
 // delete one question by id 
 export const deleteQuestion = (req, res) => {
   const id = req.query.id;
-  questionModel
-    .findByIdAndDelete(id)
-    .then((data) => {
-      if (!data) {
-        res.status(404).send({ message: `can not delete message ${id}` });
-      } else {
-        res.send("Message deleted succesfully!!");
-      }
+  questionModel.findById(id)
+    .then(question=>{
+        question.answers.map((answer)=>{
+          answerModel.findByIdAndDelete(answer).then(ans=>{
+            if(!ans){
+              console.log({message : 'cant delete this question' })
+            }else{
+              console.log("answer deleted!!")
+            }
+          })
+        })
+        questionModel
+        .findByIdAndDelete(id)
+        .then((data) => {
+          if (!data) {
+            res.status(404).send({ message: `can not delete message ${id}` });
+          } else {
+            res.send("Message deleted succesfully!!");
+          }
+        })
     })
+
     .catch((err) => {
       res.status(400).send({ message: err.message || "error occured!" });
     });

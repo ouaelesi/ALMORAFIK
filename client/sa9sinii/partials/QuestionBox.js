@@ -4,7 +4,13 @@ import router from "next/router";
 
 const QuestionBox = (props) => {
   const editQuestion = () => {};
-  const deleteQuestion = ()=>{} ; 
+  const supQuestion = async (id)=>{
+    alert("do you want to delete !!")
+     const re = await fetch(`http://localhost:3000/api/questions/${id}` , {
+       method : 'DELETE'
+     })
+     router.push('/questions'); 
+  } ; 
   const getQuestion = () => {
     router.push(`/questions/${props.id}`);
   };
@@ -15,7 +21,7 @@ const QuestionBox = (props) => {
         {props.creator} Asked {props.Time}
       </div>
       <button onClick={editQuestion}>edit</button>
-      <button onClick={deleteQuestion}>Delete</button>
+      <button onClick={()=>supQuestion(props.id)}>Delete</button>
       <div className="question_section">
         <p className="question" onClick={getQuestion}>
           {props.Question}

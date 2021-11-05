@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import fetch from "isomorphic-unfetch";
 import QuestionBox from "../../../partials/QuestionBox";
 import router from "next/router";
+import BoxAnswer from "../../../partials/BoxAnswer";
 
 const answerQuestion = ({ questionData, answers }) => {
   const [answerBody, setAnswerBody] = useState({
@@ -55,7 +56,8 @@ const answerQuestion = ({ questionData, answers }) => {
 
       <h1>Answers</h1>
       {answers.map((elem) => (
-        <div>{elem.answer}</div>
+         //<div>{elem.answer}</div>
+        <BoxAnswer data={elem}></BoxAnswer>
       ))}
 
       <form onSubmit={handleSubmit}>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import LoginSteps from '../../partials/LoginSteps'
-import LoginForm from '../../partials/LoginForm'
+import LoginForm from '../../partials/SignUP'
 
 class SignUp extends React.Component {
     render() {

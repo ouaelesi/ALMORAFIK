@@ -8,11 +8,16 @@ const BoxAnswer = (props) => {
         })
         router.push('/questions')
     }
+    const editAnsw = async (e) =>{
+        const input = document.getElementById('answerInput') ; 
+        input.value = props.data.answer ; 
+        
+    }
     return (
         <div className="answerBox">
             <div>Answered by: {props.data.creator}</div>
             <div className="">{props.data.answer}</div>
-            <button className="">edit</button>
+            <button className="" onClick={editAnsw}>edit</button>
             <button onClick={supAnswer}>delete</button>
             <div>likes: {props.data.likes}</div>
         </div>

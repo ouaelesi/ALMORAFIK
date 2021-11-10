@@ -1,13 +1,28 @@
 import mongoose from 'mongoose' ; 
+import bcrypt from 'bcrypt'
 
-const postSchema = mongoose.Schema({
-    firstName : String , 
-    lastName : String , 
-    email : String , 
+
+const UserSchema = mongoose.Schema({
+    userName : {
+        type : String , 
+        required : true , 
+    }, 
+    email : {
+        type : String , 
+        required : true 
+    } , 
+    hashPassword : {
+        type : String , 
+        required : true 
+    },
     profilPic : String , 
 }) ; 
 
-let user = mongoose.models.user || mongoose.model( 'user', postSchema);
+UserSchema.methods.comparePassword = (password , hashPassWord)=>{
+  return bcrypt.compareSync(password , hashPassWord); 
+}
+
+let user = mongoose.models.user || mongoose.model( 'user', UserSchema);
 
 export default user;
 

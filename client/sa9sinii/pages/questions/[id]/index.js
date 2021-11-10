@@ -64,7 +64,7 @@ const answerQuestion = ({ questionData, answers }) => {
       <div>
         <h4>Answer Question</h4>
       <form onSubmit={handleSubmit}>
-        <input name="answer" onChange={handleChange}></input>
+        <input name="answer" onChange={handleChange} id='answerInput'></input>
         <button type="submit">submit</button>
       </form>
       </div>

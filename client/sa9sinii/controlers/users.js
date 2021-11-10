@@ -1,6 +1,15 @@
 import user from "../models/user.js";
 import userModel from "../models/user.js";
-
+import jwt from 'jsonwebtoken' ;  
+import bcrypt from 'bcrypt'
+// login required 
+const loginReaquired = (req ,res ,next)=>{
+  if (req.user){
+    next() ; 
+  }else{
+    return res.status(401).json({message : 'user unauthorised to '})
+    }
+}
 // find users
 export const getUsers = (req, res) => {
   userModel.find().then((users) => {
@@ -15,19 +24,19 @@ export const addUser = (req, res) => {
         return ; 
     }
   const user = new userModel({
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
+    userName: req.body.userName,
+    hashPassword : req.body.hashPassword ,
     email: req.body.email,
     profilPic: req.body.profilPic,
   });
-
+  user.hashPassword = bcrypt.hashSync(req.body.hashPassword,10) 
   user
     .save()
     .then(user=>{
         res.send(user)
     })
     .catch(err=>{
-        console.log(err.massage)
+        res.send(err)
     })
 };
 

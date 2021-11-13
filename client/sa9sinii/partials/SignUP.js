@@ -57,6 +57,7 @@ const SignUP = () => {
                 placeholder=".."
                 onChange={handleChange}
                 name="hashPassword"
+                type="password"
               ></input>
               <button className="btn singinbtn" type='submit'>SIGN IN</button>
             </div>

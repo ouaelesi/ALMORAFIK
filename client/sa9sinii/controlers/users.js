@@ -10,6 +10,35 @@ const loginReaquired = (req ,res ,next)=>{
     return res.status(401).json({message : 'user unauthorised to '})
     }
 }
+// login funnction
+export const logIn = (req ,res)=>{
+  const email = req.body.email; 
+  try{
+    console.log(email)
+    userModel.findOne({"email" : email}).then(user=>{
+      console.log(user)
+      if(!user){
+        res.status(200).send('err')
+      }else {
+        bcrypt.compare(req.body.hashPassword , user.hashPassword , function(err , result){
+          if(result){
+            // Send JWT
+            const claims = {sub : user._id , userName : user.userName}
+            const token = jwt.sign(claims , 'f2f6f77c-afb9-4248-a4e1-84903860c706')
+            res.json({authToken : token})
+          }else{
+            res.send('somrthing goes wrong!!')
+            console.log('somthing goes wrong')
+            console.log(user.hashPassword)
+          }
+        })
+      }
+    })
+  }catch(err){
+    res.send(err)
+  }
+  
+}
 // find users
 export const getUsers = (req, res) => {
   userModel.find().then((users) => {

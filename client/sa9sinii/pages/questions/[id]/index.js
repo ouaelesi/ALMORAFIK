@@ -15,8 +15,8 @@ const answerQuestion = ({ questionData, answers }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     createAnswer();
-    alert(questionData._id)
-    router.push(`/questions/${questionData._id}`)
+    alert(questionData._id);
+    router.push(`/questions/${questionData._id}`);
   };
   const handleChange = (e) => {
     setAnswerBody({
@@ -42,35 +42,39 @@ const answerQuestion = ({ questionData, answers }) => {
   };
 
   return (
-    <div className='Question_container'>
-      <div className='Questions_section' >
-      <QuestionBox
-        id={questionData._id}
-        Time={questionData.createdAt}
-        user_photo={questionData.user_photo}
-        creator={questionData.creator}
-        More_details={questionData.More_details}
-        Question={questionData.question}
-        number_of_answers={questionData.answers.length}
-        number_of_likes={questionData.likeCount}
-      ></QuestionBox>
+    <div className="Question_container">
+      <div className="Questions_section">
+        <QuestionBox
+          id={questionData._id}
+          Time={questionData.createdAt}
+          user_photo={questionData.user_photo}
+          creator={questionData.creator}
+          More_details={questionData.More_details}
+          Question={questionData.question}
+          tags={questionData.tags}
+          number_of_answers={questionData.answers.length}
+          number_of_likes={questionData.likeCount}
+        ></QuestionBox>
 
-      <h1>Answers</h1>
-      {answers.map((elem) => (
-         //<div>{elem.answer}</div>
-        <BoxAnswer data={elem}></BoxAnswer>
-      ))}
-      {/* ADD answer */}
-      <div>
-        <h4>Answer Question</h4>
-      <form onSubmit={handleSubmit}>
-        <input name="answer" onChange={handleChange} id='answerInput'></input>
-        <button type="submit">submit</button>
-      </form>
+        <h1>Answers</h1>
+        {answers.map((elem, key) => (
+          //<div>{elem.answer}</div>
+          <BoxAnswer data={elem} key={key}>
+          </BoxAnswer>
+        ))}
+        {/* ADD answer */}
+        <div>
+          <h4>Answer Question</h4>
+          <form onSubmit={handleSubmit}>
+            <input
+              name="answer"
+              onChange={handleChange}
+              id="answerInput"
+            ></input>
+            <button type="submit">submit</button>
+          </form>
+        </div>
       </div>
-     
-      </div>
-    
     </div>
   );
 };

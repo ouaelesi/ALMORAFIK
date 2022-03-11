@@ -86,6 +86,7 @@ const QuestionBody = () => {
                 name="tags"
                 id="QuestionTitle"
                 onChange={handleChange}
+                placeholder="math , science ,..."
               ></Input>
               <button className="btn review_btn" type="submit">
                 ADD QUESTION

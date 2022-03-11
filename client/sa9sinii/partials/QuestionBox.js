@@ -47,6 +47,9 @@ const QuestionBox = (props) => {
                 Answer
               </button>
             </div>
+            <div>list of tags 
+            {props.tags.map((tag , key)=>(<b key={key}>{tag}</b>))}
+            </div>
           </Row>
         </div>
       </div>

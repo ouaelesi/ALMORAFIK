@@ -22,7 +22,7 @@ const SignUP = () => {
     userName : "" , 
     hashPassword :'' , 
     email : "" , 
-    profilPic : "none"
+    // profilPic : "none"
   })
   return (
     <div>

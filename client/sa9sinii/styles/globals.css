@@ -4,6 +4,9 @@
   --yellow-hover:#ECC600; 
   --blue-hover: #40479B; 
 }
+body{
+  font-family: 'Poppins' ; 
+}
 
 /* Navbar  */
 .navbar-nav{

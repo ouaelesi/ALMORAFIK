@@ -10,7 +10,7 @@ export const addQuestion = (req, res) => {
   const question = new questionModel({
     question: req.body.question,
     creator: req.body.creator,
-    tags: req.body.tags,
+    tags: req.body.tags.split(','),
     selectedFile: req.body.selectedFile,
     likeCount: req.body.likes,
     createdAt: req.body.createdAt,

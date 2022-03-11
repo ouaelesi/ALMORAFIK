@@ -4,7 +4,7 @@ import QuestionBox from "../../../partials/QuestionBox";
 import router from "next/router";
 import BoxAnswer from "../../../partials/BoxAnswer";
 
-const answerQuestion = ({ questionData, answers }) => {
+const AnswerQuestion = ({ questionData, answers }) => {
   const [answerBody, setAnswerBody] = useState({
     answer: "",
     creator: "sahbi",
@@ -79,9 +79,9 @@ const answerQuestion = ({ questionData, answers }) => {
   );
 };
 
-export default answerQuestion;
+export default AnswerQuestion;
 
-answerQuestion.getInitialProps = async ({ query: { id } }) => {
+AnswerQuestion.getInitialProps = async ({ query: { id } }) => {
   const res = await fetch(`http://localhost:3000/api/questions/${id}`);
   const Data = await res.json();
 

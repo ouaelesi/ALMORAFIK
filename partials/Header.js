@@ -26,12 +26,12 @@ import { Nav, Navbar, NavbarBrand, NavbarToggler, Collapse, NavItem, Jumbotron, 
     return (
       <div>
         <Navbar className="nav_container" light expand="md">
-          <NavbarBrand href="/home" className="px-2"><img src='/assets/imgs/logo.png' className="navlogo" width="115px"/></NavbarBrand>
+          <NavbarBrand href="/" className="px-2"><img src='/assets/imgs/logo.png' className="navlogo" width="115px"/></NavbarBrand>
           <NavbarToggler onClick={toggle} />
           <Collapse isOpen={isOpen} navbar>
             <Nav className="mr-auto row nav" navbar>
               <NavItem className="navitem col-12 col-md-2  mx-auto">
-                <NavLink href="./home" className="navlink">HOME</NavLink>
+                <NavLink href="./" className="navlink">HOME</NavLink>
               </NavItem>
               <NavItem className="navitem col-12 col-md-2  mx-auto">
                 <NavLink href="/questions"className="navlink">QUESTIONS</NavLink>

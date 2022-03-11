@@ -24,7 +24,7 @@ class Welcome extends React.Component {
    
     ]
     return (
-      <div>
+      <div className="">
         <div className="welcom row">
           <div className="col-12 col-md-6">
             <div className="welcome_title">

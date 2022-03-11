@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root{
   --blue-color: #2A2F6D; 
   --yellow-color: #FFD600;

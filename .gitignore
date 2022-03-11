@@ -2,22 +2,18 @@
 
 # dependencies
 /node_modules
-/server/node_modules
-/client/sa9sini/node_modules
-/client/sa9sini/.pnp
-/node_modules
-/server/config.env
+/.pnp
 .pnp.js
 
 # testing
-/client/sa9sini/coverage
+/coverage
 
 # next.js
-/client/sa9sini/.next/
-/client/sa9sini/out/
+/.next/
+/out/
 
 # production
-/client/sa9sini/build
+/build
 
 # misc
 .DS_Store

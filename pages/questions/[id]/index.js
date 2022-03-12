@@ -82,11 +82,11 @@ const AnswerQuestion = ({ questionData, answers }) => {
 export default AnswerQuestion;
 
 AnswerQuestion.getInitialProps = async ({ query: { id } }) => {
-  const res = await fetch(`http://localhost:3000/api/questions/${id}`);
+  const res = await fetch(`/api/questions/${id}`);
   const Data = await res.json();
 
   // fetching the answers data
-  const res2 = await fetch(`http://localhost:3000/api/answers/answerQu/${id}`);
+  const res2 = await fetch(`/api/answers/answerQu/${id}`);
   const data2 = await res2.json();
   return { questionData: Data, answers: data2 };
 };

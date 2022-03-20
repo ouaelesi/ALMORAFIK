@@ -4,6 +4,7 @@ import QuestionBox from "../../partials/QuestionBox";
 import NextPrevious from "../../partials/NextPrevious";
 import Question from "../../TemporaryData/Question";
 import fetch from "isomorphic-unfetch";
+import { NextPageContext } from "next";
 
 const Questions = ({ questions }) => {
   return (
@@ -22,7 +23,7 @@ const Questions = ({ questions }) => {
               Question={elem.question}
               tags={elem.tags}
               number_of_answers={elem.answers.length}
-              number_of_likes={elem.likeCount}
+              number_of_likes={ elem.likeCount }
             />
           ))}
           <NextPrevious></NextPrevious>
@@ -34,8 +35,14 @@ const Questions = ({ questions }) => {
 
 export default Questions;
 
-Questions.getInitialProps = async () => {
-  const res = await fetch("/api/questions");
-  const data = await res.json();
+Questions.getInitialProps = async (NextPageContext) => {
+  const cookie = NextPageContext.req?.headers.cookies  ; 
+
+  const res = await fetch("http://localhost:3000/api/questions" , {
+    headers : {
+      cookie : cookie
+    }
+  });
+  const data = await res.json();  
   return { questions: data };
 };

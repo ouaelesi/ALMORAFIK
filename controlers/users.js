@@ -1,6 +1,10 @@
 import userModel from "../models/user.js";
 import jwt from 'jsonwebtoken' ;  
 import bcrypt from 'bcrypt'
+/* eslint-disable import/no-anonymous-default-export */
+import { sign } from "jsonwebtoken";
+import { serialize } from "cookie";
+
 // login required 
 const loginReaquired = (req ,res ,next)=>{
   if (req.user){
@@ -17,11 +21,14 @@ export const logIn = (req ,res)=>{
     userModel.findOne({"email" : email}).then(user=>{
       console.log(user)
       if(!user){
+        console.log("not existing email !!")
         res.status(200).send('err')
       }else {
+        console.log("====> " , req.body.hashPassword , user.hashPassword) ; 
         bcrypt.compare(req.body.hashPassword , user.hashPassword , function(err , result){
           if(result){
             // Send JWT
+            console.log("user exist")
             const claims = {sub : user._id , userName : user.userName}
             const token = jwt.sign(claims , 'f2f6f77c-afb9-4248-a4e1-84903860c706')
             res.json({authToken : token})
@@ -61,7 +68,26 @@ export const addUser = (req, res) => {
   user
     .save()
     .then(user=>{
-        res.send(user)
+      console.log('ouael')
+      const token = sign(
+        {
+          exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30, // 30 days
+          username: req.body.userName,
+        },
+        'secret'
+      );
+  
+      const serialised = serialize("OursiteJWT", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV !== "development",
+        sameSite: "strict",
+        maxAge: 60 * 60 * 24 * 30,
+        path: "/",
+      });
+      
+      res.setHeader("Set-Cookie", serialised);
+      res.status(200)
+      res.send(user)
     })
     .catch(err=>{
         res.send(err)

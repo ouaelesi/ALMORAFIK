@@ -4,7 +4,7 @@ import {findQuestion , addQuestion} from '../../../controlers/questions'
 dbConnection()
 export default async (req ,res) =>{
    const method = req.method ; 
-
+   console.log(req)
    switch(method){
         case 'GET':
             try{

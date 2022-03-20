@@ -8,6 +8,11 @@ export default async (req ,res) =>{
    switch(method){
         case 'GET':
             try{
+               // const {cookies } = req ; 
+               // const jwt = cookies.OurSiteJWT ; 
+               // if (!jwt){
+               //    console.log("user dont have cookies yet") ; 
+               // }
                getUsers(req ,res)
             }catch(err){
                res.status(400).send('eroor')

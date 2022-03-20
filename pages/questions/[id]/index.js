@@ -3,6 +3,7 @@ import fetch from "isomorphic-unfetch";
 import QuestionBox from "../../../partials/QuestionBox";
 import router from "next/router";
 import BoxAnswer from "../../../partials/BoxAnswer";
+import axios from "axios";
 
 const AnswerQuestion = ({ questionData, answers }) => {
   const [answerBody, setAnswerBody] = useState({
@@ -81,12 +82,12 @@ const AnswerQuestion = ({ questionData, answers }) => {
 
 export default AnswerQuestion;
 
-AnswerQuestion.getInitialProps = async ({ query: { id } }) => {
-  const res = await fetch(`/api/questions/${id}`);
-  const Data = await res.json();
+export async function getServerSideProps ({ query: { id } }) {
+  const res = await axios.get(`http://localhost:3000/api/questions/${id}`);
+  const Data = await res.data;
 
   // fetching the answers data
-  const res2 = await fetch(`/api/answers/answerQu/${id}`);
-  const data2 = await res2.json();
-  return { questionData: Data, answers: data2 };
+  const res2 = await axios.get(`http://localhost:3000/api/answers/answerQu/${id}`);
+  const data2 = await res2.data;
+  return { props : {questionData: Data, answers: data2 }};
 };

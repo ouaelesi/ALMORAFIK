@@ -1,13 +1,16 @@
-import React from 'react' ; 
-import Welcome from '../partials/WelcomeSection'
-class Home extends React.Component{
-    render(){
-        return(
-          <>
-          <Welcome/>
-          </>
-        )
-    }
-}
+import React, { useContext } from "react";
+import Welcome from "../partials/WelcomeSection";
+import { Store } from "../utils/Store";
 
-export default Home ; 
+const Home = () => {
+  const { state, dispatch } = useContext(Store);
+  const { myVar } = state;
+  return (
+    <>
+    {myVar}
+      <Welcome />
+    </>
+  );
+};
+
+export default Home;

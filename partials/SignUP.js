@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 
 const SignUP = () => {
+  const router = useRouter() ; 
+
   const handleSubmit =(e)=>{ 
     signUp(); 
     alert('done'); 
@@ -16,7 +19,9 @@ const SignUP = () => {
         "Content-Type" : "application/json"
       } , body : JSON.stringify(newUser)
     })
-   
+   if(res.status === 200 ){  
+     router.push("/")
+   }
   }
   const [newUser , setUser] = useState({
     userName : "" , 

@@ -6,7 +6,7 @@ import { Nav, Navbar, NavbarBrand, NavbarToggler, Collapse, NavItem, Jumbotron, 
 
 
 
-  const  Header = (props) => {
+  const  Header = ({token}) => {
     const [isOpen, setIsOpen] = useState(false);
   
     const toggle = () => setIsOpen(!isOpen);
@@ -26,6 +26,7 @@ import { Nav, Navbar, NavbarBrand, NavbarToggler, Collapse, NavItem, Jumbotron, 
     return (
       <div>
         <Navbar className="nav_container" light expand="md">
+          {token}
           <NavbarBrand href="/" className="px-2"><img src='/assets/imgs/logo.png' className="navlogo" width="115px"/></NavbarBrand>
           <NavbarToggler onClick={toggle} />
           <Collapse isOpen={isOpen} navbar>
@@ -60,3 +61,8 @@ import { Nav, Navbar, NavbarBrand, NavbarToggler, Collapse, NavItem, Jumbotron, 
   }
   
   export default Header;
+
+
+  export function getServerSideProps({ req, res }) {
+    return { props: { token: req.cookies.OursiteJWT || "" } };
+  }

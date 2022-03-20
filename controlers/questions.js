@@ -90,6 +90,10 @@ export const findOneQuestion = (req, res) => {
 
 // get all questions
 export const findQuestion = (req, res) => {
+  console.log("her")
+  if(req.cookies) {console.log("======> we have cookies ")} else{
+    console.log("====> we don't have cookies ")
+  }
   questionModel
     .find()
     .then((question) => res.send(question))

@@ -4,7 +4,6 @@ import LoginSteps from "../../partials/LoginSteps";
 import LoginForm from "../../partials/SignUP";
 import { Store } from "../../utils/Store";
 import { useRouter } from "next/router";
-import { Router } from "react-router-dom/cjs/react-router-dom.min";
 
 function SignUp ({ token }){ 
   const router = useRouter() ; 

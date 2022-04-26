@@ -14,12 +14,13 @@ const BoxAnswer = (props) => {
         
     }
     return (
-        <div className="answerBox">
+        <div className="my-4">
             <div>Answered by: {props.data.creator}</div>
-            <div className="">{props.data.answer}</div>
-            <button className="" onClick={editAnsw}>edit</button>
-            <button onClick={supAnswer}>delete</button>
+            <div className="bg-light p-3  rounded-3 border">{props.data.answer}</div>
+            <button className="bg-light px-3 mt-2 rounded-3 border" onClick={editAnsw}>edit</button>
+            <button className="bg-light px-3 mt-2 rounded-3 border"  onClick={supAnswer}>delete</button>
             <div>likes: {props.data.likes}</div>
+            <hr/>
         </div>
     );
 };

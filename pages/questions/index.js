@@ -5,6 +5,7 @@ import NextPrevious from "../../partials/NextPrevious";
 import Question from "../../TemporaryData/Question";
 import fetch from "isomorphic-unfetch";
 import { NextPageContext } from "next";
+import baseURL from "../../baseUrl";
 
 const Questions = ({ questions }) => {
   return (
@@ -38,7 +39,7 @@ export default Questions;
 Questions.getInitialProps = async (NextPageContext) => {
   const cookie = NextPageContext.req?.headers.cookies  ; 
 
-  const res = await fetch("http://localhost:3000/api/questions" , {
+  const res = await fetch(`${baseURL}/api/questions` , {
     headers : {
       cookie : cookie
     }

@@ -7,7 +7,7 @@ const Home = () => {
   const { myVar } = state;
   return (
     <>
-    {myVar}
+    {/* {myVar} */}
       <Welcome />
     </>
   );

@@ -5,9 +5,9 @@ class Motivation extends React.Component {
   render() {
     return (
       <div className="Motivation">
-        <div className="box">
+        <div className="box p-3 p-md-5">
           <div className="title">QESTION IS THE HALF OF THE ANSWER</div>
-          <div className="content">
+          <div className="content h6">
             Hey ! i want to ask you a question ten years from now where do u
             want to see yourself ? If you have an answer now that means you have
             a dream and u want to make it true so i'm here to tell you if you

@@ -57,22 +57,25 @@ const AnswerQuestion = ({ questionData, answers }) => {
           number_of_likes={questionData.likeCount}
         ></QuestionBox>
 
-        <h1>Answers</h1>
+        <h1 className="font-bold text-xl my-3">Answers</h1>
+      
+        <div className="px-5">
         {answers.map((elem, key) => (
           //<div>{elem.answer}</div>
-          <BoxAnswer data={elem} key={key}>
-          </BoxAnswer>
+          <BoxAnswer data={elem} key={key}></BoxAnswer>
         ))}
+        </div>
         {/* ADD answer */}
         <div>
           <h4>Answer Question</h4>
-          <form onSubmit={handleSubmit}>
-            <input
+          <form onSubmit={handleSubmit} className="my-2">
+            <textarea
               name="answer"
               onChange={handleChange}
               id="answerInput"
-            ></input>
-            <button type="submit">submit</button>
+              className="bg-light border px-3 py-2 outline-none  rounded w-7/12 h-60"
+            ></textarea> <br/>
+            <button type="submit" className='bg-warning px-3 py-2 my-2 rounded '>submit</button>
           </form>
         </div>
       </div>
@@ -83,8 +86,8 @@ const AnswerQuestion = ({ questionData, answers }) => {
 export default AnswerQuestion;
 
 export async function getServerSideProps ({ query: { id } }) {
-  const res = await axios.get(`http://localhost:3000/api/questions/${id}`);
-  const Data = await res.data;
+    const res = await axios.get(`http://localhost:3000/api/questions/${id}`);
+    const Data = await res.data;
 
   // fetching the answers data
   const res2 = await axios.get(`http://localhost:3000/api/answers/answerQu/${id}`);

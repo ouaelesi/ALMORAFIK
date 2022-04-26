@@ -5,6 +5,7 @@ export const Store = createContext() ;
 
 const initialState = {
     myVar : Number(Cookies.get('myCookies')) || 0 , 
+    
 }
 
 function reducer(state ,action ){

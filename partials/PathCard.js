@@ -6,9 +6,9 @@ class PathCard extends React.Component{
     }
     render(){
         return(
-            <div className="PathCard">
-              <div className="CardIcon mb-4">
-                  <img src={this.props.icon} width="35%"></img>
+            <div className="PathCard mx-auto">
+              <div className="CardIcon mb-4 mx-auto  w-fit">
+                  <img src={this.props.icon} width="70px"></img>
               </div>
               <div className="CardTitle">
                   {this.props.Title}

@@ -7,9 +7,9 @@ class QuestionsMenu extends Component{
           <> 
           <div className="categories pt-3">
           <div className="form-group align-middle "> <input className="form-control search-form" placeholder="search" ></input></div>
-          <Row >
+          <Row className='pt-3' >
               <div className="col-6 font-weight-bold ask_text align-items-center" >All Questions</div>
-              <div className="col-5 ml-auto" > <a href="/askQuestion"><button className="btn btn-light ask_btn">Ask Your Question</button></a>  </div>
+              <div className="col-4 ml-auto " > <a href="/askQuestion"><button className="btn btn-light ask_btn">Ask Your Question</button></a>  </div>
           </Row>
          <div class="btn-group fields" role="group" aria-label="Basic example">
  <button type="button" class="btn btn-secondary">RECENT QUESTIONS</button>

@@ -9,28 +9,16 @@ import {
   Button,
   NavLink,
 } from "reactstrap";
+import { IsLoggedIn } from "../utils/IsLoggedIn";
 
 const Header = ({ token }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => setIsOpen(!isOpen);
 
-  async function createSightingRequest(sightingData) {
-    const response = await fetch("/api/hello", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ sighting: sightingData }),
-    });
-    const data = await response.json();
-    return data.sighting;
-  }
-
   return (
     <div className="px-5">
       <Navbar className="" light expand="md">
-        {token}
         <NavbarBrand href="/" className="px-2">
           <img src="/assets/imgs/logo.png" className="navlogo" width="145px" />
         </NavbarBrand>
@@ -56,21 +44,39 @@ const Header = ({ token }) => {
               <NavLink className="navlink">CONTACT</NavLink>
             </NavItem>
 
-            <NavItem className="navitem col-12 col-md-2  mx-auto">
-              <NavLink href="/logIn" className="d-flex justify-content-center">
-                {" "}
-                <Button className="signbutton login ">LOG IN</Button>
-              </NavLink>
-            </NavItem>
-            <NavItem className="navitem col-12 col-md-2  mx-auto">
-              <NavLink
-                href="/signUp"
-                className=" d-flex justify-content-center"
-              >
-                {" "}
-                <Button className="signbutton signup">SIGN UP</Button>
-              </NavLink>
-            </NavItem>
+            {!token && (
+              <NavItem className="navitem col-12 col-md-2  mx-auto">
+                <NavLink
+                  href="/logIn"
+                  className="d-flex justify-content-center"
+                >
+                  {" "}
+                  <Button className="signbutton login ">LOG IN</Button>
+                </NavLink>
+              </NavItem>
+            )}
+            {!token && (
+              <NavItem className="navitem col-12 col-md-2  mx-auto">
+                <NavLink
+                  href="/signUp"
+                  className=" d-flex justify-content-center"
+                >
+                  {" "}
+                  <Button className="signbutton signup">SIGN UP</Button>
+                </NavLink>
+              </NavItem>
+            )}
+            {token && (
+              <NavItem className="navitem col-12 col-md-2  mx-auto">
+                <NavLink
+                  href="/Profil"
+                  className=" d-flex justify-content-center"
+                >
+                  Profil
+                  <div className="bg-gray-200 p-3 rounded-md mx-2"></div>
+                </NavLink>
+              </NavItem>
+            )}
           </Nav>
         </Collapse>
       </Navbar>
@@ -79,7 +85,3 @@ const Header = ({ token }) => {
 };
 
 export default Header;
-
-export function getServerSideProps({ req, res }) {
-  return { props: { token: req.cookies.OursiteJWT || "" } };
-}

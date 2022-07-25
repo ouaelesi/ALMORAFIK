@@ -1,19 +1,36 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import QuestionsMenu from "../../partials/QuestionsMenu";
 import QuestionBox from "../../partials/QuestionBox";
 import NextPrevious from "../../partials/NextPrevious";
-import Question from "../../TemporaryData/Question";
 import fetch from "isomorphic-unfetch";
-import { NextPageContext } from "next";
-import baseURL from "../../baseUrl";
 
 const Questions = ({ questions }) => {
+  const [data, setData] = useState(null);
+  const [isLoading, setLoading] = useState(false);
+  useEffect(() => {
+    setLoading(true);
+    fetch("/api/questions")
+      .then((res) => res.json())
+      .then((data) => {
+        setData(data);
+        setLoading(false);
+      });
+  }, []);
+  if (isLoading)
+    return (
+      <div className="h-screen pt-20">
+        <div className="spinner-border block mx-auto" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+      </div>
+    );
+  if (!data) return <p>No profile data</p>;
   return (
     <div>
       <div className="Question_container">
         <div className="Questions_section">
           <QuestionsMenu></QuestionsMenu>
-          {questions.map((elem, key) => (
+          {data.map((elem, key) => (
             <QuestionBox
               key={key}
               id={elem._id}
@@ -35,15 +52,3 @@ const Questions = ({ questions }) => {
 };
 
 export default Questions;
-
-Questions.getInitialProps = async (NextPageContext) => {
-  const cookie = NextPageContext.req?.headers.cookies;
-
-  const res = await fetch(`${baseURL}/api/questions`, {
-    headers: {
-      cookie: cookie,
-    },
-  });
-  const data = await res.json();
-  return { questions: data };
-};

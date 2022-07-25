@@ -25,6 +25,7 @@ const SignUP = () => {
 
     if (res.status == 200) {
       router.push("/");
+      router.reload(window.location.pathname);
     }
   };
   const [newUser, setUser] = useState({

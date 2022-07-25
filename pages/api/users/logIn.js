@@ -1,13 +1,15 @@
 import dbConnection from "../../../utils/dbConnect";
-import {logIn} from '../../../controlers/users'
+import { logIn } from "../../../controlers/users";
 
-dbConnection()
-export default async (req ,res) =>{
-   const method = req.method ; 
+dbConnection();
+const logInFun = async (req, res) => {
+  const method = req.method;
 
-   switch(method){
-        case 'POST': 
-              logIn(req ,res)
-        break ;
-   }
-}
+  switch (method) {
+    case "POST":
+      logIn(req, res);
+      break;
+  }
+};
+
+export default logInFun;

@@ -24,7 +24,7 @@ const Questions = ({ questions }) => {
               Question={elem.question}
               tags={elem.tags}
               number_of_answers={elem.answers.length}
-              number_of_likes={ elem.likeCount }
+              number_of_likes={elem.likeCount}
             />
           ))}
           <NextPrevious></NextPrevious>
@@ -37,13 +37,13 @@ const Questions = ({ questions }) => {
 export default Questions;
 
 Questions.getInitialProps = async (NextPageContext) => {
-  const cookie = NextPageContext.req?.headers.cookies  ; 
+  const cookie = NextPageContext.req?.headers.cookies;
 
-  const res = await fetch(`${baseURL}/api/questions` , {
-    headers : {
-      cookie : cookie
-    }
+  const res = await fetch(`${baseURL}/api/questions`, {
+    headers: {
+      cookie: cookie,
+    },
   });
-  const data = await res.json();  
+  const data = await res.json();
   return { questions: data };
 };

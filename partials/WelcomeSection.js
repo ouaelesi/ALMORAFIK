@@ -1,28 +1,27 @@
 import React from "react";
-import {Button} from 'reactstrap'
-import PathCard from './PathCard'
-import Motivation from './MotivationSection'
+import { Button } from "reactstrap";
+import PathCard from "./PathCard";
+import Motivation from "./MotivationSection";
 
 class Welcome extends React.Component {
   render() {
     const tab = [
-        {
-            icon : "/assets/imgs/answer.png",
-            title : "Ask question" ,  
-            text : "Small description that explains this step" 
-        },
-        {
-            icon : "/assets/imgs/answer.png" ,
-            title : "Answer questions" ,  
-            text : "Small description that explains this step"
-        },
-        {
-            icon: "/assets/imgs/validate.png",
-            title : "Validate answer" ,  
-            text : "Small description that explains this step "
-        }
-   
-    ]
+      {
+        icon: "/assets/imgs/answer.png",
+        title: "Ask question",
+        text: "Small description that explains this step",
+      },
+      {
+        icon: "/assets/imgs/answer.png",
+        title: "Answer questions",
+        text: "Small description that explains this step",
+      },
+      {
+        icon: "/assets/imgs/validate.png",
+        title: "Validate answer",
+        text: "Small description that explains this step ",
+      },
+    ];
     return (
       <div className="">
         <div className="welcom row">
@@ -44,21 +43,17 @@ class Welcome extends React.Component {
           <div className="works_title">
             HOW IT WORKS
             <div className="yellow_line mb-5"></div>
-            <div className="row gap-4 my-5 px-5"> 
-            {
-                tab.map((elem , key)=>(
-                  <div className="col-md-4" key={key}>
+            <div className="row gap-4 my-5 px-5">
+              {tab.map((elem, key) => (
+                <div className="col-md-4" key={key}>
                   <PathCard
                     Title={tab[key].title}
                     icon={tab[key].icon}
                     Text={tab[key].text}
                   ></PathCard>
-                  
                 </div>
-                ))
-              }
+              ))}
             </div>
-          
             <div className="mt-5 ">
               <p className="mt-5 py-5 px-5 h1 ">
                 Questions are everywhere, answers are on HERE <br />
@@ -74,4 +69,4 @@ class Welcome extends React.Component {
   }
 }
 
-export default Welcome
+export default Welcome;

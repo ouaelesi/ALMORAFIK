@@ -1,5 +1,4 @@
 import { NextResponse, NextRequest } from "next/server";
-import { verify } from "jsonwebtoken";
 const secret = "secret";
 import * as jose from "jose";
 

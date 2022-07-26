@@ -2,7 +2,7 @@ import Cookies from "js-cookie";
 import React, { Component, useContext, useEffect, useState } from "react";
 import LoginSteps from "../../partials/LoginSteps";
 import LoginForm from "../../partials/SignUP";
-import { Store } from "../../utils/Store";
+import { Store } from "../../utils/AuthContext";
 import { useRouter } from "next/router";
 
 function SignUp({ token }) {

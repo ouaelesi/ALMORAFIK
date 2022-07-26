@@ -8,7 +8,7 @@ const singUp = async (req, res) => {
   switch (method) {
     case "GET":
       try {
-        // const {cookies } = req ;
+        // const {cookies} = req ;
         // const jwt = cookies.OurSiteJWT ;
         // if (!jwt){
         //    console.log("user dont have cookies yet") ;

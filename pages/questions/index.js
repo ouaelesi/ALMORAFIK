@@ -18,7 +18,7 @@ const Questions = ({ questions }) => {
   }, []);
   if (isLoading)
     return (
-      <div className="h-screen pt-20">
+      <div className="h-screen pt-">
         <div className="spinner-border block mx-auto" role="status">
           <span className="sr-only">Loading...</span>
         </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Nav,
   Navbar,
@@ -9,13 +9,21 @@ import {
   Button,
   NavLink,
 } from "reactstrap";
-import { IsLoggedIn } from "../utils/IsLoggedIn";
+
+import AuthContext from "../utils/AuthContext";
 
 const Header = ({ token }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => setIsOpen(!isOpen);
 
+  const { login, user } = useContext(AuthContext);
+
+  useEffect(() => {
+    console.log("the token", token);
+    login(token);
+    console.log("this is the user=>", user);
+  });
   return (
     <div className="px-5">
       <Navbar className="" light expand="md">

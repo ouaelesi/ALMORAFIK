@@ -31,7 +31,7 @@ const AnswerQuestion = ({ id }) => {
             setLoading(false);
           })
       );
-  }, []);
+  }, [id]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

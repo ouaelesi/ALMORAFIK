@@ -1,8 +1,9 @@
 import { NextResponse, NextRequest } from "next/server";
 import { verify } from "jsonwebtoken";
 const secret = "secret";
+import * as jose from "jose";
 
-export function middleware(req, res) {
+export async function middleware(req, res) {
   const { cookies } = req;
   const jwt = cookies.OursiteJWT;
   const { pathname, origin } = req.nextUrl;
@@ -10,7 +11,11 @@ export function middleware(req, res) {
   if (pathname.includes("/logIn") || pathname.includes("/signUp")) {
     if (jwt) {
       try {
-        verify(jwt, secret);
+        // verify(jwt, secret);
+        const { payload: jwtData } = await jose.jwtVerify(
+          jwt,
+          new TextEncoder().encode(`secret`)
+        );
         return NextResponse.redirect(`${origin}/`);
       } catch (err) {
         return NextResponse.next();
@@ -23,7 +28,11 @@ export function middleware(req, res) {
       return NextResponse.redirect(`${origin}/logIn`);
     }
     try {
-      verify(jwt, secret);
+      // verify(jwt, secret);
+      const { payload: jwtData } = await jose.jwtVerify(
+        jwt,
+        new TextEncoder().encode(`secret`)
+      );
       return NextResponse.next();
     } catch (err) {
       return NextResponse.redirect(`${origin}/logIn`);

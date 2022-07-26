@@ -7,13 +7,9 @@ import { useRouter } from "next/router";
 
 function SignUp({ token }) {
   const router = useRouter();
-  const { state, dispatch } = useContext(Store);
-  const { myVar } = state;
+
   const [logedIN, setLogedIn] = useState(token ? true : false);
-  const increment = () => {
-    dispatch({ type: "increment" });
-    Cookies.set("myCookies", myVar + 1);
-  };
+
   return (
     <>
       {/* this is the var from the context {myVar}

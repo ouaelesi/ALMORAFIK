@@ -4,6 +4,8 @@ import bcrypt from "bcrypt";
 /* eslint-disable import/no-anonymous-default-export */
 import { sign } from "jsonwebtoken";
 import { serialize } from "cookie";
+import * as jose from "jose";
+
 // login required
 const loginReaquired = (req, res, next) => {
   if (req.user) {
@@ -28,6 +30,7 @@ export const logIn = (req, res) => {
           function (err, result) {
             if (result) {
               // Send JWT
+
               const claims = { sub: user._id, userName: user.userName };
               const token = jwt.sign(
                 claims,
@@ -68,16 +71,25 @@ export const addUser = (req, res) => {
   user.hashPassword = bcrypt.hashSync(req.body.hashPassword, 10);
   user
     .save()
-    .then((user) => {
+    .then(async (user) => {
       console.log("ouael");
-      const token = sign(
-        {
-          exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30, // 30 days
-          username: req.body.userName,
-          email: req.body.email,
-        },
-        "secret"
-      );
+      const token = await new jose.SignJWT({
+        exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30, // 30 days
+        username: req.body.userName,
+        email: req.body.email,
+      })
+        .setProtectedHeader({ alg: "HS256" })
+        .setIssuedAt()
+        .setExpirationTime("30d")
+        .sign(new TextEncoder().encode(`secret`));
+      // const token = sign(
+      // {
+      //   exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30, // 30 days
+      //   username: req.body.userName,
+      //   email: req.body.email,
+      // },
+      //   "secret"
+      // );
 
       const serialised = serialize("OursiteJWT", token, {
         httpOnly: true,

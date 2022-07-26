@@ -13,6 +13,7 @@ import AuthContext from "../utils/AuthContext";
 
 function MyApp({ Component, pageProps, userLoggedIn }) {
   //const { login, error, user, isLoad } = useContext(AuthContext);
+  const [LoggedIn, setLogin] = useState(false);
 
   useEffect(() => {
     console.log("App Cbn");
@@ -34,7 +35,7 @@ MyApp.getInitialProps = async (AppContext) => {
   const req = await AppContext.ctx.req;
 
   return {
-    userLoggedIn: IsLoggedIn(req),
+    userLoggedIn: await IsLoggedIn(req),
     pageProps: appProps,
   };
 };

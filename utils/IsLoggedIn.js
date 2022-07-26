@@ -13,7 +13,7 @@ export function IsLoggedIn(req) {
     if (jwt) {
       verify(jwt, secret, (err, jwtDecoded) => {
         if (err) {
-          return "null";
+          return null;
         } else {
           UserEmail = jwtDecoded.email;
         }
@@ -21,6 +21,6 @@ export function IsLoggedIn(req) {
       return UserEmail;
     }
   } catch (err) {
-    return "null";
+    return null;
   }
 }

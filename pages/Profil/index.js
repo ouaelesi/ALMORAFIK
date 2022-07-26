@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from "react";
-import { getServerSideProps } from "../questions/[id]";
 import AuthContext from "../../utils/AuthContext";
 const Profil = () => {
   const [profilData, setProfilData] = useState("There Is No Data");
@@ -11,7 +10,8 @@ const Profil = () => {
     console.log("Profil Page cbn");
     setLoading(true);
     console.log("the user", user);
-    if (!user) {
+
+    if (user) {
       fetch(`/api/users/${user}`)
         .then((res) => res.json())
         .then((data) => {
@@ -19,8 +19,10 @@ const Profil = () => {
           setLoading(false);
         })
         .catch((err) => console.log("there is an error", user));
+    } else {
+      setLoading(false);
     }
-  }, []);
+  }, [user]);
 
   if (isLoading)
     return (

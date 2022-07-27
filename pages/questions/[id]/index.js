@@ -24,7 +24,7 @@ const AnswerQuestion = ({ id }) => {
         setquestionData(data);
       })
       .then(() =>
-        fetch(`http://localhost:3000/api/answers/answerQu/${id}`)
+        fetch(`/api/answers/answerQu/${id}`)
           .then((res) => res.json())
           .then((data) => {
             setanswers(data);
@@ -56,7 +56,7 @@ const AnswerQuestion = ({ id }) => {
   // create question
   const createAnswer = async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/answers", {
+      const res = await fetch("/api/answers", {
         method: "POST",
         headers: {
           Accept: "application/json",

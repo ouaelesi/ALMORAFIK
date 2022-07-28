@@ -10,9 +10,13 @@ const SignUP = () => {
     getValues,
     formState: { errors, isDirty, isValid },
   } = useForm({ mode: "onTouched" });
+
+  const [backErrors, setBackErrors] = useState([]);
+
   const router = useRouter();
 
   const onSubmit = (e) => {
+    setBackErrors([]);
     e.preventDefault();
     signUp(e);
   };
@@ -28,7 +32,11 @@ const SignUP = () => {
       },
       body: JSON.stringify(UserData),
     });
-
+    if (res.status == 409) {
+      const err = backErrors;
+      err.push("email Alredy Exists");
+      setBackErrors(err);
+    }
     if (res.status == 200) {
       router.push("/");
       router.reload(window.location.pathname);
@@ -43,6 +51,13 @@ const SignUP = () => {
         <button disabled="true" className=" btn login_with_facebook">
           Login with Facebook
         </button>
+        <div>
+          {backErrors.map((err, key) => (
+            <div className="alert alert-danger" role="alert" key={key}>
+              {err}
+            </div>
+          ))}
+        </div>
         <form
           className="login_form"
           onSubmit={(e) => handleSubmit(onSubmit(e))}

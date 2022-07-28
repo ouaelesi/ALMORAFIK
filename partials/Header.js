@@ -25,12 +25,12 @@ const Header = ({ token }) => {
     console.log("this is the user=>", user);
   });
   return (
-    <div className="px-5">
+    <div className="px-md-5 px-2">
       <Navbar className="" light expand="md">
         <NavbarBrand href="/" className="px-2">
           <img src="/assets/imgs/logo.png" className="navlogo" width="145px" />
         </NavbarBrand>
-        <NavbarToggler onClick={toggle} />
+        <NavbarToggler onClick={toggle} className="menuBurger" />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="mr-auto row nav" navbar>
             <NavItem className="navitem col-12 col-md-2  mx-auto">

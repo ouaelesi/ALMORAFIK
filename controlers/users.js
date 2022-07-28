@@ -18,28 +18,37 @@ const loginReaquired = (req, res, next) => {
 export const logIn = (req, res) => {
   const email = req.body.email;
   try {
-    console.log(email);
     userModel.findOne({ email: email }).then((user) => {
-      console.log(user);
       if (!user) {
         res.status(200).send("err");
       } else {
         bcrypt.compare(
           req.body.hashPassword,
           user.hashPassword,
-          function (err, result) {
+          async function (err, result) {
             if (result) {
-              // Send JWT
+              const token = await new jose.SignJWT({
+                exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30, // 30 days
+                username: user.userName,
+                email: user.email,
+              })
+                .setProtectedHeader({ alg: "HS256" })
+                .setIssuedAt()
+                .setExpirationTime("30d")
+                .sign(new TextEncoder().encode(`secret`));
 
-              const claims = { sub: user._id, userName: user.userName };
-              const token = jwt.sign(
-                claims,
-                "f2f6f77c-afb9-4248-a4e1-84903860c706"
-              );
+              const serialised = serialize("OursiteJWT", token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV !== "development",
+                sameSite: "strict",
+                maxAge: 60 * 60 * 24 * 30,
+                path: "/",
+              });
+
+              res.setHeader("Set-Cookie", serialised);
               res.json({ authToken: token });
             } else {
-              res.send("somrthing goes wrong!!");
-              console.log(user.hashPassword);
+              res.status(401).send({ message: "somrthing goes wrong!!" });
             }
           }
         );
@@ -57,7 +66,7 @@ export const getUsers = (req, res) => {
 };
 
 // add user
-export const addUser = (req, res) => {
+export const addUser = async (req, res) => {
   if (!req.body) {
     res.status(400).send({ message: "error occured !!" });
     return;
@@ -68,11 +77,14 @@ export const addUser = (req, res) => {
     email: req.body.email,
     profilPic: req.body.profilPic,
   });
+  if (await emailExists(user.email)) {
+    res.status(409).send({ message: "This email already exists" });
+    return;
+  }
   user.hashPassword = bcrypt.hashSync(req.body.hashPassword, 10);
   user
     .save()
     .then(async (user) => {
-      console.log("ouael");
       const token = await new jose.SignJWT({
         exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30, // 30 days
         username: req.body.userName,
@@ -137,4 +149,14 @@ export const getUserById = async (req, res) => {
     .findOne({ email: id })
     .then((user) => res.send(user))
     .catch((err) => res.send(err.message));
+};
+
+// Verify if the Email Exists
+export const emailExists = async (email) => {
+  const user = await userModel.findOne({ email: email });
+  if (user) {
+    return true;
+  } else {
+    return false;
+  }
 };

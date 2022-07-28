@@ -24,7 +24,7 @@ class LoginSteps extends Component {
           <div className="loginstep my-3 grid">
             <img
               className="mr-3"
-              src="/assets/imgs/validate.png"
+              src="/assets/imgs/answer.png"
               width="60px"
             ></img>{" "}
             this is a step to log in{" "}

@@ -7,6 +7,7 @@ const LogIn = () => {
   // User State will be updated from the login Form
   const [userInfo, setUserInfo] = useState({ email: "", hashPassword: "" });
   // This function will be executed when the user hit the login button
+  const [ErrorMessage, setErrorMessage] = useState([]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     const res = await fetch("http://localhost:3000/api/users/logIn", {
@@ -18,7 +19,7 @@ const LogIn = () => {
       body: JSON.stringify(userInfo),
     });
     if (res.status === 200) {
-      router.push("/Profil");
+      router.push("/");
     }
   };
   // This function will update the user state
@@ -31,14 +32,18 @@ const LogIn = () => {
   return (
     <div className="page_container row d-flex justify-content-center">
       <div className="login_container col-10 col-xl-3 col-lg-4 col-md-5 col-sm-8">
-        <button className=" btn login_with_google">
-          <img src="/assets/imgs/google_logo.png"></img> Login with Google
-        </button>
+        <button className=" btn login_with_google">Login with Google</button>
 
         <button className=" btn login_with_facebook">
-          <img src="/assets/imgs/fb_logo.png" width="8px"></img> Login with
-          Facebook
+          Login with Facebook
         </button>
+        <div>
+          {ErrorMessage.map((elem, key) => (
+            <div key={key} className="alert alert-danger" role="alert">
+              Something went wrong !
+            </div>
+          ))}
+        </div>
         <form className="login_form" onSubmit={(e) => handleSubmit(e)}>
           <div className="form-group Loginstitles" id="usernamelogin">
             Email

@@ -1,26 +1,32 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
+import { useForm } from "react-hook-form";
 
 const SignUP = () => {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    getValues,
+    formState: { errors, isDirty, isValid },
+  } = useForm({ mode: "onTouched" });
   const router = useRouter();
 
-  const handleSubmit = (e) => {
+  const onSubmit = (e) => {
     e.preventDefault();
     signUp(e);
-    alert("done");
   };
-  const handleChange = (e) => {
-    setUser({ ...newUser, [e.target.name]: e.target.value });
-  };
+
   const signUp = async (e) => {
     e.preventDefault();
+    const UserData = getValues();
     const res = await fetch("/api/users", {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(newUser),
+      body: JSON.stringify(UserData),
     });
 
     if (res.status == 200) {
@@ -28,48 +34,76 @@ const SignUP = () => {
       router.reload(window.location.pathname);
     }
   };
-  const [newUser, setUser] = useState({
-    userName: "",
-    hashPassword: "",
-    email: "",
-    // profilPic : "none"
-  });
   return (
     <div>
       <div className="login_container">
-        <button className=" btn login_with_google">
-          <img src="/assets/imgs/google_logo.png"></img> Login with Google
+        <button disabled="true" className=" btn login_with_google">
+          Login with Google
         </button>
-
-        <button className=" btn login_with_facebook">
-          <img src="/assets/imgs/fb_logo.png" width="8px"></img> Login with
-          Facebook
+        <button disabled="true" className=" btn login_with_facebook">
+          Login with Facebook
         </button>
-        <form className="login_form" onSubmit={(e) => handleSubmit(e)}>
+        <form
+          className="login_form"
+          onSubmit={(e) => handleSubmit(onSubmit(e))}
+        >
           <div className="form-group Loginstitles" id="usernamelogin">
             User Name
             <input
-              className="form-control Loginstitles"
-              placeholder=".."
+              className={`form-control ${
+                errors.userName
+                  ? "border-danger text-danger"
+                  : "border-muted text-dark"
+              }`}
+              placeholder="User Name here"
+              type="text"
               name="userName"
-              onChange={handleChange}
+              {...register("userName", { required: true, minLength: 3 })}
             ></input>
+            {errors.userName && (
+              <div className="text-danger fs-6 fw-light">
+                The UserName must be grater or equal to 3 chars
+              </div>
+            )}
             Email
             <input
-              className="form-control Loginstitles"
-              placeholder=".."
+              className={`form-control ${
+                errors.email
+                  ? "border-danger text-danger"
+                  : "border-muted text-dark"
+              }`}
+              placeholder="Email Adress"
+              type="email"
               name="email"
-              onChange={handleChange}
+              {...register("email", { required: true })}
             ></input>
+            {errors.email && (
+              <div className="text-danger fs-6 fw-light">
+                The Email is required
+              </div>
+            )}
             Password
             <input
-              className="form-control"
-              placeholder=".."
-              onChange={handleChange}
+              className={`form-control ${
+                errors.hashPassword
+                  ? "border-danger text-danger"
+                  : "border-muted text-dark"
+              }`}
+              placeholder="Password"
               name="hashPassword"
               type="password"
+              {...register("hashPassword", { minLength: 8 })}
             ></input>
-            <button className="btn singinbtn" type="submit">
+            {errors.hashPassword && (
+              <div className="text-danger fs-6 fw-light">
+                The MinLenght Must Be 8 chars
+              </div>
+            )}
+            <button
+              disabled={!isValid || !isDirty}
+              className="btn singinbtn"
+              type="submit"
+            >
               SIGN IN
             </button>
           </div>

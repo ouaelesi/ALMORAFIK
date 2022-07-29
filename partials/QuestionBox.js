@@ -6,7 +6,7 @@ const QuestionBox = (props) => {
   const editQuestion = () => {};
   const supQuestion = async (id) => {
     alert("do you want to delete !!");
-    const re = await fetch(`http://localhost:3000/api/questions/${id}`, {
+    const re = await fetch(`/api/questions/${id}`, {
       method: "DELETE",
     });
     router.push("/questions");

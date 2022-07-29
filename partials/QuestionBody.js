@@ -43,7 +43,7 @@ const QuestionBody = () => {
   };
   const createQuestion = async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/questions", {
+      const res = await fetch("/api/questions", {
         method: "POST",
         headers: {
           Accept: "application/json",

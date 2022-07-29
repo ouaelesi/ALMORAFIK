@@ -1,48 +1,57 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { FormGroup, Input, Spinner } from "reactstrap";
-import router from 'next/router'
+import router from "next/router";
+import AuthContext from "../utils/AuthContext";
 
 const QuestionBody = () => {
+  const { user } = useContext(AuthContext);
+
   // State
-  const [form, setForm] = useState({ question: "",
-    creator: "ouael",
+  const [form, setForm] = useState({
+    question: "",
+    creator: user ? user.userName : null,
     tags: ["String"],
     selectedFile: "String",
     likeCount: 0,
     createdAt: new Date(),
-    answers : [] });
+    answers: [],
+  });
   const [isSubmiting, setIsSubmiting] = useState(false);
   //
   useEffect(() => {
-  }, [isSubmiting]);
+    setForm({
+      ...form,
+      ["creator"]: user ? user.userName : null,
+    });
+  }, [isSubmiting, user]);
+
   //handle chnages & submit
   const handleSubmit = (e) => {
     e.preventDefault();
+
     setIsSubmiting(true);
-    createQuestion() ; 
-    router.push('/questions')
+    createQuestion();
+    router.push("/questions");
   };
   const handleChange = (e) => {
     setForm({
       ...form,
       [e.target.name]: e.target.value,
     });
-  }; 
-  const createQuestion = async () =>{
-     try{
-        const res = await fetch('http://localhost:3000/api/questions' , {
-          method: 'POST' , 
-          headers : {
-            "Accept" : "application/json" , 
-            "Content-Type" : "application/json"
-          } , 
-          body : JSON.stringify(form)
-        })
-        alert("done")
-     }catch(err){
-            
-     }
-  }
+  };
+  const createQuestion = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/api/questions", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+      alert("done");
+    } catch (err) {}
+  };
   return (
     <div>
       {isSubmiting ? (

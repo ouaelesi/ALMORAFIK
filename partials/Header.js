@@ -20,10 +20,9 @@ const Header = ({ token }) => {
   const { login, user } = useContext(AuthContext);
 
   useEffect(() => {
-    console.log("the token", token);
+    console.log("rahi ");
     login(token);
-    console.log("this is the user=>", user);
-  });
+  }, []);
   return (
     <div className="px-md-5 px-2">
       <Navbar className="" light expand="md">

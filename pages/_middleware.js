@@ -22,7 +22,7 @@ export async function middleware(req, res) {
     }
   }
 
-  if (pathname.includes("/Profil")) {
+  if (pathname.includes("/Profil") || pathname.includes("/askQuestion")) {
     if (jwt === undefined) {
       return NextResponse.redirect(`${origin}/logIn`);
     }

@@ -1,21 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import fetch from "isomorphic-unfetch";
 import QuestionBox from "../../../partials/QuestionBox";
 import router from "next/router";
 import BoxAnswer from "../../../partials/BoxAnswer";
 import axios from "axios";
+import AuthContext from "../../../utils/AuthContext";
 
 const AnswerQuestion = ({ id }) => {
+  const { user } = useContext(AuthContext);
+
   const [questionData, setquestionData] = useState(null);
   const [answers, setanswers] = useState(null);
   const [isLoading, setLoading] = useState(false);
   const [answerBody, setAnswerBody] = useState({
     answer: "",
-    creator: "sahbi",
+    creator: user.email,
     question: 0,
     sharedFile: String,
     likes: 1,
   });
+
   useEffect(() => {
     setLoading(true);
     fetch(`/api/questions/${id}`)
@@ -42,7 +46,7 @@ const AnswerQuestion = ({ id }) => {
   const handleChange = (e) => {
     setAnswerBody({
       answer: "",
-      creator: "sahbi",
+      creator: user.email,
       question: questionData._id,
       sharedFile: String,
       likes: 1,

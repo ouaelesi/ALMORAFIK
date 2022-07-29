@@ -17,9 +17,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Login user
-  const login = async (email) => {
+  const login = async (token) => {
     setIsLoad(true);
-    setUser(email);
+    setUser({ email: token.email, userName: token.userName });
   };
 
   // Logout user

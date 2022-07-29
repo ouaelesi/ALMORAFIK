@@ -24,7 +24,9 @@ export async function IsLoggedIn(req) {
         jwt,
         new TextEncoder().encode(`secret`)
       );
-      return jwtData.email;
+      let token = { email: jwtData.email, userName: jwtData.username };
+      console.log("hte token", token);
+      return token;
     } else {
       return false;
     }

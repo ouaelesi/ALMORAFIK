@@ -265,8 +265,10 @@
 }
 .question_details,
 .Question_info {
-  font-size: 18px;
+  font-size: 15px;
   color: gray;
+  font-weight: 300;
+  padding-top: 10px;
 }
 .categories {
   padding: 0 0px 0 10%;
@@ -459,7 +461,11 @@
   color: black;
 }
 .steps {
-  height: 80px;
+  display: flex;
+}
+.steps > p {
+  padding-top: 27px;
+  padding-left: 20px;
 }
 .review_btn {
   width: 35%;

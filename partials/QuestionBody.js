@@ -10,6 +10,7 @@ const QuestionBody = () => {
   const [form, setForm] = useState({
     question: "",
     creator: user ? user.userName : null,
+    creatorEmail: user ? user.email : null,
     tags: ["String"],
     selectedFile: "String",
     likeCount: 0,
@@ -22,6 +23,7 @@ const QuestionBody = () => {
     setForm({
       ...form,
       ["creator"]: user ? user.userName : null,
+      ["creatorEmail"]: user ? user.email : null,
     });
   }, [isSubmiting, user]);
 

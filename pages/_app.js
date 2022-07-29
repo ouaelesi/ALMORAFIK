@@ -33,7 +33,6 @@ MyApp.getInitialProps = async (AppContext) => {
   // calls page's `getInitialProps` and fills `appProps.pageProps`
   const appProps = await App.getInitialProps(AppContext);
   const req = await AppContext.ctx.req;
-  console.log("the token", await IsLoggedIn(req));
   return {
     userLoggedIn: await IsLoggedIn(req),
     pageProps: appProps,

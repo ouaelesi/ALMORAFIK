@@ -48,7 +48,7 @@ export const logIn = (req, res) => {
               res.setHeader("Set-Cookie", serialised);
               res.json({ authToken: token });
             } else {
-              res.status(401).send({ message: "somrthing goes wrong!!" });
+              res.status(401).send({ message: "something goes wrong!!" });
             }
           }
         );

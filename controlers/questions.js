@@ -1,7 +1,7 @@
 import questionModel from "../models/question";
-import answerModel from '../models/answer'
+import answerModel from "../models/answer";
 
-// add question 
+// add question
 export const addQuestion = (req, res) => {
   if (!req.body) {
     res.status(400).send({ message: "request empty!!", data: req.body });
@@ -10,11 +10,12 @@ export const addQuestion = (req, res) => {
   const question = new questionModel({
     question: req.body.question,
     creator: req.body.creator,
-    tags: req.body.tags.split(','),
+    tags: req.body.tags.split(","),
     selectedFile: req.body.selectedFile,
     likeCount: req.body.likes,
     createdAt: req.body.createdAt,
     answers: req.body.answers,
+    creatorEmail: req.body.creatorEmail,
   });
   question
     .save()
@@ -28,29 +29,28 @@ export const addQuestion = (req, res) => {
     });
 };
 
-// delete one question by id 
+// delete one question by id
 export const deleteQuestion = (req, res) => {
   const id = req.query.id;
-  questionModel.findById(id)
-    .then(question=>{
-        question.answers.map((answer)=>{
-          answerModel.findByIdAndDelete(answer).then(ans=>{
-            if(!ans){
-              console.log({message : 'cant delete this question' })
-            }else{
-              console.log("answer deleted!!")
-            }
-          })
-        })
-        questionModel
-        .findByIdAndDelete(id)
-        .then((data) => {
-          if (!data) {
-            res.status(404).send({ message: `can not delete message ${id}` });
+  questionModel
+    .findById(id)
+    .then((question) => {
+      question.answers.map((answer) => {
+        answerModel.findByIdAndDelete(answer).then((ans) => {
+          if (!ans) {
+            console.log({ message: "cant delete this question" });
           } else {
-            res.send("Message deleted succesfully!!");
+            console.log("answer deleted!!");
           }
-        })
+        });
+      });
+      questionModel.findByIdAndDelete(id).then((data) => {
+        if (!data) {
+          res.status(404).send({ message: `can not delete message ${id}` });
+        } else {
+          res.send("Message deleted succesfully!!");
+        }
+      });
     })
 
     .catch((err) => {
@@ -58,8 +58,7 @@ export const deleteQuestion = (req, res) => {
     });
 };
 
-
-// update one question by id 
+// update one question by id
 export const updateQuestion = (req, res) => {
   if (!req.body) {
     res.status(400).send("body empty !!");
@@ -82,7 +81,7 @@ export const updateQuestion = (req, res) => {
     );
 };
 
-// Get question by id 
+// Get question by id
 export const findOneQuestion = (req, res) => {
   const id = req.query.id;
   questionModel.findById(id).then((question) => res.status(200).send(question));
@@ -90,9 +89,11 @@ export const findOneQuestion = (req, res) => {
 
 // get all questions
 export const findQuestion = (req, res) => {
-  console.log("her")
-  if(req.cookies) {console.log("======> we have cookies ")} else{
-    console.log("====> we don't have cookies ")
+  console.log("her");
+  if (req.cookies) {
+    console.log("======> we have cookies ");
+  } else {
+    console.log("====> we don't have cookies ");
   }
   questionModel
     .find()
@@ -107,29 +108,42 @@ export const test = (req, res) => {
 };
 
 // find all the answers of the question
-export const findQuestionsAnswers =async (req , res)=>{
-  const id = req.query.id ; 
-  var table = []
-  await questionModel.findById(id).then((question)=>{
-    answerModel.find({question : question._id } , (err , answers)=>{
-        console.log(answers)
-        res.send(answers)
+export const findQuestionsAnswers = async (req, res) => {
+  const id = req.query.id;
+  var table = [];
+  await questionModel.findById(id).then((question) => {
+    answerModel.find({ question: question._id }, (err, answers) => {
+      console.log(answers);
+      res.send(answers);
     });
-  })
-}
+  });
+};
 
-const getAnswers =(question)=>{
-  var repose = [] ; 
-  var queue = Promise.resolve(); 
-  question.answers.map( (answerID)=>{
-    queue = queue.then(()=>{
-     answerModel.findById(answerID).then(answer=>{
-        console.log("morad")
-        repose.push(answer) ; 
-     })
-    })
-   }) 
-   queue.then(()=>{
-    console.log("ouael"); 
-    return(repose)}) ; 
-}
+const getAnswers = (question) => {
+  var repose = [];
+  var queue = Promise.resolve();
+  question.answers.map((answerID) => {
+    queue = queue.then(() => {
+      answerModel.findById(answerID).then((answer) => {
+        console.log("morad");
+        repose.push(answer);
+      });
+    });
+  });
+  queue.then(() => {
+    console.log("ouael");
+    return repose;
+  });
+};
+
+export const findUserQuestions = (req, res) => {
+  console.log("email");
+  const email = req.query.id;
+  console.log(email);
+  questionModel
+    .find({ creatorEmail: email })
+    .then((question) => res.send(question))
+    .catch((err) =>
+      res.status(400).send({ message: err.message || "error occured !!" })
+    );
+};

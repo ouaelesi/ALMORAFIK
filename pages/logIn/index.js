@@ -20,6 +20,9 @@ const LogIn = () => {
     });
     if (res.status === 200) {
       router.push("/");
+    }else{
+      const err = ErrorMessage;
+      err.push('Something went wrong ') 
     }
   };
   // This function will update the user state

@@ -10,7 +10,7 @@ const UserAskedQues = () => {
   useEffect(() => {
     if (user) {
       setLoading(true);
-      fetch("/api/questions")
+      fetch(`/api/users/questions/${user.email}`)
         .then((res) => res.json())
         .then((data) => {
           setData(data);

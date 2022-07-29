@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import AuthContext from "../utils/AuthContext";
+import ProfilQuesBox from "./ProfilQuesBox";
 
 const UserAskedQues = () => {
   const { user } = useContext(AuthContext);
@@ -25,13 +26,17 @@ const UserAskedQues = () => {
     );
   }
   if (!data) {
-    return <div>You didn t ask any question yet </div>;
+    return (
+      <div className="bg-white p-5 rounded-xl border-2 QuestionTitle">
+        You didn t ask any question yet
+      </div>
+    );
   }
   return (
-    <div>
-      <div>Your Asked Questions</div>
+    <div className="bg-white py-4  rounded-xl px-5 border-2">
+      <div className="QuestionTitle ">Your Asked Questions</div>
       {data.map((ques, key) => (
-        <div key={key}>{ques.question}</div>
+        <ProfilQuesBox QuestionData={ques} key={key} />
       ))}
     </div>
   );

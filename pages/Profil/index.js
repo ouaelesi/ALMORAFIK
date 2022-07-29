@@ -29,7 +29,7 @@ const Profil = () => {
 
   if (isLoading)
     return (
-      <div className="h-screen pt-20">
+      <div className=" pt-20">
         <div className="spinner-border block mx-auto" role="status">
           <span className="sr-only">Loading...</span>
         </div>
@@ -37,8 +37,9 @@ const Profil = () => {
     );
   return (
     <div className="bg-light">
-      <div className="px-20 py-10 h-screen container ">
-        <div className="row gap-2">
+      <div className="px-20 py-10 container ">
+        <div className="row gap-2 bg-white px-5 py-4 rounded-xl border-2 justify-content-center">
+          <div className="QuestionTitle mb-4">General Informations</div>
           <div className="col-4">
             <div className="bg-dark p-5 w-1/3 rounded-full"></div>
             <button className="px-2 rounded-md border-2 border-dark my-3">
@@ -100,8 +101,11 @@ const Profil = () => {
             </button>
           </form>
         </div>
-        <div>
-          <UserAskedQues />
+        <div className="flex gap-4 mt-4">
+          <div className="col-3 bg-white p-5 rounded-xl border-2">
+            Socila Media
+          </div>
+          <UserAskedQues className="col " />
         </div>
       </div>
     </div>

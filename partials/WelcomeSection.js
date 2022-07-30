@@ -43,7 +43,7 @@ class Welcome extends React.Component {
           <div className="works_title">
             HOW IT WORKS
             <div className="yellow_line mb-5"></div>
-            <div className="row gap-4 my-5 px-5">
+            <div className="d-md-flex justify-content-center  my-5 px-5 ">
               {tab.map((elem, key) => (
                 <div className="col-md-4" key={key}>
                   <PathCard

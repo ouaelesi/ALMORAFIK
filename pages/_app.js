@@ -8,8 +8,9 @@ import { useEffect, useState } from "react";
 import { AuthProvider } from "../utils/AuthContext";
 import App, { AppProps, AppContext } from "next/app";
 import { IsLoggedIn } from "../utils/IsLoggedIn";
-import { useContext } from "react";
-import AuthContext from "../utils/AuthContext";
+import "@fortawesome/fontawesome-svg-core/styles.css"; // import Font Awesome CSS
+import { config } from "@fortawesome/fontawesome-svg-core";
+config.autoAddCss = false; // Tell Font Awesome to skip adding the CSS automatically since it's being imported above
 
 function MyApp({ Component, pageProps, userLoggedIn }) {
   //const { login, error, user, isLoad } = useContext(AuthContext);

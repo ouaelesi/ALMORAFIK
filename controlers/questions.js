@@ -147,3 +147,20 @@ export const findUserQuestions = (req, res) => {
       res.status(400).send({ message: err.message || "error occured !!" })
     );
 };
+
+export const updateLikes = (req, res) => {
+  const id = req.query.id;
+  questionModel
+    .findOneAndUpdate(
+      {
+        _id: id,
+      },
+      {
+        $inc: {
+          likeCount: req.body.addedValue,
+        },
+      }
+    )
+    .then((question) => res.send(question))
+    .catch((err) => res.send(err.message));
+};

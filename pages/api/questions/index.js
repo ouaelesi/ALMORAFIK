@@ -2,7 +2,7 @@ import dbConnection from "../../../utils/dbConnect";
 import { findQuestion, addQuestion } from "../../../controlers/questions";
 
 dbConnection();
-export default async (req, res) => {
+const ques = async (req, res) => {
   const method = req.method;
   console.log(req);
   switch (method) {
@@ -18,3 +18,5 @@ export default async (req, res) => {
       break;
   }
 };
+
+export default ques;

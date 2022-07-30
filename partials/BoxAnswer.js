@@ -3,6 +3,7 @@ import React from "react";
 
 const BoxAnswer = (props) => {
   const supAnswer = async (e) => {
+    e.preventDefault();
     const res = await fetch(`/api/answers/${props.data._id}`, {
       method: "DELETE",
     });

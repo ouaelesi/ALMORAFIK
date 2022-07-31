@@ -41,7 +41,11 @@ const Profil = () => {
         <div className="row gap-2 bg-white px-5 py-4 rounded-xl border-2 justify-content-center">
           <div className="QuestionTitle mb-4">General Informations</div>
           <div className="col-4">
-            <div className="bg-dark p-5 w-1/3 rounded-full"></div>
+            <div className="bg-dark  w-1/3 rounded-full">
+              {profilData.profilPic && (
+                <img src={profilData.profilPic} widht="200"></img>
+              )}
+            </div>
             <button className="px-2 rounded-md border-2 border-dark my-3">
               Change Photo
             </button>

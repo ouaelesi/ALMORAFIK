@@ -160,3 +160,13 @@ export const emailExists = async (email) => {
     return false;
   }
 };
+
+export const addProfilPhoto = (fileName, userEmail) => {
+  userModel
+    .findOneAndUpdate(
+      { email: userEmail },
+      { profilPic: `/uploads/${fileName}` }
+    )
+    .then((user) => console.log(user))
+    .catch((err) => console.log(err.message));
+};

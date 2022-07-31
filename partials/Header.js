@@ -20,7 +20,6 @@ const Header = ({ token }) => {
   const { login, user } = useContext(AuthContext);
 
   useEffect(() => {
-    console.log("rahi ");
     login(token);
   }, []);
   return (

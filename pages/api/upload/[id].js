@@ -11,6 +11,7 @@ const upload = multer({
 
 const apiRoute = nextConnect({
   onError(error, req, res) {
+    console.log(`Sorry something Happened! ${error.message}`);
     res
       .status(501)
       .json({ error: `Sorry something Happened! ${error.message}` });

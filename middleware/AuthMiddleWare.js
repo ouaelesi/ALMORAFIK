@@ -6,7 +6,6 @@ const checkUser = async (req, res, next) => {
   if (token) {
     try {
       verify(token, secret);
-      console.log("sahbi");
     } catch (err) {}
   } else {
   }

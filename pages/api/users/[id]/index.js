@@ -8,7 +8,6 @@ const singleUserApi = async (req, res) => {
   switch (method) {
     case "GET":
       try {
-        console.log("rani hna ");
         getUserById(req, res);
       } catch (err) {
         res.status(400).send("eroor");

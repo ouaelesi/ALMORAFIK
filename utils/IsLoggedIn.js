@@ -8,7 +8,6 @@ export async function IsLoggedIn(req) {
   let UserEmail;
   try {
     const { cookies } = req;
-    console.log(cookies.OursiteJWT);
     const jwt = cookies.OursiteJWT;
 
     if (jwt) {

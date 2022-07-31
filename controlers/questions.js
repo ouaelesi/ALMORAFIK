@@ -125,21 +125,17 @@ const getAnswers = (question) => {
   question.answers.map((answerID) => {
     queue = queue.then(() => {
       answerModel.findById(answerID).then((answer) => {
-        console.log("morad");
         repose.push(answer);
       });
     });
   });
   queue.then(() => {
-    console.log("ouael");
     return repose;
   });
 };
 
 export const findUserQuestions = (req, res) => {
-  console.log("email");
   const email = req.query.id;
-  console.log(email);
   questionModel
     .find({ creatorEmail: email })
     .then((question) => res.send(question))

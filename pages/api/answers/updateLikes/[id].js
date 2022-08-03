@@ -1,17 +1,17 @@
 import dbConnection from "../../../../utils/dbConnect";
-import { updateLikes } from "../../../../controlers/questions";
+import { updateAnsLikes } from "../../../../controlers/answers";
 
 dbConnection();
-const ques = async (req, res) => {
+const ans = async (req, res) => {
   const method = req.method;
 
   switch (method) {
     case "GET":
       break;
     case "POST":
-      updateLikes(req, res);
+      updateAnsLikes(req, res);
       break;
   }
 };
 
-export default ques;
+export default ans;

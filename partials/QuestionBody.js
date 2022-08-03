@@ -30,7 +30,6 @@ const QuestionBody = () => {
   //handle chnages & submit
   const handleSubmit = (e) => {
     e.preventDefault();
-
     setIsSubmiting(true);
     createQuestion();
     router.push("/questions");
@@ -51,7 +50,6 @@ const QuestionBody = () => {
         },
         body: JSON.stringify(form),
       });
-      alert("done");
     } catch (err) {}
   };
   return (

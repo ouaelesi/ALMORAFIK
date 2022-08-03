@@ -89,7 +89,6 @@ export const findOneQuestion = (req, res) => {
 
 // get all questions
 export const findQuestion = (req, res) => {
-  console.log("her");
   if (req.cookies) {
     console.log("======> we have cookies ");
   } else {
@@ -111,12 +110,15 @@ export const test = (req, res) => {
 export const findQuestionsAnswers = async (req, res) => {
   const id = req.query.id;
   var table = [];
-  await questionModel.findById(id).then((question) => {
-    answerModel.find({ question: question._id }, (err, answers) => {
-      console.log(answers);
-      res.send(answers);
-    });
-  });
+  questionModel
+    .findById(id)
+    .then((question) => {
+      answerModel.find({ question: question._id }, (err, answers) => {
+        console.log(answers);
+        res.send(answers);
+      });
+    })
+    .catch((err) => res.send(err.message));
 };
 
 const getAnswers = (question) => {

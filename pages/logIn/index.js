@@ -10,7 +10,7 @@ const LogIn = () => {
   const [ErrorMessage, setErrorMessage] = useState([]);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await fetch("http://localhost:3000/api/users/logIn", {
+    const res = await fetch("/api/users/logIn", {
       method: "POST",
       headers: {
         Accept: "application/json",

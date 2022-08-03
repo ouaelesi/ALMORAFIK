@@ -49,7 +49,7 @@ const QuestionBox = (props) => {
             onClick={() => updateQuesLikes(-1)}
           />
         </div>
-        <div className="px-5 py-3">
+        <div className="px-5 py-3 col-11">
           <p className="bg-light p-3  rounded-3 border" onClick={getQuestion}>
             {props.Question}
           </p>

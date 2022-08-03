@@ -9,16 +9,10 @@ import AuthContext from "../../../utils/AuthContext";
 const AnswerQuestion = ({ id }) => {
   const { user } = useContext(AuthContext);
 
-  const [questionData, setquestionData] = useState(null);
+  const [questionData, setquestionData] = useState({});
   const [answers, setanswers] = useState(null);
   const [isLoading, setLoading] = useState(false);
-  const [answerBody, setAnswerBody] = useState({
-    answer: "",
-    creator: user.email,
-    question: 0,
-    sharedFile: String,
-    likes: 1,
-  });
+  const [answerBody, setAnswerBody] = useState(null);
 
   useEffect(() => {
     setLoading(true);
@@ -35,25 +29,21 @@ const AnswerQuestion = ({ id }) => {
             setLoading(false);
           })
       );
-  }, [id]);
+  }, [id, user]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     createAnswer();
-    alert(questionData._id);
-    router.push(`/questions/${questionData._id}`);
+    router.reload(`/questions/${questionData._id}`);
   };
   const handleChange = (e) => {
     setAnswerBody({
-      answer: "",
+      ...answerBody,
+      [e.target.name]: e.target.value,
       creator: user.email,
       question: questionData._id,
       sharedFile: String,
-      likes: 1,
-    });
-    setAnswerBody({
-      ...answerBody,
-      [e.target.name]: e.target.value,
+      likes: 0,
     });
   };
 
@@ -69,7 +59,7 @@ const AnswerQuestion = ({ id }) => {
         body: JSON.stringify(answerBody),
       });
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
     }
   };
   if (isLoading)

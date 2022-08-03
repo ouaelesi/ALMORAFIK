@@ -72,7 +72,7 @@ const Header = ({ token }) => {
                 </NavLink>
               </NavItem>
             )}
-            {token && (
+            {user && (
               <NavItem className="navitem col-12 col-md-2  mx-auto">
                 <NavLink
                   href="/Profil"

@@ -21,7 +21,7 @@ const Header = ({ token }) => {
 
   useEffect(() => {
     login(token);
-  }, []);
+  }, [token, user, login]);
   return (
     <div className="px-md-5 px-2">
       <Navbar className="" light expand="md">
@@ -50,7 +50,7 @@ const Header = ({ token }) => {
               <NavLink className="navlink">CONTACT</NavLink>
             </NavItem>
 
-            {!token && (
+            {!user && (
               <NavItem className="navitem col-12 col-md-2  mx-auto">
                 <NavLink
                   href="/logIn"
@@ -61,7 +61,7 @@ const Header = ({ token }) => {
                 </NavLink>
               </NavItem>
             )}
-            {!token && (
+            {!user && (
               <NavItem className="navitem col-12 col-md-2  mx-auto">
                 <NavLink
                   href="/signUp"

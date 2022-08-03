@@ -30,20 +30,29 @@ const Questions = ({ questions }) => {
       <div className="Question_container">
         <div className="Questions_section">
           <QuestionsMenu></QuestionsMenu>
-          {data.map((elem, key) => (
-            <QuestionBox
-              key={key}
-              id={elem._id}
-              Time={elem.createdAt}
-              user_photo={elem.user_photo}
-              creator={elem.creator}
-              More_details={elem.More_details}
-              Question={elem.question}
-              tags={elem.tags}
-              number_of_answers={elem.answers.length}
-              number_of_likes={elem.likeCount}
-            />
-          ))}
+          {data
+            .sort((a, b) => {
+              return a.likeCount === b.likeCount
+                ? 0
+                : a.likeCount < b.likeCount
+                ? 1
+                : -1;
+            })
+            .map((elem, key) => (
+              <QuestionBox
+                key={key}
+                id={elem._id}
+                Time={elem.createdAt}
+                user_photo={elem.user_photo}
+                creator={elem.creator}
+                creatorEmail={elem.creatorEmail}
+                More_details={elem.More_details}
+                Question={elem.question}
+                tags={elem.tags}
+                number_of_answers={elem.answers.length}
+                number_of_likes={elem.likeCount}
+              />
+            ))}
           <NextPrevious></NextPrevious>
         </div>
       </div>

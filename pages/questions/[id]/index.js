@@ -91,10 +91,14 @@ const AnswerQuestion = ({ id }) => {
         <h1 className="font-bold text-xl my-3">Answers</h1>
 
         <div className="px-5">
-          {answers.map((elem, key) => (
-            //<div>{elem.answer}</div>
-            <BoxAnswer data={elem} key={key}></BoxAnswer>
-          ))}
+          {answers
+            .sort((a, b) => {
+              return a.likes === b.likes ? 0 : a.likes < b.likes ? 1 : -1;
+            })
+            .map((elem, key) => (
+              //<div>{elem.answer}</div>
+              <BoxAnswer data={elem} key={key}></BoxAnswer>
+            ))}
         </div>
         {/* ADD answer */}
         <div>

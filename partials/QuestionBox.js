@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import router from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretUp, faCaretDown } from "@fortawesome/free-solid-svg-icons";
+import AuthContext from "../utils/AuthContext";
 
 const QuestionBox = (props) => {
   const [numLikes, setNumLikes] = useState(props.number_of_likes);
+  const { user } = useContext(AuthContext);
+
+  useEffect(() => {}, [user]);
 
   const updateQuesLikes = (num) => {
     setNumLikes(numLikes + num);
@@ -78,15 +82,22 @@ const QuestionBox = (props) => {
               ))}
             </div>
           </div>
-          <button className="btn btn-light border mx-1" onClick={editQuestion}>
-            edit
-          </button>
-          <button
-            className="btn btn-light border mx-1"
-            onClick={() => supQuestion(props.id)}
-          >
-            Delete
-          </button>
+          {user.email == props.creatorEmail && (
+            <div>
+              <button
+                className="btn btn-light border mx-1"
+                onClick={editQuestion}
+              >
+                edit
+              </button>
+              <button
+                className="btn btn-light border mx-1"
+                onClick={() => supQuestion(props.id)}
+              >
+                Delete
+              </button>
+            </div>
+          )}
         </div>
       </div>
       <hr></hr>

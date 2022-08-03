@@ -162,3 +162,18 @@ export const updateLikes = (req, res) => {
     .then((question) => res.send(question))
     .catch((err) => res.send(err.message));
 };
+
+// The serch function:
+export const seachQuestions = (req, res) => {
+  const searchQuery = req.query.searchQuery;
+  console.log("this is ====>", searchQuery);
+  const query = { $text: { $search: searchQuery } };
+
+  // Return only the `title` of each matched document
+  // find documents based on our query and projection
+  questionModel
+    .find(query, { score: { $meta: "textScore" } })
+    .sort({ score: { $meta: "textScore" } })
+    .then((questions) => res.send(questions))
+    .catch((err) => res.send(err.message));
+};

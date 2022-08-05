@@ -84,6 +84,7 @@ export const updateQuestion = (req, res) => {
 // Get question by id
 export const findOneQuestion = (req, res) => {
   const id = req.query.id;
+  console.log(id);
   questionModel.findById(id).then((question) => res.status(200).send(question));
 };
 

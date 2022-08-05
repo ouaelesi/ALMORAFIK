@@ -19,7 +19,11 @@ export const AuthProvider = ({ children }) => {
   // Login user
   const login = async (token) => {
     setIsLoad(true);
-    setUser({ email: token.email, userName: token.userName });
+    token
+      ? setUser({ email: token.email, userName: token.userName })
+      : setUser(null);
+
+    console.log("====> the user ", user);
   };
 
   // Logout user

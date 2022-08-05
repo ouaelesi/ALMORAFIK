@@ -26,10 +26,10 @@ export async function IsLoggedIn(req) {
       let token = { email: jwtData.email, userName: jwtData.username };
       return token;
     } else {
-      return false;
+      return null;
     }
   } catch (err) {
     console.log(err.message);
-    return false;
+    return null;
   }
 }

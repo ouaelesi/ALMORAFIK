@@ -20,6 +20,8 @@ const AnswerQuestion = ({ id }) => {
       .then((res) => res.json())
       .then((data) => {
         setquestionData(data);
+        setLoading(false);
+        console.log(data);
       })
       .then(() =>
         fetch(`/api/answers/answerQu/${id}`)
@@ -28,8 +30,9 @@ const AnswerQuestion = ({ id }) => {
             setanswers(data);
             setLoading(false);
           })
-      );
-  }, [id, user]);
+      )
+      .catch((err) => console.log(err.message));
+  }, [id]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

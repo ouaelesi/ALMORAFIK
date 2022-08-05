@@ -20,7 +20,9 @@ const Header = ({ token }) => {
   const { login, user } = useContext(AuthContext);
 
   useEffect(() => {
-    login(token);
+    console.log("=================");
+    if (!user) login(token);
+    console.log(user);
   }, [token, user, login]);
   return (
     <div className="px-md-5 px-2">

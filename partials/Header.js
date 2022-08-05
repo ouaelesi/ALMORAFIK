@@ -22,7 +22,6 @@ const Header = ({ token }) => {
   useEffect(() => {
     console.log("=================");
     if (!user) login(token);
-    console.log(user);
   }, [token, user, login]);
   return (
     <div className="px-md-5 px-2">

@@ -304,18 +304,20 @@
   font-size: 25px;
 }
 .pagination > button {
-  background-color: transparent;
-  color: grey;
-  border: 1px solid;
+  background-color: var(--yellow-color);
+  color: black;
+  border: 1px solid gray;
+}
+.pagination > button:hover {
+  background-color: var(--yellow-hover);
+  color: white;
 }
 .pagination {
   margin: 0px auto;
-  width: 200px;
+  gap: 10px;
+  width: fit-content;
 }
-.pagination > .Next {
-  width: 120px;
-  margin-left: 30px;
-}
+
 .Question_container {
   background-color: #e4e4e4;
   position: relative;

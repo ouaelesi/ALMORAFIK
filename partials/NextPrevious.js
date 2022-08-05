@@ -1,16 +1,35 @@
-import React, {Component} from 'react'
+import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAnglesRight, faAnglesLeft } from "@fortawesome/free-solid-svg-icons";
 
-class NextPrevious extends Component{
-    render(){
-        return(
-            <>
-             <div className="pagination py-3">
-                 <button className="previous btn" > prev </button>
-                 <button className="Next btn">Next  </button>
-             </div>
-            </>
-        );
-    }
-}
+const NextPrevious = ({ setCurrentPage, currentPage, maxNumPages }) => {
+  return (
+    <>
+      <div className="pagination py-3">
+        {
+          <button
+            className="previous btn "
+            onClick={() => setCurrentPage(currentPage - 1)}
+            disabled={currentPage === 0}
+          >
+            <FontAwesomeIcon icon={faAnglesLeft} />
+          </button>
+        }
+        <div className="btn underline">
+          Page {currentPage + 1}/{maxNumPages}
+        </div>
+        {
+          <button
+            className="Next btn"
+            onClick={() => setCurrentPage(currentPage + 1)}
+            disabled={currentPage + 1 === maxNumPages}
+          >
+            <FontAwesomeIcon icon={faAnglesRight} />
+          </button>
+        }
+      </div>
+    </>
+  );
+};
 
-export default NextPrevious ; 
+export default NextPrevious;

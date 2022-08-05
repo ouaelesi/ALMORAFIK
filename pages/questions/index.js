@@ -5,6 +5,15 @@ import NextPrevious from "../../partials/NextPrevious";
 import fetch from "isomorphic-unfetch";
 
 const Questions = ({ questions }) => {
+  // Pagination vars and Functions
+  const QuetionsPerPage = 5;
+  const [maxNumPages, setMaxPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
+  const IsOnCurrentPage = (id) => {
+    return Math.floor(id / QuetionsPerPage) === currentPage;
+  };
+
+  // data fetching
   const [data, setData] = useState(null);
   const [isLoading, setLoading] = useState(false);
   useEffect(() => {
@@ -13,9 +22,12 @@ const Questions = ({ questions }) => {
       .then((res) => res.json())
       .then((data) => {
         setData(data);
+        setMaxPages(Math.floor((data.length - 1) / QuetionsPerPage) + 1);
         setLoading(false);
       });
   }, []);
+
+  // Rendring Content
   if (isLoading)
     return (
       <div className="h-screen pt-">
@@ -38,22 +50,29 @@ const Questions = ({ questions }) => {
                 ? 1
                 : -1;
             })
-            .map((elem, key) => (
-              <QuestionBox
-                key={key}
-                id={elem._id}
-                Time={elem.createdAt}
-                user_photo={elem.user_photo}
-                creator={elem.creator}
-                creatorEmail={elem.creatorEmail}
-                More_details={elem.More_details}
-                Question={elem.question}
-                tags={elem.tags}
-                number_of_answers={elem.answers.length}
-                number_of_likes={elem.likeCount}
-              />
-            ))}
-          <NextPrevious></NextPrevious>
+            .map(
+              (elem, key) =>
+                IsOnCurrentPage(key) && (
+                  <QuestionBox
+                    key={key}
+                    id={elem._id}
+                    Time={elem.createdAt}
+                    user_photo={elem.user_photo}
+                    creator={elem.creator}
+                    creatorEmail={elem.creatorEmail}
+                    More_details={elem.More_details}
+                    Question={elem.question}
+                    tags={elem.tags}
+                    number_of_answers={elem.answers.length}
+                    number_of_likes={elem.likeCount}
+                  />
+                )
+            )}
+          <NextPrevious
+            setCurrentPage={setCurrentPage}
+            currentPage={currentPage}
+            maxNumPages={maxNumPages}
+          />
         </div>
       </div>
     </div>

@@ -24,9 +24,9 @@ class Welcome extends React.Component {
     ];
     return (
       <div className="">
-        <div className=" row relative">
-          <div className="welcom col-12 col-md-6  pt-5 mt-3 fw-bolder">
-            <div className="welcome_title pt-5 w-fit fw-bolder">
+        <div className="d-flex relative">
+          <div className="welcom  col-md-6  pt-5 mt-3 fw-bolder">
+            <div className="welcome_title pt-md-5 w-fit fw-bolder">
               WELCOME WITH US
               <div className="yellow_line w-25 mx-auto"></div>
             </div>
@@ -40,7 +40,7 @@ class Welcome extends React.Component {
               EXPLORE MORE
             </Button>
           </div>
-          <div className="col-6 pt-4">
+          <div className="col-6 pt-4 d-none d-md-block">
             <img
               src="/assets/imgs/HomeIllustration.svg"
               width="500px"
@@ -49,23 +49,23 @@ class Welcome extends React.Component {
           </div>
           <img
             src="/assets/imgs/homeShape.svg"
-            className="block mx-auto position-absolute bottom-0 left-0 homeShape1"
+            className="d-md-block d-none mx-auto position-absolute bottom-0 left-0 homeShape1"
           ></img>
           <img
             src="/assets/imgs/homeShape2.svg"
             className="block mx-auto position-absolute bottom-0 end-0  homeShape2"
           ></img>
         </div>
-        <div className="my-5">
-          <div className="works_title ">
-            <div className="works_title w-fit mx-auto">
+        <div className="my-md-5">
+          <div className="fs-1 fw-bolder text-center">
+            <div className=" fw-bolder w-fit mx-auto">
               HOW IT WORKS
               <div className="yellow_line mb-5 w-25 mx-auto"></div>
             </div>
 
-            <div className="d-md-flex justify-content-center  my-5 px-5 ">
+            <div className="d-md-flex justify-content-center  my-5 px-5 asking_path ">
               {tab.map((elem, key) => (
-                <div className="col-md-4" key={key}>
+                <div className="col-md-4 " key={key}>
                   <PathCard
                     Title={tab[key].title}
                     icon={tab[key].icon}
@@ -75,7 +75,7 @@ class Welcome extends React.Component {
               ))}
             </div>
             <div className="mt-5 ">
-              <p className="mt-5 py-5 px-5 fs-1 fw-bolder ">
+              <p className="mt-5 py-5 px-md-5 fs-1 fw-bolder ">
                 Questions are everywhere, answers are on HERE <br />
                 So start ask your questions
               </p>

@@ -12,8 +12,8 @@ class Footer extends React.Component {
   render() {
     return (
       <div className="footer">
-        <div className="d-flex  justify-content-between py-5">
-          <div className="col-4 px-5">
+        <div className="d-md-flex  justify-content-between py-5">
+          <div className="col-md-4 px-5">
             <img
               src="/assets/imgs/logo_white.png"
               width="180px"
@@ -26,14 +26,14 @@ class Footer extends React.Component {
               or baccalaurate holders
             </div>
           </div>
-          <div className="col-4 px-5 text-white text-center">
+          <div className="col-md-4 px-5 text-white text-center">
             <div className=" fs-4 fw-bold mb-3 yellowText">INFORMATION</div>
             <a className="fs-5 fw-semibold block mb-2">Home</a>
             <a className="fs-5 fw-semibold block mb-2">Questions</a>
             <a className="fs-5 fw-semibold block mb-2">About Us</a>
             <a className="fs-5 fw-semibold block mb-2">Contact Us</a>
           </div>
-          <div className="col-4 px-5 text-white fw-light text-center ">
+          <div className="col-md-4 px-5 text-white fw-light text-center ">
             <div className=" fs-4 fw-bold mb-3 yellowText">CONTACT</div>
             <div className="d-flex gap-2 mb-3 w-fit mx-auto">
               <FontAwesomeIcon

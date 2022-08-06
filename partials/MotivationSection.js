@@ -4,12 +4,12 @@ import { Button } from "reactstrap";
 class Motivation extends React.Component {
   render() {
     return (
-      <div className="Motivation ">
-        <div className="box p-3 p-md-5 bg-light border border-dark">
-          <div className="title fw-bolder">
+      <div className="Motivation">
+        <div className="box p-3 fw-bolder  px-md-4 bg-light border border-dark">
+          <div className="fs-1 fw-bolder py-4">
             QESTION IS THE HALF OF THE ANSWER
           </div>
-          <div className="content fs-5">
+          <div className="content  fs-5 mb-2">
             Hey ! i want to ask you a question ten years from now where do u
             want to see yourself ? If you have an answer now that means you have
             a dream and u want to make it true so i'm here to tell you if you
@@ -21,7 +21,7 @@ class Motivation extends React.Component {
             website
             <b> SA9SINI</b> as a support for you in your studies.
           </div>
-          <Button>Get Motivated</Button>
+          <Button className="my-3">Get Motivated</Button>
         </div>
       </div>
     );

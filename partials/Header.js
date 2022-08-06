@@ -80,7 +80,6 @@ const Header = ({ token }) => {
                   className=" d-flex justify-content-center"
                 >
                   Profil
-                  <div className="bg-gray-200 p-3 rounded-md mx-2"></div>
                 </NavLink>
               </NavItem>
             )}

@@ -14,8 +14,12 @@ class Footer extends React.Component {
       <div className="footer">
         <div className="d-flex  justify-content-between py-5">
           <div className="col-4 px-5">
-            <img src="/assets/imgs/logo_white.png" width="180px" />
-            <div className="text-white mt-2 fs-6">
+            <img
+              src="/assets/imgs/logo_white.png"
+              width="180px"
+              className="block mx-auto"
+            />
+            <div className="text-white mt-2 fs-6 text-center">
               A learning platform to ask questions about everything related by
               studying in all materials , proposed for all the streams who have
               baccalaureate exam to find the answer from teachers , colleagues
@@ -29,16 +33,16 @@ class Footer extends React.Component {
             <a className="fs-5 fw-semibold block mb-2">About Us</a>
             <a className="fs-5 fw-semibold block mb-2">Contact Us</a>
           </div>
-          <div className="col-4 px-5 text-white fw-light ">
+          <div className="col-4 px-5 text-white fw-light text-center ">
             <div className=" fs-4 fw-bold mb-3 yellowText">CONTACT</div>
-            <div className="d-flex gap-2 mb-3">
+            <div className="d-flex gap-2 mb-3 w-fit mx-auto">
               <FontAwesomeIcon
                 icon={faAt}
                 style={{ marginTop: "5", fontSize: "20" }}
               />
               jo_sahbi@esi.dz
             </div>
-            <div className="d-flex gap-2 mb-3">
+            <div className="d-flex gap-2 mb-3 w-fit mx-auto">
               <FontAwesomeIcon
                 icon={faPhone}
                 style={{ marginTop: "5", fontSize: "20" }}
@@ -46,7 +50,7 @@ class Footer extends React.Component {
               07 95 95 15 19
             </div>
 
-            <div className="d-flex gap-4 mt-4 mb-3">
+            <div className="d-flex gap-4 mt-4 mb-3 w-fit mx-auto">
               <FontAwesomeIcon
                 icon={faFacebookF}
                 style={{ marginTop: "5", fontSize: "30" }}

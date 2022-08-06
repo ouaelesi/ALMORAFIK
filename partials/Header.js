@@ -24,7 +24,7 @@ const Header = ({ token }) => {
     if (!user) login(token);
   }, [token, user, login]);
   return (
-    <div className="px-md-5 px-2">
+    <div className="px-md-5 px-2 shadow-sm">
       <Navbar className="" light expand="md">
         <NavbarBrand href="/" className="px-2">
           <img src="/assets/imgs/logo.png" className="navlogo" width="145px" />

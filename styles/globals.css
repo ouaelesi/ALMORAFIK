@@ -5,10 +5,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100&display=swap");
 
 :root {
-  --blue-color: #2a2f6d;
+  --blue-color: #0e0f00;
   --yellow-color: #ffd600;
   --yellow-hover: #ecc600;
-  --blue-hover: #40479b;
+  --blue-hover: #464921;
 }
 * {
   font-family: "Poppins", sans-serif !important;
@@ -68,7 +68,6 @@
   width: 200px;
 }
 .footer {
-  padding: 30px 50px 10px 50px;
   background-color: var(--blue-color);
   width: 100%;
 }
@@ -87,12 +86,8 @@
 
 /* Welcome section */
 .welcom {
-  padding: 8% 9% 10% 9%;
-  background-image: url("/assets/imgs/welcom_b.png");
-  background-size: cover;
-  background-repeat: none;
   height: 670px;
-  width: 100%;
+  padding: 2% 2% 4% 9%;
 }
 .welcome_title {
   margin: 0 0 40px 0;
@@ -104,20 +99,25 @@
   margin: 10px 0 40px 0;
   font-size: 25px;
 }
+.homeShape1 {
+  width: 200px;
+}
+.homeShape2 {
+  width: 500px;
+  z-index: -20;
+}
+
 .explore_btn {
   border: none;
   width: 200px;
   height: 50px;
   font-size: 20px;
-  font-weight: bolder;
+  color: var(--blue-color);
+  box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.2);
 }
 .yellow_line {
-  width: 100px;
-  height: 5px;
+  height: 8px;
   border-radius: 50px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 5px;
   background-color: var(--yellow-color);
 }
 
@@ -245,10 +245,18 @@
   display: flex;
 }
 .btn_answer {
-  background-color: var(--yellow-color);
-  width: 150px;
-  font-size: 18px;
-  font-weight: bold;
+  border: solid 2px var(--blue-color);
+  color: white;
+  background-color: var(--blue-color);
+}
+.btn_answer:hover {
+  background-color: var(--blue-hover);
+  color: white;
+}
+.quesTag {
+  font-size: 12px;
+  margin-right: 4px;
+  border: solid 1px gainsboro;
 }
 .Question_Statistics {
   width: 100%;
@@ -286,6 +294,8 @@
 .search-form {
   width: 70%;
   margin: 0px auto;
+  background-color: rgba(0, 0, 0, 0.2);
+  color: white;
 }
 .ask_btn {
   width: 80%;
@@ -308,6 +318,9 @@
   color: black;
   border: 1px solid gray;
 }
+.yellowText {
+  color: var(--yellow-color);
+}
 .pagination > button:hover {
   background-color: var(--yellow-hover);
   color: white;
@@ -326,10 +339,18 @@
 .Questions_section {
   width: 68%;
   margin: 0 auto;
-  background-color: white;
-  padding: 2%;
 }
 
+.QuestionBox {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
+}
+.QuestionMenu {
+  background-color: var(--blue-color);
+  border-radius: 10px;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
+}
 .nav_container {
   background-color: white;
   box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 10px 0px;

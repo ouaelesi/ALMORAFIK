@@ -1,7 +1,14 @@
 import React, { useState, useContext, useEffect } from "react";
 import router from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretUp, faCaretDown } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCaretUp,
+  faCaretDown,
+  faTrashCan,
+  faPen,
+} from "@fortawesome/free-solid-svg-icons";
+import { faBookmark } from "@fortawesome/free-regular-svg-icons";
+
 import AuthContext from "../utils/AuthContext";
 
 const QuestionBox = (props) => {
@@ -33,48 +40,58 @@ const QuestionBox = (props) => {
     router.push(`/questions/${props.id}`);
   };
   return (
-    <div className="">
-      <div className="Question_info">
-        <img src={props.user_photo}></img>
-        Asked By <b className="text-dark">{props.creator}</b> At{" "}
-        <b className="text-dark">{props.Time}</b>
+    <div className="QuestionBox my-3 px-md-5 py-2 px-2 border-2 border-light">
+      <div className="Question_info d-flex justify-content-between ">
+        <div className="pt-3 px-2">
+          <img src={props.user_photo}></img>
+          Asked By <b className="text-dark">{props.creator}</b> At{" "}
+          <b className="text-dark">{props.Time}</b>
+        </div>
+        <button className="btn">
+          <FontAwesomeIcon
+            icon={faBookmark}
+            style={{ fontSize: "28" }}
+            className="text-warning"
+          />
+        </button>
       </div>
       <div className="d-flex">
-        <div className="align-items-center fs-4  mx-auto text-center pt-4">
+        <div className="align-items-center fs-4  mx-auto text-center h-fit my-auto  px-1">
           <FontAwesomeIcon
             icon={faCaretUp}
-            style={{ fontSize: 50 }}
+            className="fs-1 "
             onClick={() => updateQuesLikes(1)}
           />
           <div>{numLikes}</div>
           <FontAwesomeIcon
             icon={faCaretDown}
-            style={{ fontSize: 50 }}
+            className="fs-1"
             onClick={() => updateQuesLikes(-1)}
           />
         </div>
-        <div className="px-5 py-3 col-11">
+        <div className="px-md-5 py-3 px-2 w-100">
+          <div className="fw-bold fs-4 mb-2">This Is the Question Title</div>
           <p className="bg-light p-3  rounded-3 border" onClick={getQuestion}>
             {props.Question}
           </p>
           <p className="question_details">{props.More_details}</p>
           <div className="rounded-3">
             <div className="d-flex">
-              <div className="mt-2">{props.number_of_answers} Answers</div>
-              <div className="px-4 mt-2">{props.number_of_likes} Likes </div>
+              <div className="mt-1">{props.number_of_answers} Answers</div>
+              <div className="px-4 mt-1">{numLikes} Likes </div>
               <div className="ml-auto">
                 <button
-                  className="btn btn-warning px-4 mt-2"
+                  className="btn  mt-1 btn_answer "
                   onClick={() => router.push(`/questions/${props.id}`)}
                 >
                   Answer
                 </button>
               </div>
             </div>
-            <div className="mb-4">
+            <div className="my-2">
               {props.tags.map((tag, key) => (
                 <span
-                  className="px-2 rounded-3 bg-dark mx-1 text-light fw-light"
+                  className="px-2 rounded-2 quesTag text-dark bg-light  fw-light py-1"
                   key={key}
                 >
                   {tag}
@@ -84,17 +101,14 @@ const QuestionBox = (props) => {
           </div>
           {user.email == props.creatorEmail && (
             <div>
-              <button
-                className="btn btn-light border mx-1"
-                onClick={editQuestion}
-              >
-                edit
+              <button className="btn border mx-1" onClick={editQuestion}>
+                <FontAwesomeIcon icon={faPen} />
               </button>
               <button
-                className="btn btn-light border mx-1"
+                className="btn border mx-1"
                 onClick={() => supQuestion(props.id)}
               >
-                Delete
+                <FontAwesomeIcon icon={faTrashCan} />
               </button>
             </div>
           )}

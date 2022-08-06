@@ -1,7 +1,12 @@
 import router from "next/router";
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretUp, faCaretDown } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCaretUp,
+  faCaretDown,
+  faPen,
+  faTrashCan,
+} from "@fortawesome/free-solid-svg-icons";
 
 const BoxAnswer = (props) => {
   const [likes, setLikes] = useState(Number(props.data.likes));
@@ -33,11 +38,11 @@ const BoxAnswer = (props) => {
   return (
     <div className="my-4">
       <div>Answered by: {props.data.creator}</div>
-      <div className="d-flex">
-        <div className="align-items-center fs-4  mx-auto text-center pt-4">
+      <div className="d-flex  p-md-4 py-2">
+        <div className="fs-4 px-md-4 px-1 text-center h-fit my-auto">
           <FontAwesomeIcon
             icon={faCaretUp}
-            style={{ fontSize: 50 }}
+            className="fs-1"
             onClick={() => {
               updateAnsLikes(1);
             }}
@@ -45,29 +50,25 @@ const BoxAnswer = (props) => {
           <div>{likes}</div>
           <FontAwesomeIcon
             icon={faCaretDown}
-            style={{ fontSize: 50 }}
+            className="fs-1"
             onClick={() => {
               updateAnsLikes(-1);
             }}
           />
         </div>
-        <div className="bg-light p-3  rounded-3 border col-11">
-          {props.data.answer}
+        <div className="px-2 w-100 ">
+          <div className="bg-light px-3 py-2  rounded-3 border">
+            {props.data.answer}
+          </div>
+          <button className="btn m-2  border" onClick={editAnsw}>
+            <FontAwesomeIcon icon={faPen} />
+          </button>
+          <button className="btn m-2  border" onClick={supAnswer}>
+            <FontAwesomeIcon icon={faTrashCan} />
+          </button>
         </div>
       </div>
 
-      <button
-        className="bg-light px-3 mt-2 rounded-3 border"
-        onClick={editAnsw}
-      >
-        edit
-      </button>
-      <button
-        className="bg-light px-3 mt-2 rounded-3 border"
-        onClick={supAnswer}
-      >
-        delete
-      </button>
       <div>likes: {props.data.likes}</div>
       <hr />
     </div>

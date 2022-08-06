@@ -30,16 +30,17 @@ const Questions = ({ questions }) => {
   // Rendring Content
   if (isLoading)
     return (
-      <div className="h-screen pt-">
-        <div className="spinner-border block mx-auto" role="status">
-          <span className="sr-only">Loading...</span>
+      <div className="h-screen Questions_section">
+        <QuestionsMenu></QuestionsMenu>
+        <div className="spinner-border block mx-auto mt-5" role="status">
+          <span className="sr-only ">Loading...</span>
         </div>
       </div>
     );
   if (!data) return <p>No profile data</p>;
   return (
     <div>
-      <div className="Question_container">
+      <div className="Question_container py-3 px-2">
         <div className="Questions_section">
           <QuestionsMenu></QuestionsMenu>
           {data

@@ -4,10 +4,12 @@ import { Button } from "reactstrap";
 class Motivation extends React.Component {
   render() {
     return (
-      <div className="Motivation">
-        <div className="box p-3 p-md-5">
-          <div className="title">QESTION IS THE HALF OF THE ANSWER</div>
-          <div className="content h6">
+      <div className="Motivation ">
+        <div className="box p-3 p-md-5 bg-light border border-dark">
+          <div className="title fw-bolder">
+            QESTION IS THE HALF OF THE ANSWER
+          </div>
+          <div className="content fs-5">
             Hey ! i want to ask you a question ten years from now where do u
             want to see yourself ? If you have an answer now that means you have
             a dream and u want to make it true so i'm here to tell you if you

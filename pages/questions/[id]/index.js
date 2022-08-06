@@ -77,8 +77,11 @@ const AnswerQuestion = ({ id }) => {
   if (!data) return <p>No profile data</p>;
 
   return (
-    <div className="Question_container">
-      <div className="Questions_section">
+    <div className="Question_container py-2">
+      <div className="Questions_section px-2">
+        <div className="px-md-5 px-3   py-5   QuestionMenu  border-2 border-light text-white fs-2 ">
+          The Question Answers
+        </div>
         <QuestionBox
           id={questionData._id}
           Time={questionData.createdAt}
@@ -90,37 +93,36 @@ const AnswerQuestion = ({ id }) => {
           number_of_answers={questionData.answers.length}
           number_of_likes={questionData.likeCount}
         ></QuestionBox>
+        <div className="QuestionBox my-3 px-md-5 py-2 px-3 border-2 border-light   ">
+          <h1 className="font-bold text-xl my-3">Answers</h1>
 
-        <h1 className="font-bold text-xl my-3">Answers</h1>
-
-        <div className="px-5">
-          {answers
-            .sort((a, b) => {
-              return a.likes === b.likes ? 0 : a.likes < b.likes ? 1 : -1;
-            })
-            .map((elem, key) => (
-              //<div>{elem.answer}</div>
-              <BoxAnswer data={elem} key={key}></BoxAnswer>
-            ))}
-        </div>
-        {/* ADD answer */}
-        <div>
-          <h4>Answer Question</h4>
-          <form onSubmit={handleSubmit} className="my-2">
-            <textarea
-              name="answer"
-              onChange={handleChange}
-              id="answerInput"
-              className="bg-light border px-3 py-2 outline-none  rounded w-7/12 h-60"
-            ></textarea>{" "}
-            <br />
-            <button
-              type="submit"
-              className="bg-warning px-3 py-2 my-2 rounded "
-            >
-              submit
-            </button>
-          </form>
+          <div className="">
+            {answers
+              .sort((a, b) => {
+                return a.likes === b.likes ? 0 : a.likes < b.likes ? 1 : -1;
+              })
+              .map((elem, key) => (
+                //<div>{elem.answer}</div>
+                <BoxAnswer data={elem} key={key}></BoxAnswer>
+              ))}
+          </div>
+          {/* ADD answer */}
+          <div>
+            <label className="fs-3">Submit an answer</label>
+            <form onSubmit={handleSubmit} className="my-2">
+              <textarea
+                name="answer"
+                onChange={handleChange}
+                id="answerInput"
+                placeholder="Write Your answer Here"
+                className="bg-light border px-3 py-2 outline-none border-dark rounded w-100 h-60"
+              ></textarea>{" "}
+              <br />
+              <button type="submit" className=" px-3 py-2 my-2 rounded ask_btn">
+                Add Your Answer
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </div>

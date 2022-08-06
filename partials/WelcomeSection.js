@@ -24,11 +24,11 @@ class Welcome extends React.Component {
     ];
     return (
       <div className="">
-        <div className="welcom row">
-          <div className="col-12 col-md-6 ">
-            <div className="welcome_title">
+        <div className=" row relative">
+          <div className="welcom col-12 col-md-6  pt-5 mt-3 fw-bolder">
+            <div className="welcome_title pt-5 w-fit fw-bolder">
               WELCOME WITH US
-              <div className="yellow_line"></div>
+              <div className="yellow_line w-25 mx-auto"></div>
             </div>
             <p className="welcome_text h6 font-light">
               A learning platform to ask questions about everything related by
@@ -36,13 +36,33 @@ class Welcome extends React.Component {
               baccalaureate exam to find the answer from teachers , colleagues
               or baccalaurate holders .
             </p>
-            <Button className="explore_btn signup">Explore more</Button>
+            <Button className="explore_btn fw-bold  signup">
+              EXPLORE MORE
+            </Button>
           </div>
+          <div className="col-6 pt-4">
+            <img
+              src="/assets/imgs/HomeIllustration.svg"
+              width="500px"
+              className="block mx-auto"
+            ></img>
+          </div>
+          <img
+            src="/assets/imgs/homeShape.svg"
+            className="block mx-auto position-absolute bottom-0 left-0 homeShape1"
+          ></img>
+          <img
+            src="/assets/imgs/homeShape2.svg"
+            className="block mx-auto position-absolute bottom-0 end-0  homeShape2"
+          ></img>
         </div>
         <div className="my-5">
-          <div className="works_title">
-            HOW IT WORKS
-            <div className="yellow_line mb-5"></div>
+          <div className="works_title ">
+            <div className="works_title w-fit mx-auto">
+              HOW IT WORKS
+              <div className="yellow_line mb-5 w-25 mx-auto"></div>
+            </div>
+
             <div className="d-md-flex justify-content-center  my-5 px-5 ">
               {tab.map((elem, key) => (
                 <div className="col-md-4" key={key}>
@@ -55,11 +75,13 @@ class Welcome extends React.Component {
               ))}
             </div>
             <div className="mt-5 ">
-              <p className="mt-5 py-5 px-5 h1 ">
+              <p className="mt-5 py-5 px-5 fs-1 fw-bolder ">
                 Questions are everywhere, answers are on HERE <br />
                 So start ask your questions
               </p>
-              <Button className="askQuestionButton">Ask Your Question</Button>
+              <Button className="askQuestionButton fw-bold">
+                Ask Your Question
+              </Button>
             </div>
             <Motivation></Motivation>
           </div>

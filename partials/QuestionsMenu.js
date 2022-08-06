@@ -1,6 +1,8 @@
 import React, { Component, useState } from "react";
 import { Row } from "reactstrap";
 import router from "next/router";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 
 const QuestionsMenu = () => {
   const handleSearch = (e) => {
@@ -11,34 +13,37 @@ const QuestionsMenu = () => {
 
   return (
     <>
-      <div className="categories pt-3">
+      <div className="px-md-5 px-3   py-5   QuestionMenu  border-2 border-light">
         <form
           className="form-group align-middle d-flex"
           onSubmit={handleSearch}
         >
           <input
-            className="form-control search-form"
+            className="px-2 rounded-3 border  search-form"
             placeholder="search"
             id="SerchInput"
           ></input>
-          <button type="submit" className="btn btn-light">
+          <button
+            type="submit"
+            className="btn text-white bg-dark bg-opacity-10 border"
+          >
             Search
           </button>
         </form>
-        <Row className="pt-3">
-          <div className="col-6 font-weight-bold ask_text align-items-center">
+        <div className="pt-3 d-flex justify-content-bettween mt-2 text-white">
+          <div className=" font-weight-bold ask_text align-items-center pt-1 gap-2 d-flex">
             All Questions
+            <FontAwesomeIcon icon={faAngleDown} style={{ fontSize: "20" }} />
           </div>
-          <div className="col-4 ml-auto ">
-            {" "}
+          <div className=" ml-auto ">
             <a href="/askQuestion">
-              <button className="btn btn-light ask_btn">
+              <button className="btn  ask_btn bg-warning">
                 Ask Your Question
               </button>
             </a>{" "}
           </div>
-        </Row>
-        <div
+        </div>
+        {/* <div
           className="btn-group fields"
           role="group"
           aria-label="Basic example"
@@ -59,7 +64,7 @@ const QuestionsMenu = () => {
             {" "}
             ....{" "}
           </button>
-        </div>
+        </div> */}
       </div>
     </>
   );

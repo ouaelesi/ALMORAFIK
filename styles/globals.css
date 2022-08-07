@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100&display=swap");
 
 :root {
@@ -11,7 +10,7 @@
   --blue-hover: #464921;
 }
 * {
-  font-family: "Poppins", sans-serif !important;
+  font-family: Tahoma, Geneva, Verdana, sans-serif;
 }
 body {
   overflow-x: hidden;
@@ -29,6 +28,7 @@ body {
   font-weight: bolder;
   font-size: 18px;
 }
+
 .signbutton {
   width: 130px;
   border: none;
@@ -135,7 +135,11 @@ body {
   background-image: url("/assets/imgs/path_bg.png");
   background-size: 100% 100%;
   background-repeat: no-repeat;
-  height: 373px;
+}
+.HowItWorks {
+  background-image: url("/assets/imgs/path_bg.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
 }
 .PathCard {
   text-align: center;
@@ -219,16 +223,13 @@ body {
 .Motivation > .box > Button:hover {
   background-color: var(--blue-hover);
 }
+
 .whoarewe {
-  padding: 120px 70px 100px 70px;
-  background-image: url("/assets/imgs/welcom_b.png");
+  padding: 9% 4% 2% 9%;
+  background-image: url("/assets/imgs/who_are_we_bg.svg");
   background-size: cover;
-  background-repeat: none;
-}
-.whoarewe {
-  background-image: url("/assets/imgs/who_are_we_bg.png");
-  background-size: 100% 100%;
-  height: 630px;
+  height: 700px;
+  background-position: center bottom;
 }
 .stat {
   padding: 0 20px 0 20px;
@@ -383,7 +384,7 @@ body {
   left: -11%;
 }
 .login_with_facebook {
-  background-color: var(--blue-color);
+  background-color: #060061;
   color: white;
 }
 .login_form {
@@ -402,7 +403,6 @@ body {
 .loginbtn {
   width: 90%;
   margin: 15px auto 0 auto;
-  background-color: var(--yellow-color);
   box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 10px 0px;
   color: white;
   font-weight: bold;
@@ -683,5 +683,9 @@ body {
   }
   .welcome_title {
     font-size: 25px;
+  }
+  .whoarewe {
+    height: 600px;
+    background-position: left bottom;
   }
 }

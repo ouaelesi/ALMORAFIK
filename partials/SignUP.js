@@ -123,6 +123,12 @@ const SignUP = () => {
             </button>
           </div>
         </form>
+        <div className="text-center mt-2">
+          You already have an account?{" "}
+          <a href="logIn" className="underline  fw-bold">
+            Log In
+          </a>
+        </div>
       </div>
     </div>
   );

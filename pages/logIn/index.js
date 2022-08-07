@@ -20,9 +20,10 @@ const LogIn = () => {
     });
     if (res.status === 200) {
       router.push("/");
-    }else{
+      router.reload("/");
+    } else {
       const err = ErrorMessage;
-      err.push('Something went wrong ') 
+      err.push("Something went wrong ");
     }
   };
   // This function will update the user state
@@ -51,23 +52,29 @@ const LogIn = () => {
           <div className="form-group Loginstitles" id="usernamelogin">
             Email
             <input
-              className="form-control Loginstitles mb-4"
-              placeholder=".."
+              className="form-control  mb-4 fs-6"
+              placeholder="Your Email here"
               name="email"
               onChange={handleChange}
             ></input>
             Password
             <input
               className="form-control mb-4"
-              placeholder=".."
+              placeholder="Your password"
               name="hashPassword"
               onChange={handleChange}
             ></input>
-            <button className="btn loginbtn" type="submit">
+            <button className="btn loginbtn btn-dark" type="submit">
               LOG IN
             </button>
           </div>
         </form>
+        <div className="text-center mt-2">
+          You Don t have an account?{" "}
+          <a href="signUp" className="underline  fw-bold">
+            Sign Up
+          </a>
+        </div>
       </div>
     </div>
   );

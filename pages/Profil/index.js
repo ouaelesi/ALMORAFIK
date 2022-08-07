@@ -57,10 +57,10 @@ const Profil = () => {
     );
   return (
     <div className="bg-light">
-      <div className="px-20 py-10 container ">
-        <div className="row gap-2 bg-white px-5 py-4 rounded-xl border-2 justify-content-center">
+      <div className="px-md-20 px-4 py-md-10 py-4 container ">
+        <div className="row gap-2 bg-white px-md-5 px-2 py-4 rounded-xl border-2 justify-content-center">
           <div className="QuestionTitle mb-4">General Informations</div>
-          <div className="col-4">
+          <div className="col-md-4">
             <div className="bg-dark  w-1/3 rounded-full">
               {profilData.profilPic && !updatedProfilPhoto && (
                 <img src={profilData.profilPic} widht="200"></img>
@@ -93,7 +93,7 @@ const Profil = () => {
             </form>
           </div>
 
-          <form className="col-7  ">
+          <form className="col-md-7  ">
             UserName
             <div className="row gap-2 mb-4">
               <input
@@ -148,8 +148,8 @@ const Profil = () => {
             </button>
           </form>
         </div>
-        <div className="flex gap-4 mt-4">
-          <div className="col-3 bg-white p-5 rounded-xl border-2">
+        <div className="md-flex gap-4 mt-md-4 ">
+          <div className="col-md-3 bg-white p-5 rounded-xl border-2 my-2">
             Socila Media
           </div>
           <UserAskedQues className="col " />

@@ -26,7 +26,6 @@ function SignUp({ token }) {
           {" "}
           <LoginForm></LoginForm>
         </div>
-        <button className="bg-red-500 w-fit"> logout </button>
       </div>
     </>
   );

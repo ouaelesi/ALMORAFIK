@@ -7,7 +7,7 @@ import {
   faTrashCan,
   faPen,
 } from "@fortawesome/free-solid-svg-icons";
-import { faBookmark } from "@fortawesome/free-regular-svg-icons";
+import { faBookmark, faCircleUser } from "@fortawesome/free-regular-svg-icons";
 
 import AuthContext from "../utils/AuthContext";
 
@@ -42,10 +42,16 @@ const QuestionBox = (props) => {
   return (
     <div className="QuestionBox my-3 px-md-5 py-2 px-2 border-2 border-light">
       <div className="Question_info d-flex justify-content-between ">
-        <div className="pt-3 px-2">
-          <img src={props.user_photo}></img>
-          Asked By <b className="text-dark">{props.creator}</b> At{" "}
-          <b className="text-dark">{props.Time}</b>
+        <div className="pt-3 px-2 d-flex">
+          <FontAwesomeIcon
+            icon={faCircleUser}
+            style={{ fontSize: "30", marginRight: 10 }}
+            className="text-dark"
+          />
+          <div className="pt-1">
+            Asked By <b className="text-dark underline">{props.creator}</b> At{" "}
+            <b className="text-dark">{props.Time}</b>
+          </div>
         </div>
         <button className="btn">
           <FontAwesomeIcon
@@ -99,7 +105,7 @@ const QuestionBox = (props) => {
               ))}
             </div>
           </div>
-          {user.email == props.creatorEmail && (
+          {user && user.email == props.creatorEmail && (
             <div>
               <button className="btn border mx-1" onClick={editQuestion}>
                 <FontAwesomeIcon icon={faPen} />

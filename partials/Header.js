@@ -9,16 +9,39 @@ import {
   Button,
   NavLink,
 } from "reactstrap";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCircleUser,
+  faRightFromBracket,
+} from "@fortawesome/free-solid-svg-icons";
+import { useRouter } from "next/router";
 import AuthContext from "../utils/AuthContext";
 
 const Header = ({ token }) => {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => setIsOpen(!isOpen);
 
   const { login, user } = useContext(AuthContext);
-
+  const userLogOut = async (e) => {
+    e.preventDefault();
+    const res = await fetch("/api/users/logout", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({}),
+    });
+    if (res.status === 200) {
+      router.push("/");
+      router.reload("/");
+    } else {
+      const err = ErrorMessage;
+      err.push("Something went wrong ");
+    }
+  };
   useEffect(() => {
     console.log("=================");
     if (!user) login(token);
@@ -33,22 +56,22 @@ const Header = ({ token }) => {
         <Collapse isOpen={isOpen} navbar>
           <Nav className="mr-auto row nav" navbar>
             <NavItem className="navitem col-12 col-md-2  mx-auto">
-              <NavLink href="./" className="navlink">
+              <NavLink href="./" className="navlink text-dark ">
                 HOME
               </NavLink>
             </NavItem>
             <NavItem className="navitem col-12 col-md-2  mx-auto">
-              <NavLink href="/questions" className="navlink">
+              <NavLink href="/questions" className="navlink text-dark ">
                 QUESTIONS
               </NavLink>
             </NavItem>
             <NavItem className="navitem col-12 col-md-2  mx-auto">
-              <NavLink href="/aboutUs" className="navlink">
+              <NavLink href="/aboutUs" className="navlink text-dark ">
                 ABOUT
               </NavLink>
             </NavItem>
             <NavItem className="navitem col-12 col-md-2  mx-auto">
-              <NavLink className="navlink">CONTACT</NavLink>
+              <NavLink className="navlink text-dark ">CONTACT</NavLink>
             </NavItem>
 
             {!user && (
@@ -74,14 +97,33 @@ const Header = ({ token }) => {
               </NavItem>
             )}
             {user && (
-              <NavItem className="navitem col-12 col-md-2  mx-auto">
-                <NavLink
-                  href="/Profil"
-                  className=" d-flex justify-content-center"
-                >
-                  Profil
-                </NavLink>
-              </NavItem>
+              <>
+                <NavItem className="navitem col-12 col-md-1  mx-auto">
+                  <NavLink
+                    href="/Profil"
+                    className=" d-flex gap-2 justify-content-center text-dark fs-6 fw-light underline"
+                  >
+                    Profil
+                    <FontAwesomeIcon
+                      icon={faCircleUser}
+                      style={{ marginTop: 2, fontSize: 20 }}
+                    />
+                  </NavLink>
+                </NavItem>
+                <NavItem className="col-12 col-md-1 ">
+                  <NavLink
+                    href="/Profil"
+                    className="d-flex gap-2  justify-content-center text-dark "
+                    onClick={(e) => userLogOut(e)}
+                  >
+                    <div className="fs-6 fw-light underline">LogOut</div>
+                    <FontAwesomeIcon
+                      icon={faRightFromBracket}
+                      style={{ marginTop: 2, fontSize: 20 }}
+                    />
+                  </NavLink>
+                </NavItem>
+              </>
             )}
           </Nav>
         </Collapse>

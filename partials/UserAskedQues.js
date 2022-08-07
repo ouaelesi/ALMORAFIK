@@ -33,8 +33,9 @@ const UserAskedQues = () => {
     );
   }
   return (
-    <div className="bg-white py-4  rounded-xl px-5 border-2">
-      <div className="QuestionTitle ">Your Asked Questions</div>
+    <div className="bg-white py-4  rounded-xl px-md-5 px-3 border-2">
+      <div className="QuestionTitle fs-2 fw-bolder">Your Asked Questions</div>
+      <hr />
       {data.map((ques, key) => (
         <ProfilQuesBox QuestionData={ques} key={key} />
       ))}

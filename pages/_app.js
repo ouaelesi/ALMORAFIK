@@ -7,6 +7,7 @@ import cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { AuthProvider } from "../utils/AuthContext";
 import App, { AppProps, AppContext } from "next/app";
+
 import { IsLoggedIn } from "../utils/IsLoggedIn";
 import "@fortawesome/fontawesome-svg-core/styles.css"; // import Font Awesome CSS
 import { config } from "@fortawesome/fontawesome-svg-core";

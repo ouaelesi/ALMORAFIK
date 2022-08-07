@@ -7,6 +7,7 @@ import {
   faPen,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
+import { faCircleUser } from "@fortawesome/free-regular-svg-icons";
 
 const BoxAnswer = (props) => {
   const [likes, setLikes] = useState(Number(props.data.likes));
@@ -37,7 +38,17 @@ const BoxAnswer = (props) => {
   };
   return (
     <div className="my-4">
-      <div>Answered by: {props.data.creator}</div>
+      <div className="d-flex gap-2">
+        <FontAwesomeIcon
+          icon={faCircleUser}
+          className="fs-1"
+          onClick={() => {
+            updateAnsLikes(1);
+          }}
+        />
+        <div>Answered by: {props.data.creator}</div>
+      </div>
+
       <div className="d-flex  p-md-4 py-2">
         <div className="fs-4 px-md-4 px-1 text-center h-fit my-auto">
           <FontAwesomeIcon

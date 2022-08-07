@@ -170,3 +170,16 @@ export const addProfilPhoto = (fileName, userEmail) => {
     .then((user) => console.log(user))
     .catch((err) => console.log(err.message));
 };
+
+export const logOut = async (req, res) => {
+  const serialised = serialize("OursiteJWT", "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV !== "development",
+    sameSite: "strict",
+    maxAge: -1,
+    path: "/",
+  });
+
+  res.setHeader("Set-Cookie", serialised);
+  res.status(200).send(serialised);
+};

@@ -63,7 +63,7 @@ class Welcome extends React.Component {
               <div className="yellow_line mb-5 w-25 mx-auto"></div>
             </div>
 
-            <div className="d-md-flex justify-content-center  my-5 px-5 asking_path ">
+            <div className="d-md-flex justify-content-center  my-5 px-5  HowItWorks">
               {tab.map((elem, key) => (
                 <div className="col-md-4 " key={key}>
                   <PathCard

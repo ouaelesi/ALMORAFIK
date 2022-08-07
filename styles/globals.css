@@ -104,6 +104,7 @@ body {
 }
 .homeShape1 {
   width: 200px;
+  z-index: -20;
 }
 .homeShape2 {
   width: 500px;
@@ -347,6 +348,11 @@ body {
 
 .QuestionBox {
   background-color: white;
+  border-radius: 10px;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
+}
+.AnswersBox {
+  background-color: rgb(255, 255, 255);
   border-radius: 10px;
   box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
 }

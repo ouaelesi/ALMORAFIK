@@ -49,11 +49,11 @@ class Welcome extends React.Component {
           </div>
           <img
             src="/assets/imgs/homeShape.svg"
-            className="d-md-block d-none mx-auto position-absolute bottom-0 left-0 homeShape1"
+            className=" mx-auto position-absolute bottom-0 left-0 homeShape1"
           ></img>
           <img
             src="/assets/imgs/homeShape2.svg"
-            className="block mx-auto position-absolute bottom-0 end-0  homeShape2"
+            className="d-md-block d-none block mx-auto position-absolute bottom-0 end-0  homeShape2"
           ></img>
         </div>
         <div className="my-md-5">

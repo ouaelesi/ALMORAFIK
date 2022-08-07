@@ -65,16 +65,18 @@ const AnswerQuestion = ({ id }) => {
       console.log(err.message);
     }
   };
-  if (isLoading)
+  const data = questionData && answers;
+  if (isLoading || !data)
     return (
-      <div className="h-screen pt-20">
-        <div className="spinner-border block mx-auto" role="status">
-          <span className="sr-only">Loading...</span>
+      <div className="h-screen ">
+        <div className="px-md-5 px-3   py-5   QuestionMenu  border-2 border-light text-white fs-2 ">
+          The Question Answers
+        </div>
+        <div className="spinner-border block mx-auto mt-5" role="status">
+          <span className="sr-only ">Loading...</span>
         </div>
       </div>
     );
-  const data = questionData && answers;
-  if (!data) return <p>No profile data</p>;
 
   return (
     <div className="Question_container py-2">
@@ -93,8 +95,9 @@ const AnswerQuestion = ({ id }) => {
           number_of_answers={questionData.answers.length}
           number_of_likes={questionData.likeCount}
         ></QuestionBox>
-        <div className="QuestionBox my-3 px-md-5 py-2 px-3 border-2 border-light   ">
-          <h1 className="font-bold text-xl my-3">Answers</h1>
+        <div className="AnswersBox my-3 px-md-5 py-2 px-3 border-2 border-secondary   ">
+          <h1 className="font-bold fs-2 my-3">ANSWERS</h1>
+          <hr></hr>
 
           <div className="">
             {answers

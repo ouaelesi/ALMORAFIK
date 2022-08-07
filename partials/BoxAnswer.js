@@ -38,13 +38,11 @@ const BoxAnswer = (props) => {
   };
   return (
     <div className="my-4">
-      <div className="d-flex gap-2">
+      <div className="d-flex">
         <FontAwesomeIcon
           icon={faCircleUser}
-          className="fs-1"
-          onClick={() => {
-            updateAnsLikes(1);
-          }}
+          style={{ fontSize: "30", marginRight: 10 }}
+          className="text-dark"
         />
         <div>Answered by: {props.data.creator}</div>
       </div>

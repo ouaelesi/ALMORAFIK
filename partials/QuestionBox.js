@@ -40,7 +40,7 @@ const QuestionBox = (props) => {
     router.push(`/questions/${props.id}`);
   };
   return (
-    <div className="QuestionBox my-3 px-md-5 py-2 px-2 border-2 border-light">
+    <div className="QuestionBox my-3 px-md-5 py-2 px-2 border-2 border-secondary">
       <div className="Question_info d-flex justify-content-between ">
         <div className="pt-3 px-2 d-flex">
           <FontAwesomeIcon
@@ -120,7 +120,6 @@ const QuestionBox = (props) => {
           )}
         </div>
       </div>
-      <hr></hr>
     </div>
   );
 };

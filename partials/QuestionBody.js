@@ -59,7 +59,7 @@ const QuestionBody = () => {
       ) : (
         <div>
           <div className="ASKYOURQUES">Ask Your Question</div>
-          <div className="QuestionBody">
+          <div className="QuestionBody  border-2 border-secondary">
             <form onSubmit={handleSubmit}>
               <p className="QuestionTitle mb-0 ">Title</p>
               <p className="QuestionEXP mb-2">

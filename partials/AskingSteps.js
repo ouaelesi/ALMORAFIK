@@ -3,7 +3,7 @@ import React, { Component } from "react";
 class AskingSteps extends Component {
   render() {
     return (
-      <div className="QuestionSteps">
+      <div className="QuestionSteps ">
         <div className="">
           <img
             src="/assets/imgs/ask_ques.png"
@@ -11,7 +11,7 @@ class AskingSteps extends Component {
             np
           ></img>
         </div>
-        <div className="ques_step_txt">
+        <div className="ques_step_txt border-2 border-secondary">
           <p className="text-center font-weight-bold card_steps">
             How to draft your question
           </p>

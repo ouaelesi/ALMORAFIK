@@ -412,6 +412,7 @@ body {
   box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 10px 0px;
   color: white;
   font-weight: bold;
+  background-color: var(--yellow-color);
 }
 .loginbtn {
   background-color: var(--blue-color);

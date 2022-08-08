@@ -9,6 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faCircleUser } from "@fortawesome/free-regular-svg-icons";
 import AuthContext from "../utils/AuthContext";
+
 const BoxAnswer = (props) => {
   const { user } = useContext(AuthContext);
   const [likes, setLikes] = useState(Number(props.data.likes));
@@ -74,13 +75,10 @@ const BoxAnswer = (props) => {
           </div>
           {user && user.email == props.data.creator && (
             <div>
-              <button className="btn border mx-1" onClick={editQuestion}>
+              <button className="btn m-2  border" onClick={editAnsw}>
                 <FontAwesomeIcon icon={faPen} />
               </button>
-              <button
-                className="btn border mx-1"
-                onClick={() => supQuestion(props.id)}
-              >
+              <button className="btn m-2  border" onClick={supAnswer}>
                 <FontAwesomeIcon icon={faTrashCan} />
               </button>
             </div>

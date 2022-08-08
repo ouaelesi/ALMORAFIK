@@ -92,7 +92,12 @@ const QuestionBox = (props) => {
           <p className="question_details">{props.More_details}</p>
           <div className="rounded-3">
             <div className="d-flex">
-              <div className="mt-1">{props.number_of_answers} Answers</div>
+              <div
+                className="mt-1 underline cursor-pointer"
+                onClick={() => router.push(`/questions/${props.id}`)}
+              >
+                {props.number_of_answers} Answers
+              </div>
               <div className="px-4 mt-1">{numLikes} Likes </div>
               <div className="ml-auto">
                 <button

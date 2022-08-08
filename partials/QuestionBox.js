@@ -8,25 +8,29 @@ import {
   faPen,
 } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark, faCircleUser } from "@fortawesome/free-regular-svg-icons";
-
+import { useRouter } from "next/router";
 import AuthContext from "../utils/AuthContext";
 
 const QuestionBox = (props) => {
   const [numLikes, setNumLikes] = useState(props.number_of_likes);
   const { user } = useContext(AuthContext);
-
+  const router = useRouter();
   useEffect(() => {}, [user]);
 
   const updateQuesLikes = (num) => {
-    setNumLikes(numLikes + num);
-    const queUpdates = fetch(`/api/questions/updateLikes/${props.id}`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ addedValue: num }),
-    });
+    if (user) {
+      setNumLikes(numLikes + num);
+      const queUpdates = fetch(`/api/questions/updateLikes/${props.id}`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ addedValue: num }),
+      });
+    } else {
+      router.push("/signUp");
+    }
   };
   const editQuestion = () => {
     alert("Will be available Soon !");

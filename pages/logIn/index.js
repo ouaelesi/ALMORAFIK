@@ -61,6 +61,7 @@ const LogIn = () => {
             <input
               className="form-control mb-4"
               placeholder="Your password"
+              type="password"
               name="hashPassword"
               onChange={handleChange}
             ></input>

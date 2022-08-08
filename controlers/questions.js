@@ -7,7 +7,9 @@ export const addQuestion = (req, res) => {
     res.status(400).send({ message: "request empty!!", data: req.body });
     return;
   }
+  console.log("===============this is the bodu", req.body);
   const question = new questionModel({
+    title: req.body.title,
     question: req.body.question,
     creator: req.body.creator,
     tags: req.body.tags.split(","),

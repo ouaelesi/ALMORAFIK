@@ -68,7 +68,7 @@ const AnswerQuestion = ({ id }) => {
   const data = questionData && answers;
   if (isLoading || !data)
     return (
-      <div className="h-screen ">
+      <div className="h-screen Questions_section p-2">
         <div className="px-md-5 px-3   py-5   QuestionMenu  border-2 border-light text-white fs-2 ">
           The Question Answers
         </div>
@@ -94,6 +94,7 @@ const AnswerQuestion = ({ id }) => {
           tags={questionData.tags}
           number_of_answers={questionData.answers.length}
           number_of_likes={questionData.likeCount}
+          title={questionData.title}
         ></QuestionBox>
         <div className="AnswersBox my-3 px-md-5 py-2 px-3 border-2 border-secondary   ">
           <h1 className="font-bold fs-2 my-3">ANSWERS</h1>

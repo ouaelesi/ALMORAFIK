@@ -16,11 +16,10 @@ const BoxAnswer = (props) => {
     const res = await fetch(`/api/answers/${props.data._id}`, {
       method: "DELETE",
     });
-    router.push("/questions");
+    router.reload(window.location.pathname);
   };
   const editAnsw = async (e) => {
-    const input = document.getElementById("answerInput");
-    input.value = props.data.answer;
+    alert("Will Be available Soon!");
   };
   const updateAnsLikes = async (num) => {
     setLikes(likes + num);
@@ -44,7 +43,10 @@ const BoxAnswer = (props) => {
           style={{ fontSize: "30", marginRight: 10 }}
           className="text-dark"
         />
-        <div>Answered by: {props.data.creator}</div>
+        <div>
+          Answered by:
+          <label className=" underline">{props.data.creator}</label>{" "}
+        </div>
       </div>
 
       <div className="d-flex  p-md-4 py-2">

@@ -8,6 +8,7 @@ const QuestionBody = () => {
 
   // State
   const [form, setForm] = useState({
+    title: "",
     question: "",
     creator: user ? user.userName : null,
     creatorEmail: user ? user.email : null,
@@ -39,6 +40,7 @@ const QuestionBody = () => {
       ...form,
       [e.target.name]: e.target.value,
     });
+    console.log(form);
   };
   const createQuestion = async () => {
     try {
@@ -68,8 +70,8 @@ const QuestionBody = () => {
               </p>
               <Input
                 type="text"
-                name="QuestionTitle"
-                id="QuestionTitle"
+                name="title"
+                id="title"
                 onChange={handleChange}
               ></Input>
 

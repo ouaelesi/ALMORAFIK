@@ -66,6 +66,7 @@ const Questions = ({ questions }) => {
                     tags={elem.tags}
                     number_of_answers={elem.answers.length}
                     number_of_likes={elem.likeCount}
+                    title={elem.title}
                   />
                 )
             )}

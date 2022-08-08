@@ -28,7 +28,9 @@ const QuestionBox = (props) => {
       body: JSON.stringify({ addedValue: num }),
     });
   };
-  const editQuestion = () => {};
+  const editQuestion = () => {
+    alert("Will be available Soon !");
+  };
   const supQuestion = async (id) => {
     alert("do you want to delete !!");
     const re = await fetch(`/api/questions/${id}`, {
@@ -40,7 +42,7 @@ const QuestionBox = (props) => {
     router.push(`/questions/${props.id}`);
   };
   return (
-    <div className="QuestionBox my-3 px-md-5 py-2 px-2 border-2 border-secondary">
+    <div className="QuestionBox my-3 px-md-5 py-2 px-2 border border-secondary">
       <div className="Question_info d-flex justify-content-between ">
         <div className="pt-3 px-2 d-flex">
           <FontAwesomeIcon
@@ -53,7 +55,7 @@ const QuestionBox = (props) => {
             <b className="text-dark">{props.Time}</b>
           </div>
         </div>
-        <button className="btn">
+        <button className="" onClick={() => alert("Will Be available Soon!")}>
           <FontAwesomeIcon
             icon={faBookmark}
             style={{ fontSize: "28" }}
@@ -76,8 +78,11 @@ const QuestionBox = (props) => {
           />
         </div>
         <div className="px-md-5 py-3 px-2 w-100">
-          <div className="fw-bold fs-4 mb-2">This Is the Question Title</div>
-          <p className="bg-light p-3  rounded-3 border" onClick={getQuestion}>
+          <div className="fw-bold fs-4 mb-2">{props.title}</div>
+          <p
+            className="bg-light p-3  rounded-3 border cursor-pointer"
+            onClick={getQuestion}
+          >
             {props.Question}
           </p>
           <p className="question_details">{props.More_details}</p>

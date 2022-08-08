@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import AuthContext from "../../utils/AuthContext";
 import UserAskedQues from "../../partials/UserAskedQues";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPen, faEnvelope, faUser } from "@fortawesome/free-solid-svg-icons";
+
 const Profil = () => {
   const [profilData, setProfilData] = useState("There Is No Data");
   const [isLoading, setLoading] = useState(true);
@@ -12,6 +15,7 @@ const Profil = () => {
   const [updatedProfilPhoto, setUpdateProfilPhoto] = useState(null);
   // infos of the Auth user
   const { user } = useContext(AuthContext);
+  // icons
 
   useEffect(() => {
     setLoading(true);
@@ -56,9 +60,12 @@ const Profil = () => {
       </div>
     );
   return (
-    <div className="bg-light">
-      <div className="px-md-20 px-4 py-md-10 py-4 container ">
-        <div className="row gap-2 bg-white px-md-5 px-2 py-4 rounded-xl border-2 justify-content-center">
+    <div className="bg-light ">
+      <div className=" px-md-5 px-4 py-md-10 py-4 Questions_section ">
+        <div className="row gap-2 bg-white px-md-5 px-3 py-4 rounded-xl border border-secondary shadow justify-content-between ">
+          <div className="alert alert-warning  " role="alert">
+            Update Profil features Will be Available Soon!{" "}
+          </div>
           <div className="QuestionTitle mb-4">General Informations</div>
           <div className="col-md-4">
             <div className="bg-dark  w-1/3 rounded-full">
@@ -93,22 +100,56 @@ const Profil = () => {
             </form>
           </div>
 
-          <form className="col-md-7  ">
-            UserName
+          <form className="col-md-5  w-md-5/12 ">
+            <div>
+              <FontAwesomeIcon
+                icon={faUser}
+                style={{
+                  marginTop: "5",
+                  fontSize: "15",
+                  marginRight: 5,
+                  marginLeft: -7,
+                }}
+              />
+              UserName
+            </div>
+
             <div className="row gap-2 mb-4">
               <input
                 defaultValue={profilData.userName}
                 className="form-control col"
               ></input>
-              <button className="btn btn-warning col-2">Edit</button>
+              <button className="btn  col-1">
+                {" "}
+                <FontAwesomeIcon
+                  icon={faPen}
+                  style={{ marginTop: "5", fontSize: "20" }}
+                />
+              </button>
             </div>
-            Email
+            <div>
+              <FontAwesomeIcon
+                icon={faEnvelope}
+                style={{
+                  marginTop: "5",
+                  fontSize: "15",
+                  marginRight: 5,
+                  marginLeft: -7,
+                }}
+              />
+              Email
+            </div>
             <div className="row gap-2 mb-4">
               <input
                 defaultValue={profilData.email}
                 className="form-control col w-8/12"
               ></input>
-              <button className="btn btn-warning col-2">Edit</button>
+              <button className="btn  col-1">
+                <FontAwesomeIcon
+                  icon={faPen}
+                  style={{ marginTop: "5", fontSize: "20" }}
+                />
+              </button>
             </div>
             {!pswSecIsOpen && (
               <div
@@ -143,17 +184,11 @@ const Profil = () => {
                 </div>
               </div>
             )}
-            <button className="btn btn-warning float-right">
-              Save Changes
-            </button>
+            <button className="btn ask_btn float-right">Save Changes</button>
           </form>
         </div>
-        <div className="md-flex gap-4 mt-md-4 ">
-          <div className="col-md-3 bg-white p-5 rounded-xl border-2 my-2">
-            Socila Media
-          </div>
-          <UserAskedQues className="col " />
-        </div>
+
+        <UserAskedQues className="col " />
       </div>
     </div>
   );

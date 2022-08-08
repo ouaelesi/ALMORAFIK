@@ -1,5 +1,5 @@
 import router from "next/router";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCaretUp,
@@ -8,8 +8,9 @@ import {
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 import { faCircleUser } from "@fortawesome/free-regular-svg-icons";
-
+import AuthContext from "../utils/AuthContext";
 const BoxAnswer = (props) => {
+  const { user } = useContext(AuthContext);
   const [likes, setLikes] = useState(Number(props.data.likes));
   const supAnswer = async (e) => {
     e.preventDefault();
@@ -71,12 +72,19 @@ const BoxAnswer = (props) => {
           <div className="bg-light px-3 py-2  rounded-3 border">
             {props.data.answer}
           </div>
-          <button className="btn m-2  border" onClick={editAnsw}>
-            <FontAwesomeIcon icon={faPen} />
-          </button>
-          <button className="btn m-2  border" onClick={supAnswer}>
-            <FontAwesomeIcon icon={faTrashCan} />
-          </button>
+          {user && user.email == props.data.creator && (
+            <div>
+              <button className="btn border mx-1" onClick={editQuestion}>
+                <FontAwesomeIcon icon={faPen} />
+              </button>
+              <button
+                className="btn border mx-1"
+                onClick={() => supQuestion(props.id)}
+              >
+                <FontAwesomeIcon icon={faTrashCan} />
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

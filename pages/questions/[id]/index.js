@@ -36,14 +36,18 @@ const AnswerQuestion = ({ id }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    createAnswer();
-    router.reload(`/questions/${questionData._id}`);
+    if (user) {
+      createAnswer();
+      router.reload(`/questions/${questionData._id}`);
+    } else {
+      router.push(`/signUp`);
+    }
   };
   const handleChange = (e) => {
     setAnswerBody({
       ...answerBody,
       [e.target.name]: e.target.value,
-      creator: user.email,
+      creator: user ? user.email : "",
       question: questionData._id,
       sharedFile: String,
       likes: 0,
@@ -123,7 +127,7 @@ const AnswerQuestion = ({ id }) => {
               ></textarea>{" "}
               <br />
               <button type="submit" className=" px-3 py-2 my-2 rounded ask_btn">
-                Add Your Answer
+                {user ? "Add Your Answer" : "SignUp to Answer"}
               </button>
             </form>
           </div>

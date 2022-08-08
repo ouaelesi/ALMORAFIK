@@ -7,7 +7,7 @@ class Welcome extends React.Component {
   render() {
     const tab = [
       {
-        icon: "/assets/imgs/answer.png",
+        icon: "/assets/imgs/ask_ques.png",
         title: "Ask question",
         text: "Small description that explains this step",
       },
@@ -31,14 +31,16 @@ class Welcome extends React.Component {
               <div className="yellow_line w-25 mx-auto"></div>
             </div>
             <p className="welcome_text h6 font-light">
-              A learning platform to ask questions about everything related by
-              studying in all materials , proposed for all the streams who have
-              baccalaureate exam to find the answer from teachers , colleagues
-              or baccalaurate holders .
+              A learning platform to ask questions about anything related to
+              study in all subjects, offered for all majors that have a
+              baccalaureate exam to find the answer from teachers, colleagues or
+              bachelors.
             </p>
-            <Button className="explore_btn fw-bold  signup">
-              EXPLORE MORE
-            </Button>
+            <a href="/questions">
+              <Button className="explore_btn fw-bold  signup">
+                EXPLORE MORE
+              </Button>
+            </a>
           </div>
           <div className="col-6 pt-4 d-none d-md-block">
             <img
@@ -75,13 +77,15 @@ class Welcome extends React.Component {
               ))}
             </div>
             <div className="mt-5 ">
-              <p className="mt-5 py-5 px-md-5 fs-1 fw-bolder ">
+              <p className="mt-5 py-5 px-md-5 px-2 fs-md-1 fs-2 fw-bolder ">
                 Questions are everywhere, answers are on HERE <br />
                 So start ask your questions
               </p>
-              <Button className="askQuestionButton fw-bold">
-                Ask Your Question
-              </Button>
+              <a href="/askQuestion">
+                <Button className="askQuestionButton fw-bold">
+                  Ask Your Question
+                </Button>
+              </a>
             </div>
             <Motivation></Motivation>
           </div>

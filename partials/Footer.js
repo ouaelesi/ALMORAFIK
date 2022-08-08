@@ -20,10 +20,10 @@ class Footer extends React.Component {
               className="block mx-auto"
             />
             <div className="text-white mt-2 fs-6 text-center">
-              A learning platform to ask questions about everything related by
-              studying in all materials , proposed for all the streams who have
-              baccalaureate exam to find the answer from teachers , colleagues
-              or baccalaurate holders
+              A learning platform to ask questions about anything related to
+              study in all subjects, offered for all majors that have a
+              baccalaureate exam to find the answer from teachers, colleagues or
+              bachelors.
             </div>
           </div>
           <div className="col-md-4 px-5 text-white text-center">

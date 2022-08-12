@@ -2,46 +2,41 @@ import React, { useEffect, useState, useContext } from "react";
 import { FormGroup, Input, Spinner } from "reactstrap";
 import router from "next/router";
 import AuthContext from "../utils/AuthContext";
+import { useForm } from "react-hook-form";
 
 const QuestionBody = () => {
+  const {
+    register,
+    getValues,
+    setValue,
+    formState: { errors, isDirty, isValid },
+  } = useForm({ mode: "onTouched" });
+
   const { user } = useContext(AuthContext);
 
-  // State
-  const [form, setForm] = useState({
-    title: "",
-    question: "",
-    creator: user ? user.userName : null,
-    creatorEmail: user ? user.email : null,
-    tags: ["String"],
-    selectedFile: "String",
-    likeCount: 0,
-    createdAt: new Date(),
-    answers: [],
-  });
+  // States
   const [isSubmiting, setIsSubmiting] = useState(false);
   //
   useEffect(() => {
-    setForm({
-      ...form,
-      ["creator"]: user ? user.userName : null,
-      ["creatorEmail"]: user ? user.email : null,
-    });
+    user ? setValue("creator", user.userName) : setValue("creator", null);
+    user ? setValue("creatorEmail", user.email) : setValue("creator", null);
+    setValue("selectedFile", "");
+    setValue("likeCount", 0);
+    setValue("createdAt", new Date());
+    setValue("answers", []);
+
+    console.log("the values", getValues());
   }, [isSubmiting, user]);
 
   //handle chnages & submit
   const handleSubmit = (e) => {
+    console.log("the values ===>", getValues());
     e.preventDefault();
     setIsSubmiting(true);
     createQuestion();
     router.push("/questions");
   };
-  const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
-    console.log(form);
-  };
+
   const createQuestion = async () => {
     try {
       const res = await fetch("/api/questions", {
@@ -50,7 +45,7 @@ const QuestionBody = () => {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify(getValues()),
       });
     } catch (err) {}
   };
@@ -68,37 +63,62 @@ const QuestionBody = () => {
                 Be specific and imagine you’re asking a question to another
                 person
               </p>
-              <Input
-                type="text"
+              <input
+                className={`${
+                  errors.title ? "border border-danger text-danger" : "border"
+                } form-control`}
                 name="title"
                 id="title"
-                onChange={handleChange}
-              ></Input>
-
+                required="true"
+                {...register("title", { required: true, minLength: 8 })}
+              ></input>
+              {errors.title && (
+                <label className="text-danger fs-6">
+                  * The Title must be greater than 8 chars
+                </label>
+              )}
               <p className="QuestionTitle mb-0 mt-2">Body</p>
               <p className="QuestionEXP mb-2">
                 Include all the information someone would need to answer your
                 question
               </p>
               <textarea
-                className="form-control Question_text"
+                className={`${
+                  errors.question
+                    ? "border border-danger text-danger"
+                    : "border"
+                } form-control Question_text`}
                 name="question"
                 id="question"
+                required="true"
                 rows="6"
-                onChange={handleChange}
+                {...register("question", { required: true, minLength: 20 })}
               ></textarea>
+              {errors.question && (
+                <label className="text-danger fs-6">
+                  * The Title must be greater then 20 chars
+                </label>
+              )}
 
               <p className="QuestionTitle mb-0 mt-2">Tags</p>
               <p className="QuestionEXP mb-2">
                 Add some tags to describe what your question is about
               </p>
-              <Input
-                type="text"
+              <input
+                className={`${
+                  errors.tags ? "border border-danger text-danger" : "border"
+                } form-control `}
                 name="tags"
+                required="true"
                 id="QuestionTitle"
-                onChange={handleChange}
                 placeholder="math , science ,..."
-              ></Input>
+                {...register("tags", { required: true, minLength: 3 })}
+              ></input>
+              {errors.tags && (
+                <label className="text-danger fs-6">
+                  * The Title must be greater then 3 chars
+                </label>
+              )}
               <button className="btn review_btn" type="submit">
                 ADD QUESTION
               </button>

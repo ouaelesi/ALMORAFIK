@@ -16,11 +16,13 @@ const loginReaquired = (req, res, next) => {
 };
 // login funnction
 export const logIn = (req, res) => {
+  console.log(req.body);
   const email = req.body.email;
   try {
     userModel.findOne({ email: email }).then((user) => {
       if (!user) {
-        res.status(200).send("err");
+        console.log("we are here");
+        res.status(401).send("User Or Password Not correct !!");
       } else {
         bcrypt.compare(
           req.body.hashPassword,
@@ -48,13 +50,16 @@ export const logIn = (req, res) => {
               res.setHeader("Set-Cookie", serialised);
               res.json({ authToken: token });
             } else {
-              res.status(401).send({ message: "something goes wrong!!" });
+              res
+                .status(401)
+                .send({ message: "User Or Password Not correct !!" });
             }
           }
         );
       }
     });
   } catch (err) {
+    console.log(err.message);
     res.send(err);
   }
 };

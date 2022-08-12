@@ -6,7 +6,6 @@ const SignUP = () => {
   const {
     register,
     handleSubmit,
-    watch,
     getValues,
     formState: { errors, isDirty, isValid },
   } = useForm({ mode: "onTouched" });

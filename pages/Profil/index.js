@@ -21,6 +21,7 @@ const Profil = () => {
     setLoading(true);
 
     if (user) {
+  
       fetch(`/api/users/${user.email}`)
         .then((res) => res.json())
         .then((data) => {

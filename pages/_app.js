@@ -21,24 +21,22 @@ function MyApp({ Component, pageProps, userLoggedIn }) {
   return (
     <AuthProvider>
       <Head>
-        <meta
-          name="msapplication-TileImage"
-          content="/imgs/thumbnail.png"
-        ></meta>
+        <meta name="msapplication-TileImage" content="/thumbnail.png"></meta>
 
-        <meta property="og:site_name" content="Indexa Hearing Solutions"></meta>
+        <meta property="og:site_name" content="SA9SINI WebSite"></meta>
         <meta
           property="og:title"
-          content="HELPING TO IPMROVE THEIR LIVES"
+          content="Questions are everywhere, answers are on HERE
+          So start ask your questions"
         ></meta>
         <meta
           property="og:description"
-          content="Equipements et services adaptées et destinées aux adultes et aux enfants."
+          content="A learning platform to ask questions about anything related to study in all subjects, offered for all majors that have a baccalaureate exam to find the answer from teachers, colleagues or bachelors."
         ></meta>
         <meta
           property="og:image"
           itemProp="image"
-          content="/imgs/thumbnail.png"
+          content="/thumbnail.png"
         ></meta>
         <meta property="og:type" content="website"></meta>
         <meta property="og:image:type" content="image/png"></meta>

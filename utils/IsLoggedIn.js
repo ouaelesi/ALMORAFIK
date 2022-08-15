@@ -1,8 +1,4 @@
-import { verify } from "jsonwebtoken";
-const secret = "secret";
-import dbConnection from "./dbConnect";
 import * as jose from "jose";
-import AuthContext from "./AuthContext";
 
 export async function IsLoggedIn(req) {
   let UserEmail;

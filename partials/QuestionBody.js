@@ -115,7 +115,7 @@ const QuestionBody = () => {
                 {...register("tags", { required: true, minLength: 3 })}
               ></input>
               {errors.tags && (
-                <label className="text-danger fs-6">
+                <label className="text-danger fs-6 block">
                   * The Title must be greater then 3 chars
                 </label>
               )}

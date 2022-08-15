@@ -7,7 +7,7 @@ import cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { AuthProvider } from "../utils/AuthContext";
 import App, { AppProps, AppContext } from "next/app";
-
+import Head from "next/head";
 import { IsLoggedIn } from "../utils/IsLoggedIn";
 import "@fortawesome/fontawesome-svg-core/styles.css"; // import Font Awesome CSS
 import { config } from "@fortawesome/fontawesome-svg-core";
@@ -20,6 +20,33 @@ function MyApp({ Component, pageProps, userLoggedIn }) {
   useEffect(() => {}, []);
   return (
     <AuthProvider>
+      <Head>
+        <meta
+          name="msapplication-TileImage"
+          content="/imgs/thumbnail.png"
+        ></meta>
+
+        <meta property="og:site_name" content="Indexa Hearing Solutions"></meta>
+        <meta
+          property="og:title"
+          content="HELPING TO IPMROVE THEIR LIVES"
+        ></meta>
+        <meta
+          property="og:description"
+          content="Equipements et services adaptées et destinées aux adultes et aux enfants."
+        ></meta>
+        <meta
+          property="og:image"
+          itemProp="image"
+          content="/imgs/thumbnail.png"
+        ></meta>
+        <meta property="og:type" content="website"></meta>
+        <meta property="og:image:type" content="image/png"></meta>
+        <meta property="og:image:width" content="500"></meta>
+        <meta property="og:url" content="your_website_url_here"></meta>
+        <title>SASINI</title>
+        <link rel="icon" href="/favicon.png" />
+      </Head>
       <Header token={userLoggedIn} userLoggedIn={userLoggedIn} />
       <Component {...pageProps} />
       <Footer />

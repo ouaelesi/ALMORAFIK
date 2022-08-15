@@ -5,7 +5,7 @@ import router from "next/router";
 import BoxAnswer from "../../../partials/BoxAnswer";
 import axios from "axios";
 import AuthContext from "../../../utils/AuthContext";
-
+import Head from "next/head";
 const AnswerQuestion = ({ id }) => {
   const { user } = useContext(AuthContext);
 
@@ -84,6 +84,10 @@ const AnswerQuestion = ({ id }) => {
 
   return (
     <div className="Question_container py-2">
+      <Head>
+        <title>SASINI-Question:{questionData.title}</title>
+        <link rel="icon" href="/favicon.png" />
+      </Head>
       <div className="Questions_section px-2">
         <div className="px-md-5 px-3   py-5   QuestionMenu  border-2 border-light text-white fs-2 ">
           The Question Answers
@@ -121,6 +125,7 @@ const AnswerQuestion = ({ id }) => {
               <textarea
                 name="answer"
                 onChange={handleChange}
+                required="true"
                 id="answerInput"
                 placeholder="Write Your answer Here"
                 className="bg-light border px-3 py-2 outline-none border-dark rounded w-100 h-60"

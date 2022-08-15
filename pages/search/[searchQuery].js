@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import QuestionBox from "../../partials/QuestionBox";
+import QuestionsMenu from "../../partials/QuestionsMenu";
 
 const SearchPage = () => {
   const router = useRouter();
@@ -27,7 +28,8 @@ const SearchPage = () => {
   if (!searchResult && !isLoading) return <div>there is no result</div>;
   return (
     <div className="Question_container">
-      <div className="Questions_section">
+      <div className="Questions_section Question_container py-4">
+        <QuestionsMenu />
         {searchResult.map((elem, key) => (
           <QuestionBox
             key={key}
@@ -41,6 +43,7 @@ const SearchPage = () => {
             tags={elem.tags}
             number_of_answers={elem.answers.length}
             number_of_likes={elem.likeCount}
+            title={elem.title}
           />
         ))}
       </div>

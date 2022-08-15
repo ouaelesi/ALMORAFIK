@@ -46,12 +46,9 @@ export const deleteAnswer = (req, res) => {
     const questionId = answer.question;
     questionModel.findById(questionId).then((question) => {
       const answersArray = question.answers;
-      console.log("this is the array: ================>" + answersArray);
       const index = answersArray.indexOf(id.toString());
-      console.log("this is the index=>========================" + index);
       if (index > -1) {
         answersArray.splice(index, 1);
-        console.log("this is the array: ================>" + answersArray);
         questionModel
           .findByIdAndUpdate(
             questionId,
@@ -60,13 +57,7 @@ export const deleteAnswer = (req, res) => {
           )
           .then((question) => {
             if (!question) {
-              console.log(
-                "we are having a problem on deleting the answer from the array !!"
-              );
             } else {
-              console.log(
-                "this is the array: ================>" + answersArray
-              );
               console.log("questiondeleted !!" + question.answers);
             }
           });

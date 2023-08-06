@@ -13,11 +13,18 @@ import "@fortawesome/fontawesome-svg-core/styles.css"; // import Font Awesome CS
 import { config } from "@fortawesome/fontawesome-svg-core";
 config.autoAddCss = false; // Tell Font Awesome to skip adding the CSS automatically since it's being imported above
 
+import { Inter, Montserrat, Mada, El_Messiri, Cairo } from "@next/font/google";
+import { useRouter } from "next/router";
+
+//  If loading a variable font, you don't need to specify the font weight
+const mada = Mada({ subsets: ["latin"] });
+const montserrat = Montserrat({ subsets: ["latin"] });
 function MyApp({ Component, pageProps, userLoggedIn }) {
   //const { login, error, user, isLoad } = useContext(AuthContext);
   const [LoggedIn, setLogin] = useState(false);
+  const { locale } = useRouter();
 
-  useEffect(() => {}, []);
+  useEffect(() => {}, [locale]);
   return (
     <AuthProvider>
       <Head>
@@ -45,9 +52,13 @@ function MyApp({ Component, pageProps, userLoggedIn }) {
         <title>SASINI</title>
         <link rel="icon" href="/favicon.png" />
       </Head>
-      <Header token={userLoggedIn} userLoggedIn={userLoggedIn} />
-      <Component {...pageProps} />
-      <Footer />
+      <main
+        className={locale === "arab" ? mada.className : montserrat.className}
+      >
+        <Header token={userLoggedIn} userLoggedIn={userLoggedIn} />
+        <Component {...pageProps} />
+        <Footer />
+      </main>
     </AuthProvider>
   );
 }

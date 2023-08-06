@@ -1,98 +1,128 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "reactstrap";
 import PathCard from "./PathCard";
 import Motivation from "./MotivationSection";
 
-class Welcome extends React.Component {
-  render() {
-    const tab = [
-      {
-        icon: "/assets/imgs/ask_ques.png",
-        title: "Ask question",
-        text: "Small description that explains this step",
-      },
-      {
-        icon: "/assets/imgs/answer.png",
-        title: "Answer questions",
-        text: "Small description that explains this step",
-      },
-      {
-        icon: "/assets/imgs/validate.png",
-        title: "Validate answer",
-        text: "Small description that explains this step ",
-      },
-    ];
-    return (
-      <div className="">
-        <div className="d-flex relative">
-          <div className="welcom  col-md-6  pt-5 mt-3 fw-bolder">
-            <div className="welcome_title pt-md-5 w-fit fw-bolder">
-              WELCOME WITH US
-              <div className="yellow_line w-25 mx-auto"></div>
-            </div>
-            <p className="welcome_text h6 font-light">
-              A learning platform to ask questions about anything related to
-              study in all subjects, offered for all majors that have a
-              baccalaureate exam to find the answer from teachers, colleagues or
-              bachelors.
-            </p>
-            <a href="/questions">
-              <Button className="explore_btn fw-bold  signup">
-                EXPLORE MORE
-              </Button>
-            </a>
+// next link
+import Link from "next/link";
+
+// data
+import { homeDataEng } from "../data/TemporaryData/staticData/eng/homeData";
+import { homeData } from "../data/TemporaryData/staticData/arab/homeData";
+import { useRouter } from "next/router";
+
+
+const Welcome = () => {
+  const { locale } = useRouter();
+
+  // state
+  const [HeaderData, setData] = useState(homeData);
+
+  useEffect(() => {
+    locale === "arab" ? setData(homeData) : setData(homeDataEng);
+  }, [locale]);
+
+  const tab = [
+    {
+      icon: "/assets/imgs/ask_ques.png",
+      title: "Ask question",
+      text: "Small description that explains this step",
+    },
+    {
+      icon: "/assets/imgs/answer.png",
+      title: "Answer questions",
+      text: "Small description that explains this step",
+    },
+    {
+      icon: "/assets/imgs/validate.png",
+      title: "Validate answer",
+      text: "Small description that explains this step ",
+    },
+  ];
+
+  return (
+    <div className="">
+      <div
+        className={` ${
+          locale === "arab" ? "flex-row-reverse text-end" : "text-start"
+        } d-flex relative `}
+      >
+        <div className="welcom  col-md-6  pt-5 mt-3 fw-bolder">
+          <div className="welcome_title pt-md-5  fw-bolder display-1">
+            {HeaderData.header.title}
+            <div className="yellow_line w-25 ml-auto"></div>
           </div>
-          <div className="col-6 pt-4 d-none d-md-block">
-            <img
-              src="/assets/imgs/HomeIllustration.svg"
-              width="500px"
-              className="block mx-auto"
-            ></img>
-          </div>
+          <p className="welcome_text h6 font-light">
+            {HeaderData.header.description}
+          </p>
+          <Link href="/questions">
+            <Button className="explore_btn fw-bold  signup">
+              {HeaderData.header.action}
+            </Button>
+          </Link>
+        </div>
+        <div className="col-6 pt-4 d-none d-md-block">
           <img
-            src="/assets/imgs/homeShape.svg"
-            className=" mx-auto position-absolute bottom-0 left-0 homeShape1"
-          ></img>
-          <img
-            src="/assets/imgs/homeShape2.svg"
-            className="d-md-block d-none block mx-auto position-absolute bottom-0 end-0  homeShape2"
+            src="/assets/imgs/HomeIllustration.svg"
+            width="500px"
+            className="block mx-auto"
           ></img>
         </div>
-        <div className="my-md-5">
-          <div className="fs-1 fw-bolder text-center">
-            <div className=" fw-bolder w-fit mx-auto">
-              HOW IT WORKS
-              <div className="yellow_line mb-5 w-25 mx-auto"></div>
-            </div>
-
-            <div className="d-md-flex justify-content-center  my-5 px-5  HowItWorks">
-              {tab.map((elem, key) => (
-                <div className="col-md-4 " key={key}>
-                  <PathCard
-                    Title={tab[key].title}
-                    icon={tab[key].icon}
-                    Text={tab[key].text}
-                  ></PathCard>
-                </div>
-              ))}
-            </div>
-            <div className="mt-5 ">
-              <p className="mt-5 py-5 px-md-5 px-2 fs-md-1 fs-2 fw-bolder ">
-                Questions are everywhere, answers are on HERE <br />
-                So start ask your questions
-              </p>
-              <a href="/askQuestion">
-                <Button className="askQuestionButton fw-bold">
-                  Ask Your Question
-                </Button>
-              </a>
-            </div>
-            <Motivation></Motivation>
+        <img
+          src={
+            locale === "arab"
+              ? "/assets/imgs/homeShape2.svg"
+              : "/assets/imgs/homeShape.svg"
+          }
+          className={`mx-auto position-absolute bottom-0 ${
+            locale === "arab" ? "end-0" : "start-0"
+          } homeShape1`}
+        ></img>
+        <img
+          src={
+            locale === "arab"
+              ? "/assets/imgs/homeShape.svg"
+              : "/assets/imgs/homeShape2.svg"
+          }
+          className={`d-md-block d-none block mx-auto position-absolute bottom-0 ${
+            locale === "arab" ? "start-0" : "end-0"
+          }  homeShape2`}
+        ></img>
+      </div>
+      <div className="my-md-5">
+        <div className="fs-1 fw-bolder text-center">
+          <div className=" fw-bolder w-fit mx-auto">
+            HOW IT WORKS
+            <div className="yellow_line mb-5 w-25 mx-auto"></div>
           </div>
+
+          <div className="d-md-flex justify-content-center  my-5 px-5  HowItWorks">
+            {tab.map((elem, key) => (
+              <div className="col-md-4 " key={key}>
+                <PathCard
+                  Title={tab[key].title}
+                  icon={tab[key].icon}
+                  Text={tab[key].text}
+                ></PathCard>
+              </div>
+            ))}
+          </div>
+          <div className="mt-5 ">
+            <p className="mt-5 py-5 px-md-5 px-2 fs-md-1 fs-2 fw-bolder ">
+              Questions are everywhere, answers are on HERE <br />
+              So start ask your questions
+            </p>
+            <Link href="/askQuestion">
+              <Button className="askQuestionButton fw-bold">
+                Ask Your Question
+              </Button>
+            </Link>
+          </div>
+          <Motivation></Motivation>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default Welcome;

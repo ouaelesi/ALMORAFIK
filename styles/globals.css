@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100&display=swap");
 
 :root {
   --blue-color: #0e0f00;
@@ -9,9 +8,7 @@
   --yellow-hover: #ecc600;
   --blue-hover: #464921;
 }
-* {
-  font-family: Tahoma, Geneva, Verdana, sans-serif;
-}
+
 body {
   overflow-x: hidden;
 }
@@ -20,12 +17,19 @@ body {
   display: flex;
   justify-content: center;
 }
+.navlink:hover {
+  border-bottom: solid 2px var(--yellow-color);
+  height: fit-content;
+}
+.navlink {
+  padding-top: 10px;
+}
 
 .nav {
   text-align: center;
   white-space: nowrap;
   width: 100%;
-  font-weight: bolder;
+  font-weight: bold;
   font-size: 18px;
 }
 
@@ -90,7 +94,7 @@ body {
 /* Welcome section */
 .welcom {
   height: 670px;
-  padding: 2% 3% 4% 9%;
+  padding: 2% 9% 4% 9%;
 }
 .welcome_title {
   margin: 0 0 40px 0;

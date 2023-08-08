@@ -11,7 +11,6 @@ import { homeDataEng } from "../data/TemporaryData/staticData/eng/homeData";
 import { homeData } from "../data/TemporaryData/staticData/arab/homeData";
 import { useRouter } from "next/router";
 
-
 const Welcome = () => {
   const { locale } = useRouter();
 
@@ -92,29 +91,32 @@ const Welcome = () => {
       <div className="my-md-5">
         <div className="fs-1 fw-bolder text-center">
           <div className=" fw-bolder w-fit mx-auto">
-            HOW IT WORKS
+            {HeaderData.howItWorks.title}
             <div className="yellow_line mb-5 w-25 mx-auto"></div>
           </div>
 
-          <div className="d-md-flex justify-content-center  my-5 px-5  HowItWorks">
-            {tab.map((elem, key) => (
+          <div
+            className={`d-md-flex justify-content-center  my-5 px-5  HowItWorks ${
+              locale === "arab" ? "flex-md-row-reverse" : ""
+            }`}
+          >
+            {HeaderData.howItWorks.steps.map((elem, key) => (
               <div className="col-md-4 " key={key}>
                 <PathCard
-                  Title={tab[key].title}
-                  icon={tab[key].icon}
-                  Text={tab[key].text}
+                  Title={elem.title}
+                  icon={elem.icon}
+                  Text={elem.text}
                 ></PathCard>
               </div>
             ))}
           </div>
           <div className="mt-5 ">
-            <p className="mt-5 py-5 px-md-5 px-2 fs-md-1 fs-2 fw-bolder ">
-              Questions are everywhere, answers are on HERE <br />
-              So start ask your questions
+            <p className="mt-5 py-5 px-md-10 px-2 fs-md-1 fs-2 fw-bolder w-75 mx-auto">
+              {HeaderData.howItWorks.quote}
             </p>
             <Link href="/askQuestion">
               <Button className="askQuestionButton fw-bold">
-                Ask Your Question
+                {HeaderData.howItWorks.action}
               </Button>
             </Link>
           </div>

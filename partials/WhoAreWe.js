@@ -1,28 +1,31 @@
-import React, { Component } from "react";
+import { useRouter } from "next/router";
+import React, { Component, useEffect, useState } from "react";
+import { aboutUsData } from "../data/TemporaryData/staticData/arab/aboutUsData";
+import { aboutUsDataEng } from "../data/TemporaryData/staticData/eng/aboutUsData";
 
-class WhoAreWe extends Component {
-  render() {
-    return (
-      <div className="whoarewe ">
-        <div className="row">
-          <div className="col-md-5  fw-bolder">
-            <div className="fs-1 fw-bolder w-fit">
-              WHO ARE WE?
-              <div className="yellow_line w-25 mx-auto"></div>
-            </div>
-            <p className=" fs-4 fw-lighter mt-3 ">
-              We are a group of 7 university students in different fields (
-              computer science, medicine, and commerce). However we share the
-              same goal and the same vision. We unified our ideas and our
-              efforts to come up with this website which we aspire that it will
-              realize our purpose in giving the support and spreading the sense
-              of altruism.
-            </p>
+const WhoAreWe = () => {
+  const { locale } = useRouter();
+
+  // state
+  const [data, setData] = useState(aboutUsData);
+
+  useEffect(() => {
+    locale === "arab" ? setData(aboutUsData) : setData(aboutUsDataEng);
+  }, [locale]);
+
+  return (
+    <div className="whoarewe ">
+      <div className={`row ${locale === "arab" ? "text-end" : "text-start"}`}>
+        <div className="col-md-5  fw-bolder">
+          <div className="fs-1 fw-bolder ">
+            {data.header.title}
+            <div className="yellow_line w-25 mx-auto"></div>
           </div>
+          <p className=" fs-4 fw-lighter mt-3 ">{data.header.description}</p>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default WhoAreWe;

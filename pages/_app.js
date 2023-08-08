@@ -13,11 +13,11 @@ import "@fortawesome/fontawesome-svg-core/styles.css"; // import Font Awesome CS
 import { config } from "@fortawesome/fontawesome-svg-core";
 config.autoAddCss = false; // Tell Font Awesome to skip adding the CSS automatically since it's being imported above
 
-import { Inter, Montserrat, Mada, El_Messiri, Cairo } from "@next/font/google";
+import { Inter, Montserrat, Mada, El_Messiri, Cairo , Noto_Sans_Arabic } from "@next/font/google";
 import { useRouter } from "next/router";
 
 //  If loading a variable font, you don't need to specify the font weight
-const mada = Mada({ subsets: ["latin"] });
+const mada = Noto_Sans_Arabic({ subsets : ['arabic'] });
 const montserrat = Montserrat({ subsets: ["latin"] });
 function MyApp({ Component, pageProps, userLoggedIn }) {
   //const { login, error, user, isLoad } = useContext(AuthContext);

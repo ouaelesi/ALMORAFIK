@@ -11,7 +11,6 @@ class PathCard extends React.Component {
           <img src={this.props.icon} width="70px"></img>
         </div>
         <div className="CardTitle">{this.props.Title}</div>
-        <div className="CardText">{this.props.Text}</div>
       </div>
     );
   }

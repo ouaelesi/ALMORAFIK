@@ -4,11 +4,19 @@ import LoginSteps from "../../partials/LoginSteps";
 import LoginForm from "../../partials/SignUP";
 import { Store } from "../../utils/AuthContext";
 import { useRouter } from "next/router";
+import { authArData } from "../../data/TemporaryData/staticData/arab/authData";
+import { authData } from "../../data/TemporaryData/staticData/eng/authData";
 
 function SignUp({ token }) {
-  const router = useRouter();
+  const { locale } = useRouter();
 
+  const router = useRouter();
   const [logedIN, setLogedIn] = useState(token ? true : false);
+  const [authStaticData, setData] = useState(authArData);
+
+  useEffect(() => {
+    locale === "arab" ? setData(authArData) : setData(authData);
+  }, [locale]);
 
   return (
     <>
@@ -18,13 +26,24 @@ function SignUp({ token }) {
       <br/>
       this is the token {token ? "true" : "false"} */}
 
-      <div className="page_container row">
-        <div className="col-12 col-md-6 d-flex justify-content-center">
-          <LoginSteps></LoginSteps>
+      <div
+        className={`page_container row ${
+          locale === "arab" ? "text-end" : "text-start"
+        }`}
+      >
+        <div
+          className={`col-12 col-md-6 d-flex justify-content-center ${
+            locale === "arab" ? "order-2" : ""
+          }`}
+        >
+          <LoginSteps staticData={authStaticData}></LoginSteps>
         </div>
-        <div className="col-12 col-md-6 d-flex justify-content-center">
-          {" "}
-          <LoginForm></LoginForm>
+        <div
+          className={`col-12 col-md-6 d-flex justify-content-center ${
+            locale === "arab" ? "order-1" : ""
+          }`}
+        >
+          <LoginForm staticData={authStaticData}></LoginForm>
         </div>
       </div>
     </>

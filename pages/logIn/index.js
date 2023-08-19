@@ -1,8 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
+import { authArData } from "../../data/TemporaryData/staticData/arab/authData";
+import { authData } from "../../data/TemporaryData/staticData/eng/authData";
 
 const LogIn = () => {
+  const { locale } = useRouter();
+
+  const [authStaticData, setAuthData] = useState(authArData);
+  useEffect(() => {
+    locale === "arab" ? setAuthData(authArData) : setAuthData(authData);
+  }, [locale]);
+
   const [loading, setLoading] = useState(false);
   // Form Validation
   const {
@@ -39,12 +48,18 @@ const LogIn = () => {
   };
 
   return (
-    <div className="page_container row d-flex justify-content-center">
+    <div
+      className={`page_container row d-flex justify-content-center ${
+        locale === "arab" ? "text-end" : "text-start"
+      }`}
+    >
       <div className="login_container col-10 col-xl-3 col-lg-4 col-md-5 col-sm-8">
-        <button className=" btn login_with_google">Login with Google</button>
+        <button className=" btn login_with_google">
+          {authStaticData.login.loginGoogle}
+        </button>
 
         <button className=" btn login_with_facebook">
-          Login with Facebook
+          {authStaticData.login.loginFaceBook}
         </button>
         <div>
           {loading ? (
@@ -65,14 +80,16 @@ const LogIn = () => {
         </div>
         <form className="login_form" onSubmit={(e) => handleSubmit(e)}>
           <div className="form-group Loginstitles" id="usernamelogin">
-            Email
+            {authStaticData.login.email}
             <input
-              className={`${
+              className={`
+              ${locale === "arab" ? "text-end" : "text-start"}
+              ${
                 errors.email
                   ? "border border-danger text-danger"
                   : "border border-dark"
               } form-control   fs-6 mb-0`}
-              placeholder="Your Email here"
+              placeholder={authStaticData.login.emailPlace}
               name="email"
               type="email"
               required="true"
@@ -83,14 +100,17 @@ const LogIn = () => {
                 a Valid adress email is required
               </p>
             )}
-            <label className="mt-4">Password</label>
+            <label className="mt-4">{authStaticData.login.password}</label>
             <input
-              className={`${
+              className={`
+            
+              ${locale === "arab" ? "text-end" : "text-start"}
+              ${
                 errors.hashPassword
                   ? "border border-danger text-danger"
                   : "border border-dark"
               } form-control   fs-6 mb-0`}
-              placeholder="Your password"
+              placeholder={authStaticData.login.passwordPlace}
               type="password"
               name="hashPassword"
               required="true"
@@ -104,7 +124,7 @@ const LogIn = () => {
               type="submit"
               disabled={errors.email || errors.hashPassword}
             >
-              LOG IN
+              {authStaticData.login.action}
             </button>
           </div>
         </form>

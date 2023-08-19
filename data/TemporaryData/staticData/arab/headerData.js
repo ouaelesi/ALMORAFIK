@@ -9,5 +9,6 @@ export const headerData = {
     login: "تسجيل الدخول",
     signup: "اشتراك",
     profile: "حسابي",
+    logOut :"خروج"
   },
 };

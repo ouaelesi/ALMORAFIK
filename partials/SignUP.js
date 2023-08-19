@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
-const SignUP = () => {
+const SignUP = ({ staticData }) => {
+  const { locale } = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -45,10 +47,10 @@ const SignUP = () => {
     <div>
       <div className="login_container">
         <button disabled="true" className=" btn login_with_google">
-          Login with Google
+          {staticData.signUp.loginGoogle}
         </button>
         <button disabled="true" className=" btn login_with_facebook">
-          Login with Facebook
+          {staticData.signUp.loginFaceBook}
         </button>
         <div>
           {backErrors.map((err, key) => (
@@ -62,14 +64,16 @@ const SignUP = () => {
           onSubmit={(e) => handleSubmit(onSubmit(e))}
         >
           <div className="form-group Loginstitles" id="usernamelogin">
-            User Name
+            {staticData.signUp.userName}
             <input
-              className={`form-control ${
+              className={`form-control
+              ${locale === "arab" ? "text-end" : "text-start"}
+              ${
                 errors.userName
                   ? "border-danger text-danger"
                   : "border-muted text-dark"
               }`}
-              placeholder="User Name here"
+              placeholder={staticData.signUp.userNamePlace}
               type="text"
               name="userName"
               {...register("userName", { required: true, minLength: 3 })}
@@ -79,14 +83,16 @@ const SignUP = () => {
                 The UserName must be grater or equal to 3 chars
               </div>
             )}
-            Email
+            {staticData.signUp.email}
             <input
-              className={`form-control ${
+              className={`form-control
+              ${locale === "arab" ? "text-end" : "text-start"}
+              ${
                 errors.email
                   ? "border-danger text-danger"
                   : "border-muted text-dark"
               }`}
-              placeholder="Email Adress"
+              placeholder={staticData.signUp.emailPlace}
               type="email"
               name="email"
               {...register("email", { required: true })}
@@ -96,14 +102,15 @@ const SignUP = () => {
                 The Email is required
               </div>
             )}
-            Password
+            {staticData.signUp.password}
             <input
-              className={`form-control ${
+              className={`form-control
+              ${locale === "arab" ? "text-end" : "text-start"} ${
                 errors.hashPassword
                   ? "border-danger text-danger"
                   : "border-muted text-dark"
               }`}
-              placeholder="Password"
+              placeholder={staticData.signUp.passwordPlace}
               name="hashPassword"
               type="password"
               {...register("hashPassword", { minLength: 8 })}
@@ -118,7 +125,7 @@ const SignUP = () => {
               className="btn singinbtn"
               type="submit"
             >
-              SIGN IN
+              {staticData.signUp.action}
             </button>
           </div>
         </form>

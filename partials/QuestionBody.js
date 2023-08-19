@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useContext } from "react";
 import { FormGroup, Input, Spinner } from "reactstrap";
-import router from "next/router";
+import router, { useRouter } from "next/router";
 import AuthContext from "../utils/AuthContext";
 import { useForm } from "react-hook-form";
 
-const QuestionBody = () => {
+const QuestionBody = ({ staticData }) => {
+  const { locale } = useRouter();
+
   const {
     register,
     getValues,
@@ -55,16 +57,13 @@ const QuestionBody = () => {
         <Spinner />
       ) : (
         <div>
-          <div className="ASKYOURQUES">Ask Your Question</div>
+          <div className="ASKYOURQUES">{staticData.bigTitle}</div>
           <div className="QuestionBody  border-2 border-secondary">
             <form onSubmit={handleSubmit}>
-              <p className="QuestionTitle mb-0 ">Title</p>
-              <p className="QuestionEXP mb-2">
-                Be specific and imagine you’re asking a question to another
-                person
-              </p>
+              <p className="QuestionTitle mb-0 ">{staticData.title}</p>
+              <p className="QuestionEXP mb-2">{staticData.titleDescription}</p>
               <input
-                className={`${
+                className={`${locale === "arab" ? "text-end" : "text-start"} ${
                   errors.title ? "border border-danger text-danger" : "border"
                 } form-control`}
                 name="title"
@@ -77,13 +76,10 @@ const QuestionBody = () => {
                   * The Title must be greater than 8 chars
                 </label>
               )}
-              <p className="QuestionTitle mb-0 mt-2">Body</p>
-              <p className="QuestionEXP mb-2">
-                Include all the information someone would need to answer your
-                question
-              </p>
+              <p className="QuestionTitle mb-0 mt-2">{staticData.body}</p>
+              <p className="QuestionEXP mb-2">{staticData.bodyDescription}</p>
               <textarea
-                className={`${
+                className={`${locale === "arab" ? "text-end" : "text-start"} ${
                   errors.question
                     ? "border border-danger text-danger"
                     : "border"
@@ -100,12 +96,12 @@ const QuestionBody = () => {
                 </label>
               )}
 
-              <p className="QuestionTitle mb-0 mt-2">Tags</p>
-              <p className="QuestionEXP mb-2">
-                Add some tags to describe what your question is about
-              </p>
+              <p className="QuestionTitle mb-0 mt-2">{staticData.tags}</p>
+              <p className="QuestionEXP mb-2">{staticData.tagsDescription}</p>
               <input
-                className={`${
+                className={`
+                ${locale === "arab" ? "text-end" : "text-start"}
+                ${
                   errors.tags ? "border border-danger text-danger" : "border"
                 } form-control `}
                 name="tags"
@@ -120,7 +116,7 @@ const QuestionBody = () => {
                 </label>
               )}
               <button className="btn review_btn" type="submit">
-                ADD QUESTION
+                {staticData.action}
               </button>
             </form>
           </div>

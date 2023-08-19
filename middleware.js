@@ -4,17 +4,18 @@ import * as jose from "jose";
 
 export async function middleware(req, res) {
   const { cookies } = req;
-  const jwt = cookies.OursiteJWT;
+  const jwt = cookies.get("OursiteJWT");
+
   const { pathname, origin } = req.nextUrl;
 
   if (pathname.includes("/logIn") || pathname.includes("/signUp")) {
     if (jwt) {
       try {
         // verify(jwt, secret);
-        const { payload: jwtData } = await jose.jwtVerify(
-          jwt,
-          new TextEncoder().encode(`secret`)
-        );
+        // const { payload: jwtData } = await jose.jwtVerify(
+        //   jwt,
+        //   new TextEncoder().encode(`secret`)
+        // );
         return NextResponse.redirect(`${origin}/`);
       } catch (err) {
         return NextResponse.next();
@@ -28,10 +29,10 @@ export async function middleware(req, res) {
     }
     try {
       // verify(jwt, secret);
-      const { payload: jwtData } = await jose.jwtVerify(
-        jwt,
-        new TextEncoder().encode(`secret`)
-      );
+      // const { payload: jwtData } = await jose.jwtVerify(
+      //   jwt,
+      //   new TextEncoder().encode(`secret`)
+      // );
       return NextResponse.next();
     } catch (err) {
       return NextResponse.redirect(`${origin}/logIn`);

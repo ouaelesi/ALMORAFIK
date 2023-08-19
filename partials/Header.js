@@ -149,12 +149,18 @@ const Links = ({ token, classNames }) => {
         </div>
         <div className="mx-2 mt-1">
           {user && (
-            <div>
+            <div
+              className={` pt-2 d-flex gap-2
+               ${locale === "arab" ? " flex-row-reverse" : ""}
+               `}
+            >
               <Link
                 href="/Profil"
-                className=" d-flex gap-2 justify-content-center text-dark fs-6 fw-light underline"
+                className={`d-flex gap-2 justify-content-center text-dark fs-6  underline ${
+                  locale === "arab" ? "flex-row-reverse" : ""
+                }`}
               >
-                Profil
+                {navData.actions.profile}
                 <FontAwesomeIcon
                   icon={faCircleUser}
                   style={{ marginTop: 2, fontSize: 20 }}
@@ -163,10 +169,12 @@ const Links = ({ token, classNames }) => {
 
               <Link
                 href="/Profil"
-                className="d-flex gap-2  justify-content-center text-dark "
+                className={`d-flex gap-2 justify-content-center text-dark fs-6  underline ${
+                  locale === "arab" ? "flex-row-reverse" : ""
+                }`}
                 onClick={(e) => userLogOut(e)}
               >
-                <div className="fs-6 fw-light underline">LogOut</div>
+                <div className="fs-6  underline"> {navData.actions.logOut}</div>
                 <FontAwesomeIcon
                   icon={faRightFromBracket}
                   style={{ marginTop: 2, fontSize: 20 }}

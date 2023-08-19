@@ -1,12 +1,26 @@
 import React, { useState, useEffect, useContext } from "react";
 import fetch from "isomorphic-unfetch";
 import QuestionBox from "../../../partials/QuestionBox";
-import router from "next/router";
+import router, { useRouter } from "next/router";
 import BoxAnswer from "../../../partials/BoxAnswer";
 import axios from "axios";
 import AuthContext from "../../../utils/AuthContext";
 import Head from "next/head";
+import { questionsArData } from "../../../data/TemporaryData/staticData/arab/questionsPage";
+import { questionsEngData } from "../../../data/TemporaryData/staticData/eng/questionsPage";
+
 const AnswerQuestion = ({ id }) => {
+  const { locale } = useRouter();
+
+  // state
+  const [questionsData, setQuestionsData] = useState(questionsArData);
+
+  useEffect(() => {
+    locale === "arab"
+      ? setQuestionsData(questionsArData)
+      : setQuestionsData(questionsEngData);
+  }, [locale]);
+
   const { user } = useContext(AuthContext);
 
   const [questionData, setquestionData] = useState({});
@@ -83,14 +97,18 @@ const AnswerQuestion = ({ id }) => {
     );
 
   return (
-    <div className="Question_container py-2">
+    <div
+      className={`Question_container py-2 ${
+        locale == "arab" ? "text-end" : "text-start"
+      }`}
+    >
       <Head>
         <title>SASINI-Question:{questionData.title}</title>
         <link rel="icon" href="/favicon.png" />
       </Head>
       <div className="Questions_section px-2">
         <div className="px-md-5 px-3   py-5   QuestionMenu  border-2 border-light text-white fs-2 ">
-          The Question Answers
+          {questionsData.questionAnswers.title}
         </div>
         <QuestionBox
           id={questionData._id}
@@ -103,9 +121,12 @@ const AnswerQuestion = ({ id }) => {
           number_of_answers={questionData.answers.length}
           number_of_likes={questionData.likeCount}
           title={questionData.title}
+          staticData={questionsData}
         ></QuestionBox>
         <div className="AnswersBox my-3 px-md-5 py-2 px-3 border-2 border-secondary   ">
-          <h1 className="font-bold fs-2 my-3">ANSWERS</h1>
+          <h1 className="font-bold fs-2 my-3">
+            {questionsData.questionAnswers.answers}
+          </h1>
           <hr></hr>
 
           <div className="">
@@ -115,24 +136,34 @@ const AnswerQuestion = ({ id }) => {
               })
               .map((elem, key) => (
                 //<div>{elem.answer}</div>
-                <BoxAnswer data={elem} key={key}></BoxAnswer>
+                <BoxAnswer
+                  data={elem}
+                  key={key}
+                  staticData={questionsData}
+                ></BoxAnswer>
               ))}
           </div>
           {/* ADD answer */}
           <div>
-            <label className="fs-3">Submit an answer</label>
+            <label className="fs-3">
+              {questionsData.questionAnswers.submitAnswer}
+            </label>
             <form onSubmit={handleSubmit} className="my-2">
               <textarea
                 name="answer"
                 onChange={handleChange}
                 required="true"
                 id="answerInput"
-                placeholder="Write Your answer Here"
-                className="bg-light border px-3 py-2 outline-none border-dark rounded w-100 h-60"
+                placeholder={questionsData.questionAnswers.placeholder}
+                className={`bg-light border px-3 py-2 outline-none border-dark rounded w-100 h-60 ${
+                  locale == "arab" ? "text-end" : "text-start"
+                }`}
               ></textarea>{" "}
               <br />
               <button type="submit" className=" px-3 py-2 my-2 rounded ask_btn">
-                {user ? "Add Your Answer" : "SignUp to Answer"}
+                {user
+                  ? questionsData.questionAnswers.action
+                  :questionsData.questionAnswers.condition}
               </button>
             </form>
           </div>

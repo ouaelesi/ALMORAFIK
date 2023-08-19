@@ -1,10 +1,13 @@
 import React, { Component, useState } from "react";
 import { Row } from "reactstrap";
-import router from "next/router";
+import router, { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 
-const QuestionsMenu = () => {
+const QuestionsMenu = ({ data }) => {
+  const { locale } = useRouter();
+
   const handleSearch = (e) => {
     e.preventDefault();
     const searchQuery = document.getElementById("SerchInput").value;
@@ -15,32 +18,39 @@ const QuestionsMenu = () => {
     <>
       <div className="px-md-5 px-3   py-5   QuestionMenu  border-2 border-light">
         <form
-          className="form-group align-middle d-flex"
+          className={`  d-flex  search-form  border px-2 rounded-3   ${
+            locale === "arab" ? "flex-row-reverse" : ""
+          } `}
           onSubmit={handleSearch}
         >
           <input
-            className="px-2 rounded-3 border  search-form"
-            placeholder="search"
+            className={`px-2 rounded-3   w-100 bg-transparent  search-form  
+                ${locale === "arab" ? "text-end" : "text-start"} `}
+            placeholder={data.search.placeholder}
             id="SerchInput"
           ></input>
           <button
             type="submit"
-            className="btn text-white bg-dark bg-opacity-10 border"
+            className="btn text-white bg-dark bg-opacity-10 "
           >
-            Search
+            {data.search.action}
           </button>
         </form>
-        <div className="pt-3 d-flex justify-content-bettween mt-2 text-white">
+        <div
+          className={`pt-3 d-flex justify-content-between mt-2 text-white ${
+            locale === "arab" ? "flex-row-reverse " : ""
+          }`}
+        >
           <div className=" font-weight-bold ask_text align-items-center pt-1 gap-2 d-flex">
-            All Questions
+            {data.search.filters}
             <FontAwesomeIcon icon={faAngleDown} style={{ fontSize: "20" }} />
           </div>
-          <div className=" ml-auto ">
-            <a href="/askQuestion">
+          <div className="  ">
+            <Link href="/askQuestion">
               <button className="btn  ask_btn bg-warning">
-                Ask Your Question
+                {data.search.askQuestion}
               </button>
-            </a>{" "}
+            </Link>{" "}
           </div>
         </div>
         {/* <div

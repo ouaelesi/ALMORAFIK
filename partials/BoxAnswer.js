@@ -1,4 +1,4 @@
-import router from "next/router";
+import router, { useRouter } from "next/router";
 import React, { useState, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -11,6 +11,8 @@ import { faCircleUser } from "@fortawesome/free-regular-svg-icons";
 import AuthContext from "../utils/AuthContext";
 
 const BoxAnswer = (props) => {
+  const { locale } = useRouter();
+
   const { user } = useContext(AuthContext);
   const [likes, setLikes] = useState(Number(props.data.likes));
   const supAnswer = async (e) => {
@@ -39,19 +41,23 @@ const BoxAnswer = (props) => {
   };
   return (
     <div className="my-4">
-      <div className="d-flex">
+      <div className={`d-flex gap-2 ${locale == "arab" ? "flex-row-reverse" : ""}`}>
         <FontAwesomeIcon
           icon={faCircleUser}
           style={{ fontSize: "30", marginRight: 10 }}
           className="text-dark"
         />
+        <p>{props.staticData.questionAnswers.answredBy}</p>
         <div>
-          Answered by:
           <label className=" underline">{props.data.creator}</label>{" "}
         </div>
       </div>
 
-      <div className="d-flex  p-md-4 py-2">
+      <div
+        className={`d-flex  p-md-4 py-2 ${
+          locale == "arab" ? "flex-row-reverse" : ""
+        }`}
+      >
         <div className="fs-4 px-md-4 px-1 text-center h-fit my-auto">
           <FontAwesomeIcon
             icon={faCaretUp}
@@ -86,7 +92,7 @@ const BoxAnswer = (props) => {
         </div>
       </div>
 
-      <div>likes: {props.data.likes}</div>
+      <div>{props.staticData.questionAnswers.likes} {props.data.likes}</div>
       <hr />
     </div>
   );

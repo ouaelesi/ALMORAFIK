@@ -4,7 +4,22 @@ import QuestionBox from "../../partials/QuestionBox";
 import NextPrevious from "../../partials/NextPrevious";
 import fetch from "isomorphic-unfetch";
 
+import { questionsArData } from "../../data/TemporaryData/staticData/arab/questionsPage";
+import { questionsEngData } from "../../data/TemporaryData/staticData/eng/questionsPage";
+import { useRouter } from "next/router";
+
 const Questions = ({ questions }) => {
+  const { locale } = useRouter();
+
+  // state
+  const [questionsData, setQuestionsData] = useState(questionsArData);
+
+  useEffect(() => {
+    locale === "arab"
+      ? setQuestionsData(questionsArData)
+      : setQuestionsData(questionsEngData);
+  }, [locale]);
+
   // Pagination vars and Functions
   const QuetionsPerPage = 5;
   const [maxNumPages, setMaxPages] = useState(0);
@@ -31,7 +46,7 @@ const Questions = ({ questions }) => {
   if (isLoading)
     return (
       <div className="h-screen Questions_section">
-        <QuestionsMenu></QuestionsMenu>
+        <QuestionsMenu data={questionsData}></QuestionsMenu>
         <div className="spinner-border block mx-auto mt-5" role="status">
           <span className="sr-only ">Loading...</span>
         </div>
@@ -42,7 +57,7 @@ const Questions = ({ questions }) => {
     <div>
       <div className="Question_container py-3 px-2">
         <div className="Questions_section">
-          <QuestionsMenu></QuestionsMenu>
+          <QuestionsMenu data={questionsData}></QuestionsMenu>
           {data
             .sort((a, b) => {
               return a.likeCount === b.likeCount
@@ -67,6 +82,7 @@ const Questions = ({ questions }) => {
                     number_of_answers={elem.answers.length}
                     number_of_likes={elem.likeCount}
                     title={elem.title}
+                    staticData={questionsData}
                   />
                 )
             )}

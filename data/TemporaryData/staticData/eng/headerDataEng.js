@@ -9,5 +9,6 @@ export const headerDataEng = {
     login: "Login",
     signup: "SignUp",
     profile: "Profile",
+    logOut : "log Out"
   },
 };

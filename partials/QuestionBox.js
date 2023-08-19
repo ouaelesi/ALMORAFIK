@@ -11,7 +11,12 @@ import { faBookmark, faCircleUser } from "@fortawesome/free-regular-svg-icons";
 import { useRouter } from "next/router";
 import AuthContext from "../utils/AuthContext";
 
+import { displayDate } from "../utils/date";
+
 const QuestionBox = (props) => {
+  //
+  const { locale } = useRouter();
+
   const [numLikes, setNumLikes] = useState(props.number_of_likes);
   const { user } = useContext(AuthContext);
   const router = useRouter();
@@ -47,16 +52,29 @@ const QuestionBox = (props) => {
   };
   return (
     <div className="QuestionBox my-3 px-md-5 py-2 px-3 border border-secondary">
-      <div className="Question_info d-flex justify-content-between ">
-        <div className="pt-3 px-2 d-flex">
+      <div
+        className={`Question_info d-flex justify-content-between  ${
+          locale === "arab" ? "flex-row-reverse" : ""
+        }`}
+      >
+        <div
+          className={`pt-3 px-2 d-flex gap-2 ${
+            locale === "arab" ? "flex-row-reverse" : ""
+          }`}
+        >
           <FontAwesomeIcon
             icon={faCircleUser}
             style={{ fontSize: "30", marginRight: 10 }}
             className="text-dark"
           />
-          <div className="pt-1">
-            Asked By <b className="text-dark underline">{props.creator}</b> At{" "}
-            <b className="text-dark">{props.Time}</b>
+          <div
+            className={`pt-1 d-flex gap-2  ${
+              locale === "arab" ? "flex-row-reverse" : ""
+            }`}
+          >
+            <p> {props.staticData.questionsBox.askedBy}</p>
+            <b className="text-dark underline">{props.creator}</b>
+            <b className="text-dark">{displayDate(props.Time)}</b>
           </div>
         </div>
         <button className="" onClick={() => alert("Will Be available Soon!")}>
@@ -67,7 +85,9 @@ const QuestionBox = (props) => {
           />
         </button>
       </div>
-      <div className="d-flex">
+      <div
+        className={`d-flex   ${locale === "arab" ? "flex-row-reverse" : ""}`}
+      >
         <div className="align-items-center fs-4  mx-auto text-center h-fit my-auto  px-1">
           <FontAwesomeIcon
             icon={faCaretUp}
@@ -82,33 +102,62 @@ const QuestionBox = (props) => {
           />
         </div>
         <div className="px-md-5 py-3 px-2 w-100">
-          <div className="fw-bold fs-4 mb-2">{props.title}</div>
+          <div
+            className={`fw-bold fs-4 mb-2 ${
+              locale === "arab" ? " text-end" : " text-start"
+            }`}
+          >
+            {props.title}
+          </div>
           <p
-            className="bg-light p-3  rounded-3 border cursor-pointer"
+            className={`bg-light p-3  rounded-3 border cursor-pointer ${
+              locale === "arab" ? " text-end" : " text-start"
+            }`}
             onClick={getQuestion}
           >
             {props.Question}
           </p>
-          <p className="question_details">{props.More_details}</p>
+          <p
+            className={`question_details ${
+              locale === "arab" ? " text-end" : " text-start"
+            }`}
+          >
+            {props.More_details}
+          </p>
           <div className="rounded-3">
-            <div className="d-flex">
+            <div
+              className={`d-flex   ${
+                locale === "arab" ? "flex-row-reverse" : ""
+              }`}
+            >
               <div
                 className="mt-1 underline cursor-pointer"
                 onClick={() => router.push(`/questions/${props.id}`)}
               >
-                {props.number_of_answers} Answers
+                {props.number_of_answers}{" "}
+                {props.staticData.questionsBox.answers}
               </div>
-              <div className="px-4 mt-1">{numLikes} Likes </div>
-              <div className="ml-auto">
+              <div className="px-4 mt-1">
+                {numLikes} {props.staticData.questionsBox.likes}{" "}
+              </div>
+              <div
+                className={`   ${locale === "arab" ? "mr-auto" : "ml-auto"}`}
+              >
                 <button
                   className="btn  mt-1 btn_answer "
                   onClick={() => router.push(`/questions/${props.id}`)}
                 >
-                  Answer
+                  {props.staticData.questionsBox.answer}
                 </button>
               </div>
             </div>
-            <div className="my-2">
+            <div
+              className={
+                locale === "arab"
+                  ? "d-flex justify-content-end"
+                  : "d-flex justify-content-start"
+              }
+            >
               {props.tags.map((tag, key) => (
                 <span
                   className="px-2 rounded-2 quesTag text-dark bg-light  fw-light py-1"

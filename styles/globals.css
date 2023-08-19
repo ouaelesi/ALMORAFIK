@@ -9,6 +9,11 @@
   --blue-hover: #464921;
 }
 
+::selection {
+  background-color: var(--yellow-color); /* Change this to your desired color */
+  color: #8e7702; /* Change this to your desired text color */
+}
+
 body {
   overflow-x: hidden;
 }
@@ -306,6 +311,7 @@ body {
   margin: 0px auto;
   background-color: rgba(0, 0, 0, 0.2);
   color: white;
+  outline: none;
 }
 .ask_btn {
   width: 80%;
@@ -404,15 +410,15 @@ body {
   border-width: 1px;
   /* box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 5px 0px; */
   border-radius: 8px;
-  padding: 20px 0px 20px 25px;
+  padding: 20px 25px 20px 25px;
 }
 .login_form > div > input {
-  width: 90%;
+  width: 100%;
   margin: 10px 0;
 }
 .singinbtn,
 .loginbtn {
-  width: 90%;
+  width: 100%;
   margin: 15px auto 0 auto;
   box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 10px 0px;
   color: white;

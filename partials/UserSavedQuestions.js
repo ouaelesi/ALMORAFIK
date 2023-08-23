@@ -6,7 +6,7 @@ import { questionsArData } from "../data/TemporaryData/staticData/arab/questions
 import { questionsEngData } from "../data/TemporaryData/staticData/eng/questionsPage";
 import { useRouter } from "next/router";
 
-const UserAskedQues = () => {
+const UserSavedQuestions = () => {
   const { locale } = useRouter();
 
   // state
@@ -19,7 +19,7 @@ const UserAskedQues = () => {
   useEffect(() => {
     if (user) {
       setLoading(true);
-      fetch(`/api/users/questions/${user.email}`)
+      fetch(`/api/questions/saveQuestion/user`)
         .then((res) => res.json())
         .then((data) => {
           setData(data);
@@ -76,4 +76,4 @@ const UserAskedQues = () => {
   );
 };
 
-export default UserAskedQues;
+export default UserSavedQuestions;

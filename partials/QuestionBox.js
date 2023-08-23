@@ -6,6 +6,7 @@ import {
   faCaretDown,
   faTrashCan,
   faPen,
+  faBookmark as solidBookMark,
 } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark, faCircleUser } from "@fortawesome/free-regular-svg-icons";
 import { useRouter } from "next/router";
@@ -18,6 +19,8 @@ const QuestionBox = (props) => {
   const { locale } = useRouter();
 
   const [numLikes, setNumLikes] = useState(props.number_of_likes);
+  const [isQuestionSaved, setSaved] = useState(false);
+
   const { user } = useContext(AuthContext);
   const router = useRouter();
   useEffect(() => {}, [user]);
@@ -37,9 +40,11 @@ const QuestionBox = (props) => {
       router.push("/signUp");
     }
   };
+
   const editQuestion = () => {
     alert("Will be available Soon !");
   };
+
   const supQuestion = async (id) => {
     alert("do you want to delete !!");
     const re = await fetch(`/api/questions/${id}`, {
@@ -47,9 +52,37 @@ const QuestionBox = (props) => {
     });
     router.push("/questions");
   };
+
   const getQuestion = () => {
     router.push(`/questions/${props.id}`);
   };
+
+  // save question
+  const saveQuestion = async () => {
+    const response = await fetch("/api/questions/saveQuestion", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userId: "d", questionId: props.id }),
+    });
+
+    setSaved(!isQuestionSaved);
+  };
+
+  // check if question is saved ;
+  const checkSavedQuestion = () => {
+    fetch("/api/questions/saveQuestion/" + props.id)
+      .then((res) => res.json())
+      .then((data) => {
+        data.length === 0 ? setSaved(false) : setSaved(true);
+      });
+  };
+
+  useEffect(() => {
+    checkSavedQuestion();
+  }, [props.id]);
   return (
     <div className="QuestionBox my-3 px-md-5 py-2 px-3 border border-secondary">
       <div
@@ -77,11 +110,11 @@ const QuestionBox = (props) => {
             <b className="text-dark">{displayDate(props.Time)}</b>
           </div>
         </div>
-        <button className="" onClick={() => alert("Will Be available Soon!")}>
+        <button className="" onClick={() => saveQuestion()}>
           <FontAwesomeIcon
-            icon={faBookmark}
+            icon={isQuestionSaved ? solidBookMark : faBookmark}
             style={{ fontSize: "28" }}
-            className="text-warning"
+            className="text-warning "
           />
         </button>
       </div>

@@ -17,6 +17,9 @@
 body {
   overflow-x: hidden;
 }
+.bg-yellow-color {
+  background-color: var(--yellow-color);
+}
 /* Navbar  */
 .navbar-nav {
   display: flex;
@@ -160,7 +163,7 @@ body {
   border-style: solid;
   border-width: 2px;
   width: 250px;
-  height: fit-content  ; 
+  height: fit-content;
   border-radius: 20px;
   padding: 20px;
   cursor: pointer;

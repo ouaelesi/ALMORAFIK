@@ -20,6 +20,7 @@ export async function IsLoggedIn(req) {
         new TextEncoder().encode(`secret`)
       );
       let token = { email: jwtData.email, userName: jwtData.username };
+
       return token;
     } else {
       return null;

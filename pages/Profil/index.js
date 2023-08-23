@@ -1,10 +1,23 @@
 import React, { useState, useEffect, useContext } from "react";
 import AuthContext from "../../utils/AuthContext";
 import UserAskedQues from "../../partials/UserAskedQues";
+import UserSavedQuestions from "../../partials/UserSavedQuestions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faEnvelope, faUser } from "@fortawesome/free-solid-svg-icons";
+import { profileStaticData } from "../../data/TemporaryData/staticData/eng/profileStaticData";
+import { profileStaticDataAr } from "../../data/TemporaryData/staticData/arab/profileStaticDataAr";
+
+import {
+  faPen,
+  faEnvelope,
+  faUser,
+  faComment,
+  faBookmark,
+} from "@fortawesome/free-solid-svg-icons";
+import { useRouter } from "next/router";
 
 const Profil = () => {
+  const { locale } = useRouter();
+
   const [profilData, setProfilData] = useState("There Is No Data");
   const [isLoading, setLoading] = useState(true);
   // To Open the update password section
@@ -13,6 +26,24 @@ const Profil = () => {
   const [updatedProfilData, setUpdateProfil] = useState();
   // To Update the user Profil
   const [updatedProfilPhoto, setUpdateProfilPhoto] = useState(null);
+
+  const [profileTablerData, setProfileTablerData] = useState([
+    {
+      name: profileStaticDataAr.tabs.myQuestions,
+      icon: faComment,
+      component: UserAskedQues,
+    },
+    {
+      name: profileStaticDataAr.tabs.mySaves,
+      icon: faBookmark,
+      component: UserSavedQuestions,
+    },
+  ]);
+
+  const [activeTab, setTab] = useState(profileTablerData[0]);
+
+  const [staticData, setStaticData] = useState(profileStaticDataAr);
+
   // infos of the Auth user
   const { user } = useContext(AuthContext);
   // icons
@@ -21,7 +52,6 @@ const Profil = () => {
     setLoading(true);
 
     if (user) {
-  
       fetch(`/api/users/${user.email}`)
         .then((res) => res.json())
         .then((data) => {
@@ -34,6 +64,12 @@ const Profil = () => {
       setLoading(false);
     }
   }, [user]);
+
+  useEffect(() => {
+    locale === "arab"
+      ? setStaticData(profileStaticDataAr)
+      : setStaticData(profileStaticData);
+  }, [locale]);
 
   const changeProfilPhoto = () => {
     const imgInput = document.getElementById("img");
@@ -61,14 +97,18 @@ const Profil = () => {
       </div>
     );
   return (
-    <div className="bg-light ">
+    <div
+      className={`bg-light ${locale === "arab" ? "text-end" : "text-start"}`}
+    >
       <div className=" px-md-5 px-4 py-md-10 py-4 Questions_section ">
         <div className="row gap-2 bg-white px-md-5 px-3 py-4 rounded-xl border border-secondary shadow justify-content-between ">
           <div className="alert alert-warning  " role="alert">
-            Update Profil features Will be Available Soon!{" "}
+            {staticData.alert}
           </div>
-          <div className="QuestionTitle mb-4">General Informations</div>
-          <div className="col-md-4">
+          <div className="QuestionTitle mb-4">{staticData.title}</div>
+          <div
+            className={`col-md-5  ${locale === "arab" ? "order-2" : "order-1"}`}
+          >
             <div className="bg-dark  w-1/3 rounded-full">
               {profilData.profilPic && !updatedProfilPhoto && (
                 <img src={profilData.profilPic} widht="200"></img>
@@ -84,7 +124,6 @@ const Profil = () => {
             </div>
 
             <form onSubmit={changeProfilPhoto}>
-              <label>Select image:</label>
               <input
                 type="file"
                 id="img"
@@ -96,13 +135,21 @@ const Profil = () => {
                 type="submit"
                 className="px-2 rounded-md border-2 border-dark my-3"
               >
-                Change Photo
+                {staticData.changePhoto}
               </button>
             </form>
           </div>
 
-          <form className="col-md-5  w-md-5/12 ">
-            <div>
+          <form
+            className={`col-md-5  w-md-5/12   ${
+              locale === "arab" ? "order-1" : "order-2"
+            }`}
+          >
+            <div
+              className={`d-flex gap-3  ${
+                locale === "arab" ? "flex-row-reverse" : ""
+              }`}
+            >
               <FontAwesomeIcon
                 icon={faUser}
                 style={{
@@ -112,10 +159,14 @@ const Profil = () => {
                   marginLeft: -7,
                 }}
               />
-              UserName
+              {staticData.userName}
             </div>
 
-            <div className="row gap-2 mb-4">
+            <div
+              className={`d-flex gap-3  mb-4  ${
+                locale === "arab" ? "flex-row-reverse" : ""
+              }`}
+            >
               <input
                 defaultValue={profilData.userName}
                 className="form-control col"
@@ -128,7 +179,11 @@ const Profil = () => {
                 />
               </button>
             </div>
-            <div>
+            <div
+              className={`d-flex gap-3  ${
+                locale === "arab" ? "flex-row-reverse" : ""
+              }`}
+            >
               <FontAwesomeIcon
                 icon={faEnvelope}
                 style={{
@@ -138,9 +193,13 @@ const Profil = () => {
                   marginLeft: -7,
                 }}
               />
-              Email
+              {staticData.email}
             </div>
-            <div className="row gap-2 mb-4">
+            <div
+              className={`d-flex gap-3  mb-4  ${
+                locale === "arab" ? "flex-row-reverse" : ""
+              }`}
+            >
               <input
                 defaultValue={profilData.email}
                 className="form-control col w-8/12"
@@ -157,7 +216,7 @@ const Profil = () => {
                 className="mb-4 underline cursor-pointer"
                 onClick={() => setPSWsection(true)}
               >
-                Edit password
+                {staticData.editPassword}
               </div>
             )}
             {pswSecIsOpen && (
@@ -185,11 +244,38 @@ const Profil = () => {
                 </div>
               </div>
             )}
-            <button className="btn ask_btn float-right">Save Changes</button>
+            <button className="btn ask_btn float-right">
+              {staticData.save}
+            </button>
           </form>
         </div>
 
-        <UserAskedQues className="col " />
+        <div
+          className={`d-flex mt-8 w-fit  p-1 border-2 rounded-md ${
+            locale === "arab" ? "flex-row-reverse ml-auto" : ""
+          }`}
+        >
+          {profileTablerData.map((tab, key) => (
+            <div
+              key={key}
+              className={`${
+                tab.name === activeTab.name
+                  ? "text-white bg-yellow-color fw-semibold"
+                  : ""
+              }
+              cursor-pointer hover-text-warning px-4 py-2 rounded-md d-flex gap-2`}
+              onClick={() => setTab(tab)}
+            >
+              {" "}
+              <FontAwesomeIcon
+                icon={tab.icon}
+                style={{ marginTop: "4", fontSize: "16" }}
+              />{" "}
+              {tab.name}
+            </div>
+          ))}
+        </div>
+        {<activeTab.component />}
       </div>
     </div>
   );

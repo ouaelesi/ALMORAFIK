@@ -252,7 +252,7 @@ const Profil = () => {
 
         <div
           className={`d-flex mt-8 w-fit  p-1 border-2 rounded-md ${
-            locale === "arab" ? "flex-row-reverse ml-auto" : "" 
+            locale === "arab" ? "flex-row-reverse ml-auto" : ""  
           }`}
         >
           {profileTablerData.map((tab, key) => (

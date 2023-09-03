@@ -56,7 +56,7 @@ const Questions = ({ questions }) => {
   return (
     <div>
       <div className="Question_container py-3 px-2">
-        <div className="Questions_section">
+        <div className="Questions_section ">
           <QuestionsMenu data={questionsData}></QuestionsMenu>
           {data
             .sort((a, b) => {

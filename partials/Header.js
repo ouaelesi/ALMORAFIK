@@ -115,6 +115,9 @@ const Links = ({ token, classNames }) => {
         <Link href="/questions" className="navlink text-dark d-block">
           {navData.links.questions}
         </Link>
+        <Link href="/resources" className="navlink text-dark d-block">
+          {navData.links.resources}
+        </Link>
         <Link href="/aboutUs" className="navlink text-dark d-block">
           {navData.links.about}
         </Link>

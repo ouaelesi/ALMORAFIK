@@ -84,7 +84,7 @@ const QuestionBox = (props) => {
     checkSavedQuestion();
   }, [props.id]);
   return (
-    <div className="QuestionBox my-3 px-md-5 py-2 px-3 border border-secondary">
+    <div className="QuestionBox my-3 px-md-5 py-2 px-3  border-secondary">
       <div
         className={`Question_info d-flex justify-content-between  ${
           locale === "arab" ? "flex-row-reverse" : ""

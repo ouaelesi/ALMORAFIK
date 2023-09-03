@@ -351,7 +351,7 @@ body {
 }
 
 .Question_container {
-  background-color: #e4e4e4;
+  background-color: #efefef;
   position: relative;
   width: 100%;
 }
@@ -363,7 +363,7 @@ body {
 .QuestionBox {
   background-color: white;
   border-radius: 10px;
-  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
+  /* box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2); */
 }
 .AnswersBox {
   background-color: rgb(255, 255, 255);
@@ -709,4 +709,22 @@ body {
     height: 600px;
     background-position: left bottom;
   }
+}
+
+/* resources page */
+/* 1. Youtube */
+.channelTitle {
+  font-size: 20px;
+  font-weight: 700;
+}
+.channelUserName {
+  color: var(--yellow-color);
+  font-weight: 500;
+  font-size: 12px;
+  margin-top: -5px;
+}
+
+.channelDescription {
+  font-size: 12px;
+  margin-top: 5px;
 }

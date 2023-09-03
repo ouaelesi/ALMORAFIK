@@ -1,9 +1,10 @@
 export const headerDataEng = {
   links: {
-    home: "Home",
-    contact: "Contact Us",
-    about: "About Us",
-    questions: "Questions",
+    home: "HOME",
+    contact: "CONTACT US",
+    about: "ABOUT US",
+    questions: "QUESTIONS",
+    resources : "RESOURCES"
   },
   actions: {
     login: "Login",

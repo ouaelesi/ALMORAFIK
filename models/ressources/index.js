@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 
 const postSchema = mongoose.Schema({
-  channel: String,
-  userName: String,
-  followers: String,
+  title: String,
+  subTitle: String,
+  type: String,
   tags: [String],
   description: String,
   likes: {
@@ -18,7 +18,7 @@ const postSchema = mongoose.Schema({
   },
 });
 
-const youtuberes =
-  mongoose.models.youtuberes || mongoose.model("youtuberes", postSchema);
+const resources =
+  mongoose.models.resources || mongoose.model("resources", postSchema);
 
-export default youtuberes;
+export default resources;

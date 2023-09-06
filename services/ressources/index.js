@@ -1,0 +1,1 @@
+// here goes the common services of the resources 

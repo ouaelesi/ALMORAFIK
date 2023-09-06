@@ -1,4 +1,4 @@
-// get youtub channeles
+// get youtube channeles
 export const getYoutubChannels_Service = async () => {
   let reponse = await fetch("/api/ressources/youtube")
     .then((res) => res.json())

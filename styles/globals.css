@@ -334,8 +334,8 @@ body {
 }
 .pagination > button {
   background-color: var(--yellow-color);
-  color: black;
-  border: 1px solid gray;
+  color: white;
+  /* border: 1px solid gray; */
 }
 .yellowText {
   color: var(--yellow-color);

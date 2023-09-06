@@ -8,8 +8,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark } from "@fortawesome/free-regular-svg-icons";
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 const YoutubCard = ({ data }) => {
+  // router
+  const router = useRouter();
+
   const [isQuestionSaved, setSaved] = useState(false);
   const [numLikes, setNumLikes] = useState(data.likes);
 
@@ -29,9 +33,12 @@ const YoutubCard = ({ data }) => {
           width={200}
           height={200}
           className="rounded-circle "
-          alt={data.channelTitle}
+          alt={data.title}
         />
-        <div className="rounded-md p-1 w-fit border border-secondary mx-auto mt-2 ">
+        <div
+          className="rounded-md p-1 w-fit border border-secondary mx-auto mt-2 "
+          onClick={() => router.push(data.link)}
+        >
           <Image
             src="/assets/imgs/youtube-logo.png"
             width={20}
@@ -41,10 +48,8 @@ const YoutubCard = ({ data }) => {
         </div>
       </div>
       <div className="w-100">
-        <p className="channelTitle">{data.channel}</p>
-        <p className="channelUserName">
-          {data.userName} {data.subscribers}
-        </p>
+        <p className="channelTitle">{data.title}</p>
+        <p className="channelUserName">{data.subTitle}</p>
         <p className="channelDescription">{data.description}</p>
         <div
           className={
@@ -64,17 +69,16 @@ const YoutubCard = ({ data }) => {
         </div>{" "}
         <p></p>
       </div>
-      <div style={{width : "80px"}}>
+      <div style={{ width: "80px" }}>
         <div className="w-fit mx-auto">
-        <button className="" onClick={() => saveChannel()}>
-          <FontAwesomeIcon
-            icon={isQuestionSaved ? solidBookMark : faBookmark}
-            style={{ fontSize: "25" }}
-            className="text-warning "
-          />
-        </button>
+          <button className="" onClick={() => saveChannel()}>
+            <FontAwesomeIcon
+              icon={isQuestionSaved ? solidBookMark : faBookmark}
+              style={{ fontSize: "25" }}
+              className="text-warning "
+            />
+          </button>
         </div>
-      
         <div className="align-items-center fs-6 mt-3  mx-auto text-center h-fit   px-1">
           <FontAwesomeIcon
             icon={faCaretUp}

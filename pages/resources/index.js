@@ -6,15 +6,23 @@ import YoutubResources from "../../partials/resourcesPage/YoutubResouces";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 import BooksRessources from "../../partials/resourcesPage/BooksRessources";
-const Resources = () => {
-  const locale = useRouter();
+import { ressourcePageDataEn } from "../../data/TemporaryData/staticData/eng/ressourcesPageEn";
+import { ressourcePageDataAr } from "../../data/TemporaryData/staticData/arab/ressourcesPageAr";
+import { useEffect } from "react";
 
-  const Not=  ()=>{
-    return <div className="text-center my-4">Not available yet</div>
-  }
+const Resources = () => {
+  const { locale } = useRouter();
+
+  const [pageData, setPageData] = useState(
+    locale === "arab" ? ressourcePageDataAr : ressourcePageDataEn
+  );
+
+  const Not = () => {
+    return <div className="text-center my-4">Not available yet</div>;
+  };
   const [profileTablerData, setProfileTablerData] = useState([
     {
-      name: "Youtube Channels",
+      name: pageData.youtubChannels.title,
       icon: faYoutube,
       component: YoutubResources,
     },
@@ -30,13 +38,39 @@ const Resources = () => {
     },
   ]);
 
+  useEffect(() => {
+    let data = locale === "arab" ? ressourcePageDataAr : ressourcePageDataEn
+    setPageData(data);
+    setProfileTablerData([
+      {
+        name: data.youtubChannels.title,
+        icon: faYoutube,
+        component: YoutubResources,
+      },
+      {
+        name: data.books.title,
+        icon: faBook,
+        component: BooksRessources,
+      },
+      {
+        name: data.mediaPages.title,
+        icon: faGlobe,
+        component: Not,
+      },
+    ]);
+  }, [locale]);
+
   const [activeTab, setTab] = useState(profileTablerData[0]);
 
   return (
     <div className="Question_container">
       <div className="h-screen Questions_section  py-3">
-        <div className="px-md-5 px-3   py-5   QuestionMenu  border-2 border-light text-white fs-2 ">
-          the resources page
+        <div
+          className={`px-md-5 px-3   py-5   QuestionMenu  border-2 border-light text-white fs-2 ${
+            locale === "arab" ? "text-end" : ""
+          }`}
+        >
+          {pageData.title}
         </div>
         <div
           className={`d-flex mt-4 w-fit  p-1 border-2 rounded-md bg-light ${
@@ -65,7 +99,6 @@ const Resources = () => {
         </div>
         {<activeTab.component />}
       </div>
-    
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import youtubeRes from "../../../models/ressources/youtubeRes";
+import resourcesModal from "../../../models/ressources/index";
 import { IsLoggedIn } from "../../../utils/IsLoggedIn";
 
 // Add a youtub channel
@@ -13,17 +13,17 @@ export const addYoutubRes = async (req, res) => {
     return;
   }
 
-  const youtube = new youtubeRes({
-    channel: req.body.channel,
+  const resource = new resourcesModal({
+    title: req.body.title,
     description: req.body.description,
-    userName: req.body.userName,
+    type: req.body.type,
+    subTitle: req.body.subTitle,
     image: req.body.image,
     tags: req.body.tags.split(","),
-    followers: req.body.followers,
-    link : req.body.link
+    link: req.body.link,
   });
-  console.log(youtube);
-  youtube
+
+  resource
     .save()
     .then((data) => {
       res.send(data);
@@ -35,11 +35,22 @@ export const addYoutubRes = async (req, res) => {
     });
 };
 
+//--------------------------------------------------------
+// get all resources
+export const getAllResources_Mut = async (req, res) => {
+  resourcesModal
+    .find()
+    .then((channel) => res.send(channel))
+    .catch((err) =>
+      res.status(400).send({ message: err.message || "error occured !!" })
+    );
+};
+
+//--------------------------------------------------------
 // get all youtub channels
 export const getYoutubeChannels = async (req, res) => {
-  console.log("================")
-  youtubeRes
-    .find()
+  resourcesModal
+    .find({ type: "youtube" })
     .then((channel) => res.send(channel))
     .catch((err) =>
       res.status(400).send({ message: err.message || "error occured !!" })

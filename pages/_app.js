@@ -50,6 +50,7 @@ function MyApp({ Component, pageProps, userLoggedIn }) {
         <meta property="og:image:width" content="500"></meta>
         <meta property="og:url" content="your_website_url_here"></meta>
         <title>SASINI</title>
+        <link rel="manifest" href="/manifest.json" />
         <link rel="icon" href="/favicon.png" />
       </Head>
       <main

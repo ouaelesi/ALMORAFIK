@@ -39,9 +39,33 @@ const BoxAnswer = (props) => {
       }
     );
   };
+
+  const renderMathQuill = (latex) => {
+    if (typeof window !== "undefined") {
+      const {
+        addStyles,
+        EditableMathField,
+        StaticMathField,
+      } = require("react-mathquill");
+      addStyles();
+      return (
+        <div>
+          <StaticMathField
+            className={` text-light bg-dark border px-3 py-2 outline-none border-dark rounded w-100 my-2`}
+          >
+            {latex}
+          </StaticMathField>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="my-4">
-      <div className={`d-flex gap-2 ${locale == "arab" ? "flex-row-reverse" : ""}`}>
+      <div
+        className={`d-flex gap-2 ${locale == "arab" ? "flex-row-reverse" : ""}`}
+      >
         <FontAwesomeIcon
           icon={faCircleUser}
           style={{ fontSize: "30", marginRight: 10 }}
@@ -77,7 +101,21 @@ const BoxAnswer = (props) => {
         </div>
         <div className="px-2 w-100 ">
           <div className="bg-light px-3 py-2  rounded-3 border">
-            {props.data.answer}
+            {props.data.answer.split("|||").map((elem, key) =>
+              key % 2 === 0 ? (
+                <pre
+                  key={key}
+                  style={{
+                    direction: "rtl",
+                    whiteSpace: "pre-wrap",
+                  }}
+                >
+                  {elem}
+                </pre>
+              ) : (
+                renderMathQuill(elem)
+              )
+            )}
           </div>
           {user && user.email == props.data.creator && (
             <div>
@@ -92,7 +130,9 @@ const BoxAnswer = (props) => {
         </div>
       </div>
 
-      <div>{props.staticData.questionAnswers.likes} {props.data.likes}</div>
+      <div>
+        {props.staticData.questionAnswers.likes} {props.data.likes}
+      </div>
       <hr />
     </div>
   );

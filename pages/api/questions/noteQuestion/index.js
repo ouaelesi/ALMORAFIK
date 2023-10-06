@@ -1,6 +1,5 @@
-import { saveQuestion } from "../../../../controlers/questionActions/saveQuestions";
 import dbConnection from "../../../../utils/dbConnect";
-
+import { noteQuestion } from "../../../../controlers/questionActions/noteQuestion";
 
 dbConnection();
 const ques = async (req, res) => {
@@ -10,7 +9,7 @@ const ques = async (req, res) => {
     case "GET":
       break;
     case "POST":
-      saveQuestion(req, res);
+      noteQuestion(req, res);
       break;
   }
 };

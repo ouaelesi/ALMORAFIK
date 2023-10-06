@@ -120,7 +120,7 @@ const LogIn = () => {
               <p className="fs-6 text-danger fw-light ">Password is required</p>
             )}
             <button
-              className="btn loginbtn btn-dark mt-4"
+              className="btn loginbtn btn-dark mt-4 text-light"
               type="submit"
               disabled={errors.email || errors.hashPassword}
             >

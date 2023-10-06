@@ -1,8 +1,8 @@
-import dbConnection from "../../../../../utils/dbConnect";
 import {
   isQuestionSaved,
   saveQuestion,
-} from "../../../../../controlers/saveQuestions";
+} from "../../../../../controlers/questionActions/saveQuestions";
+import dbConnection from "../../../../../utils/dbConnect";
 
 dbConnection();
 const ques = async (req, res) => {
@@ -10,10 +10,10 @@ const ques = async (req, res) => {
 
   switch (method) {
     case "GET":
-      isQuestionSaved(req , res);
+      isQuestionSaved(req, res);
       break;
     case "POST":
-      //   saveQuestion(req, res);
+      saveQuestion(req, res);
       break;
   }
 };

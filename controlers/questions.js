@@ -17,10 +17,7 @@ export const addQuestion = async (req, res) => {
     question: req.body.question,
     creator: req.body.creator,
     tags: req.body.tags.split(","),
-    selectedFile: req.body.selectedFile,
-    likeCount: req.body.likes,
-    createdAt: req.body.createdAt,
-    answers: req.body.answers,
+    files: req.body.files,
     creatorEmail: req.body.creatorEmail,
   });
   question
@@ -99,13 +96,114 @@ export const findOneQuestion = (req, res) => {
 };
 
 // get all questions
+// get all questions
+// get all questions
 export const findQuestion = async (req, res) => {
-  questionModel
-    .find()
-    .then((question) => res.send(question))
-    .catch((err) =>
-      res.status(400).send({ message: err.message || "error occured !!" })
-    );
+  try {
+    const userEmail = await IsLoggedIn(req);
+
+    if (!userEmail) {
+      res.status(400).send({ message: "User Not Logged In!" });
+      return;
+    }
+
+    const questionsWithActions = await questionModel.aggregate([
+      {
+        $lookup: {
+          from: "userquestionsactions",
+          let: { questionId: "$_id" },
+          pipeline: [
+            {
+              $addFields: { questionId: { $toObjectId: "$questionId" } },
+            },
+            {
+              $match: {
+                $expr: { $eq: ["$questionId", "$$questionId"] },
+                userId: userEmail.email, // Assuming you have the user's ID in userEmail.email
+                saved: true,
+              },
+            },
+          ],
+          as: "actions",
+        },
+      },
+      {
+        $addFields: {
+          saved: { $cond: [{ $eq: [{ $size: "$actions" }, 1] }, true, false] },
+        },
+      },
+      {
+        $lookup: {
+          from: "userquestionsactions",
+          let: { questionId: "$_id" },
+          pipeline: [
+            {
+              $addFields: { questionId: { $toObjectId: "$questionId" } },
+            },
+            {
+              $match: {
+                $expr: { $eq: ["$questionId", "$$questionId"] },
+                // userId: userEmail.email, // Assuming you have the user's ID in userEmail.email
+              },
+            },
+          ],
+          as: "notes",
+        },
+      },
+      {
+        $unwind: {
+          path: "$notes",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "userquestionsactions",
+          let: { questionId: "$_id" },
+          pipeline: [
+            {
+              $addFields: { questionId: { $toObjectId: "$questionId" } },
+            },
+            {
+              $match: {
+                $expr: { $eq: ["$questionId", "$$questionId"] },
+                userId: userEmail.email, // Assuming you have the user's ID in userEmail.email
+              },
+            },
+          ],
+          as: "userNote",
+        },
+      },
+      {
+        $unwind: {
+          path: "$userNote",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $group: {
+          _id: "$_id",
+          title: { $first: "$title" },
+          question: { $first: "$question" },
+          creator: { $first: "$creator" },
+          creatorEmail: { $first: "$creatorEmail" },
+          tags: { $first: "$tags" },
+          files: { $first: "$files" },
+          createdAt: { $first: "$createdAt" },
+          answers: { $first: "$answers" },
+          saved: { $first: "$saved" },
+          sumNotes: { $sum: "$notes.note" }, // Calculate the sum of notes for the current user
+          userNote: { $first: "$userNote.note" },
+        },
+      },
+    ]);
+
+    console.log(questionsWithActions);
+
+    res.send(questionsWithActions);
+  } catch (err) {
+    res.status(400).send({ message: err.message || "An error occurred!" });
+  }
 };
 
 export const test = (req, res) => {

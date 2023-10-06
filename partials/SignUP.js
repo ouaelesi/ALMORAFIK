@@ -95,11 +95,17 @@ const SignUP = ({ staticData }) => {
               placeholder={staticData.signUp.emailPlace}
               type="email"
               name="email"
-              {...register("email", { required: true })}
+              {...register("email", {
+                required: "The Email is required",
+                pattern: {
+                  value: /^\S+@\S+$/i,
+                  message: "Invalid email address",
+                },
+              })}
             ></input>
             {errors.email && (
               <div className="text-danger fs-6 fw-light">
-                The Email is required
+                {errors.email.message}
               </div>
             )}
             {staticData.signUp.password}
@@ -113,7 +119,11 @@ const SignUP = ({ staticData }) => {
               placeholder={staticData.signUp.passwordPlace}
               name="hashPassword"
               type="password"
-              {...register("hashPassword", { minLength: 8 })}
+              {...register("hashPassword", {
+                minLength: 8,
+                required: true,
+                type: "email",
+              })}
             ></input>
             {errors.hashPassword && (
               <div className="text-danger fs-6 fw-light">

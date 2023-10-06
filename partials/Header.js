@@ -42,7 +42,15 @@ const Header = ({ token }) => {
         } d-flex    justify-content-between py-3 w-100`}
       >
         <Link href="/" className="px-2">
-          <img src="/assets/imgs/logo.png" className="navlogo" width="145px" />
+          <img
+            src={
+              locale === "arab"
+                ? "/assets/imgs/logoAr.png"
+                : "/assets/imgs/logo.png"
+            }
+            className="navlogo"
+            width="145px"
+          />
         </Link>
         <Links token={token} classNames="d-none d-md-flex w-100" />
         <div className="d-block d-md-none" onClick={toggle}>

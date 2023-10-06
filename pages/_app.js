@@ -13,7 +13,7 @@ import "@fortawesome/fontawesome-svg-core/styles.css"; // import Font Awesome CS
 import { config } from "@fortawesome/fontawesome-svg-core";
 config.autoAddCss = false; // Tell Font Awesome to skip adding the CSS automatically since it's being imported above
 
-import { Inter, Montserrat, Mada, El_Messiri, Cairo , Noto_Sans_Arabic } from "@next/font/google";
+import { Inter, Montserrat, Mada, El_Messiri, Cairo , Noto_Sans_Arabic } from "next/font/google";
 import { useRouter } from "next/router";
 
 //  If loading a variable font, you don't need to specify the font weight
@@ -49,6 +49,7 @@ function MyApp({ Component, pageProps, userLoggedIn }) {
         <meta property="og:image:type" content="image/png"></meta>
         <meta property="og:image:width" content="500"></meta>
         <meta property="og:url" content="your_website_url_here"></meta>
+        <meta charset="UTF-8"></meta>
         <title>SASINI</title>
         <link rel="manifest" href="/manifest.json" />
         <link rel="icon" href="/favicon.png" />

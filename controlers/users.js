@@ -33,6 +33,7 @@ export const logIn = (req, res) => {
                 exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30, // 30 days
                 username: user.userName,
                 email: user.email,
+                userId : user._id
               })
                 .setProtectedHeader({ alg: "HS256" })
                 .setIssuedAt()
@@ -63,6 +64,7 @@ export const logIn = (req, res) => {
     res.send(err);
   }
 };
+
 // find users
 export const getUsers = (req, res) => {
   userModel.find().then((users) => {
@@ -73,14 +75,13 @@ export const getUsers = (req, res) => {
 // add user
 export const addUser = async (req, res) => {
   if (!req.body) {
-    res.status(400).send({ message: "error occured !!" });
+    res.status(400).send({ message: "Must have a body !!" });
     return;
   }
   const user = new userModel({
     userName: req.body.userName,
     hashPassword: req.body.hashPassword,
     email: req.body.email,
-    profilPic: req.body.profilPic,
   });
   if (await emailExists(user.email)) {
     res.status(409).send({ message: "This email already exists" });
@@ -94,6 +95,7 @@ export const addUser = async (req, res) => {
         exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30, // 30 days
         username: req.body.userName,
         email: req.body.email,
+        userId : user._id
       })
         .setProtectedHeader({ alg: "HS256" })
         .setIssuedAt()

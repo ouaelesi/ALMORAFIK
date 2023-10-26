@@ -11,6 +11,7 @@ import Link from "next/link";
 import { homeDataEng } from "../data/TemporaryData/staticData/eng/homeData";
 import { homeData } from "../data/TemporaryData/staticData/arab/homeData";
 import { useRouter } from "next/router";
+import Image from "next/image";
 
 const Welcome = () => {
   const { locale } = useRouter();
@@ -71,11 +72,14 @@ const Welcome = () => {
           style={{ marginTop: 40 }}
         >
           <Tilt tiltReverse>
-            <img
+            <Image
               src="/assets/imgs/homeillustration.svg"
-              width="500px"
+              width={500}
+              height={500}
               className="block mx-auto cursor-pointer"
-            ></img>
+              alt="almorafik home illustration"
+              style={{ width: "500px" }}
+            />
           </Tilt>
         </div>
         <img

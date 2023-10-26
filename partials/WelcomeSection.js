@@ -73,7 +73,7 @@ const Welcome = () => {
         >
           <Tilt tiltReverse>
             <Image
-              src="/assets/imgs/homeillustration.svg"
+              src="/assets/imgs/welcomeillustration.svg"
               width={500}
               height={500}
               className="block mx-auto cursor-pointer"

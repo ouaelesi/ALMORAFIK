@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button } from "reactstrap";
 import PathCard from "./PathCard";
 import Motivation from "./MotivationSection";
+import Tilt from "react-parallax-tilt";
 
 // next link
 import Link from "next/link";
@@ -42,7 +43,7 @@ const Welcome = () => {
   return (
     <div className="">
       <div
-        className={` ${
+        className={`pt-4 ${
           locale === "arab" ? "flex-row-reverse text-end" : "text-start"
         } d-flex relative `}
       >
@@ -55,29 +56,40 @@ const Welcome = () => {
             {HeaderData.header.description}
           </p>
           <Link href="/questions">
-            <Button className="explore_btn fw-bold  signup">
+            <Button className="explore_btn px-7 fw-medium  signup">
               {HeaderData.header.action}
             </Button>
           </Link>
-        </div>
-        <div className="col-6 pt-4 d-none d-md-block">
           <img
-            src="/assets/imgs/HomeIllustration.svg"
-            width="500px"
-            className="block mx-auto"
+            src="/assets/imgs/colorShapes.png"
+            width="400px"
+            className={`mt-16 ${locale === "arab" ? "ml-auto" : ""}  `}
           ></img>
+        </div>
+        <div
+          className="col-6 pt-4 mt-8 d-none d-md-block"
+          style={{ marginTop: 40 }}
+        >
+          <Tilt tiltReverse>
+            <img
+              src="/assets/imgs/homeillustration.svg"
+              width="500px"
+              className="block mx-auto cursor-pointer"
+            ></img>
+          </Tilt>
         </div>
         <img
           src={
             locale === "arab"
-              ? "/assets/imgs/homeShape2.svg"
-              : "/assets/imgs/homeShape.svg"
+              ? "/assets/imgs/cloud.png"
+              : "/assets/imgs/cloud.png"
           }
-          className={`mx-auto position-absolute bottom-0 ${
+          className={`mx-auto position-absolute top-0 ${
             locale === "arab" ? "end-0" : "start-0"
           } homeShape1`}
         ></img>
-        <img
+
+        {/* <img
           src={
             locale === "arab"
               ? "/assets/imgs/homeShape.svg"
@@ -86,7 +98,7 @@ const Welcome = () => {
           className={`d-md-block d-none block mx-auto position-absolute bottom-0 ${
             locale === "arab" ? "start-0" : "end-0"
           }  homeShape2`}
-        ></img>
+        ></img> */}
       </div>
       <div className="my-md-5">
         <div className="fs-1 fw-bolder text-center">

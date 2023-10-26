@@ -18,7 +18,7 @@ const postSchema = mongoose.Schema({
   },
 });
 
-const resources =
+let resources =
   mongoose.models.resources || mongoose.model("resources", postSchema);
 
 export default resources;

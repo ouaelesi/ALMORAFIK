@@ -2,60 +2,50 @@ import React from "react";
 import BookRessourcesCard from "./BookRessourceCard";
 import NextPrevious from "../NextPrevious";
 import { useState } from "react";
+import { useEffect } from "react";
+import { getBooks_Service } from "../../services/ressources/Books";
+import { useRouter } from "next/router";
+import Loader from "../base/Loader";
 
 const BooksRessources = () => {
+  // locale lang
+  const { locale } = useRouter();
+
   const [currentPage, setCurrentPage] = useState(1);
   const [maxNumPages, setMaxNumPAges] = useState(1);
 
-  const data = [
-    {
-      _id: 1,
-      image: "/assets/imgs/mathbook.png",
-      title: "Bac MATH",
-      author: "@ouaelsahbi",
+  const [booksData, setData] = useState(null);
 
-      description:
-        "This a description of the channle it can be anything it can be anything, its just a random text tused in the desgin",
-      tags: ["Math", "Bac"],
-    },
-    {
-      _id: 2,
-      image: "/assets/imgs/mathbook.png",
-      title: "Ouael SAHBI",
-      author: "@ouaelsahbi",
+  // get books
+  const getBooks = async () => {
+    try {
+      const response = await getBooks_Service();
+      setData(response);
+    } catch {}
+  };
 
-      description:
-        "This a description of the channle it can be anything it can be anything, its just a random text tused in the desgin",
-      tags: ["Math", "Bac"],
-    },
-    {
-      _id: 3,
-      image: "/assets/imgs/mathbook.png",
-      title: "Ouael SAHBI",
-      author: "@ouaelsahbi",
-
-      description:
-        "This a description of the channle it can be anything it can be anything, its just a random text tused in the desgin",
-      tags: ["Math", "Bac"],
-    },
-    {
-      _id: 1,
-      image: "/assets/imgs/mathbook.png",
-      title: "Ouael SAHBI",
-      author: "@ouaelsahbi",
-
-      description:
-        "This a description of the channle it can be anything it can be anything, its just a random text tused in the desgin",
-      tags: ["Math", "Bac"],
-    },
-  ];
-
+  useEffect(() => {
+    !booksData && getBooks();
+  }, [booksData]);
   return (
     <div>
-      <div className="grid grid-cols-2 gap-4 mt-4">
-        {data.map((channel) => (
-          <BookRessourcesCard data={channel} key={channel._id} />
-        ))}
+      <div
+        className={`d-flex gap-4 mt-4 ${
+          locale === "arab" ? "flex-row-reverse" : ""
+        }`}
+      >
+        {" "}
+        {booksData ? (
+          booksData.map((channel) => (
+            <div key={channel._id} className="w-1/2">
+              <BookRessourcesCard data={channel} />
+            </div>
+          ))
+        ) : (
+          <div className="w-100 h-screen d-flex justify-center">
+            <Loader />
+          </div>
+        )}
       </div>
       <div className="mt-4">
         <NextPrevious

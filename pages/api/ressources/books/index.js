@@ -1,18 +1,18 @@
 import {
   addYoutubRes,
+  getBooksMut,
   getYoutubeChannels,
 } from "../../../../controlers/ressources/youtube/youtubeResController";
 import dbConnection from "../../../../utils/dbConnect";
 
 dbConnection();
-const youtubManager = async (req, res) => {
+const booksManager = async (req, res) => {
   const method = req.method;
 
   switch (method) {
     case "GET":
       try {
-        console.log("here");
-        getYoutubeChannels(req, res);
+        getBooksMut(req, res);
       } catch (err) {
         res.status(400).send(err);
       }
@@ -26,4 +26,4 @@ const youtubManager = async (req, res) => {
       break;
   }
 };
-export default youtubManager;
+export default booksManager;

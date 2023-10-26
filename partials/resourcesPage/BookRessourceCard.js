@@ -8,39 +8,60 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark } from "@fortawesome/free-regular-svg-icons";
 import { useState } from "react";
+import { useRouter } from "next/router";
+import { ressourcePageDataAr } from "../../data/TemporaryData/staticData/arab/ressourcesPageAr";
+import { ressourcePageDataEn } from "../../data/TemporaryData/staticData/eng/ressourcesPageEn";
+import { useEffect } from "react";
 
 const BookRessourcesCard = ({ data }) => {
+  const { locale } = useRouter();
+
+  const [pageData, setPageData] = useState(
+    locale === "arab" ? ressourcePageDataAr : ressourcePageDataEn
+  );
   const [isQuestionSaved, setSaved] = useState(false);
-  const [numLikes, setNumLikes] = useState(5);
 
   // functions
   const saveChannel = () => {
     setSaved(!isQuestionSaved);
   };
 
-  const updateNumLikes = (n) => {
-    setNumLikes(numLikes + n);
-  };
+  useEffect(() => {
+    setPageData(locale === "arab" ? ressourcePageDataAr : ressourcePageDataEn);
+  }, [locale]);
+
   return (
-    <div className="d-flex QuestionBox  px-md-4 py-3 px-3  border-secondary gap-4">
+    <div
+      className={`d-flex QuestionBox  px-md-4 py-3 px-3  border-secondary gap-4 ${
+        locale === "arab" ? "flex-row-reverse" : ""
+      }`}
+    >
       <div>
         <Image
           src={data.image}
-          width={200}
+          width={120}
           height={200}
           className=""
           alt={data.title}
+          style={{
+            width: "650px",
+          }}
         />
+        <div className="my-3">
+          <button className="btn_answer btn block mx-auto" style={{ fontSize: 11 }}>
+            {pageData.books.bookAction}
+          </button>
+        </div>
       </div>
-      <div>
+      <div className={`${locale === "arab" ? "text-end" : ""}`}>
         <p className="channelTitle">{data.title}</p>
-        <p className="channelUserName">Author : {data.author}</p>
+        <p className="channelUserName">{data.subTitle}</p>
         <p className="channelDescription">{data.description}</p>
         <div
           className={
-            false
-              ? "d-flex justify-content-end mt-2"
-              : "d-flex justify-content-start mt-2"
+            locale === "arab"
+              ? "d-flex  flex-wrap gap-2  justify-content-end mt-2"
+              : "d-flex  flex-wrap gap-2  justify-content-start mt-2"
           }
         >
           {data.tags.map((tag, key) => (
@@ -64,7 +85,7 @@ const BookRessourcesCard = ({ data }) => {
             />
           </button>
         </div>
-        <div className="align-items-center fs-6 mt-3  mx-auto text-center h-fit   px-1">
+        {/* <div className="align-items-center fs-6 mt-3  mx-auto text-center h-fit   px-1">
           <FontAwesomeIcon
             icon={faCaretUp}
             style={{ fontSize: "22" }}
@@ -76,7 +97,7 @@ const BookRessourcesCard = ({ data }) => {
             style={{ fontSize: "22" }}
             onClick={() => updateNumLikes(-1)}
           />
-        </div>{" "}
+        </div>{" "} */}
       </div>
     </div>
   );

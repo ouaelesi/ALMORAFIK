@@ -70,7 +70,7 @@ const Questions = ({ questions }) => {
               (elem, key) =>
                 IsOnCurrentPage(key) && (
                   <QuestionBox
-                    key={key}
+                    key={elem._id}
                     id={elem._id}
                     Time={elem.createdAt}
                     user_photo={elem.user_photo}

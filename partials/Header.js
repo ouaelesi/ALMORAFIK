@@ -45,8 +45,8 @@ const Header = ({ token }) => {
           <img
             src={
               locale === "arab"
-                ? "/assets/imgs/logoAr.png"
-                : "/assets/imgs/logo.png"
+                ? "/assets/imgs/darkLogoAr.png"
+                : "/assets/imgs/darkLogo.png"
             }
             className="navlogo"
             width="145px"

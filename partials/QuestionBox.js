@@ -76,6 +76,27 @@ const QuestionBox = (props) => {
     } catch {}
   };
 
+  const renderMathQuill = (latex) => {
+    if (typeof window !== "undefined") {
+      const {
+        addStyles,
+        EditableMathField,
+        StaticMathField,
+      } = require("react-mathquill");
+      addStyles();
+      return (
+        <div>
+          <StaticMathField
+            className={` text-light bg-dark border px-3 py-2 outline-none border-dark rounded w-100 my-2`}
+          >
+            {latex}
+          </StaticMathField>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="QuestionBox my-3 px-md-5 py-2 px-3  border-secondary">
       <div
@@ -169,9 +190,7 @@ const QuestionBox = (props) => {
                   {elem}
                 </pre>
               ) : (
-                <pre key={key} className="equationBlock">
-                  {elem}
-                </pre>
+                renderMathQuill(elem)
               )
             )}
           </p>

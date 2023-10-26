@@ -5,6 +5,7 @@ export const ressourcePageDataAr = {
   },
   books: {
     title: "أفضل الكتب",
+    bookAction : "احصل على الكتاب"
   },
   mediaPages: {
     title: "صفحات التواصل الاجتماعي",

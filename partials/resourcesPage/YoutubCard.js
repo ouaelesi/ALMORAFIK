@@ -9,10 +9,13 @@ import {
 import { faBookmark } from "@fortawesome/free-regular-svg-icons";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 const YoutubCard = ({ data }) => {
   // router
   const router = useRouter();
+
+  const { locale } = useRouter();
 
   const [isQuestionSaved, setSaved] = useState(false);
   const [numLikes, setNumLikes] = useState(data.likes);
@@ -26,7 +29,11 @@ const YoutubCard = ({ data }) => {
     setNumLikes(numLikes + n);
   };
   return (
-    <div className="d-flex QuestionBox  px-md-4 py-3 px-3  border-secondary gap-4">
+    <div
+      className={`d-flex QuestionBox  px-md-4 py-3 px-3  border-secondary gap-4 ${
+        locale === "arab" ? "flex-row-reverse" : ""
+      }`}
+    >
       <div>
         <Image
           src={data.image}
@@ -35,25 +42,25 @@ const YoutubCard = ({ data }) => {
           className="rounded-circle "
           alt={data.title}
         />
-        <div
-          className="rounded-md p-1 w-fit border border-secondary mx-auto mt-2 "
-          onClick={() => router.push(data.link)}
-        >
-          <Image
-            src="/assets/imgs/youtube-logo.png"
-            width={20}
-            height={20}
-            alt="youtub logo"
-          />
+        <div className="rounded-md p-1 w-fit border border-secondary mx-auto mt-2 ">
+          <Link href={data.link} target="_blank">
+            <Image
+              src="/assets/imgs/youtube-logo.png"
+              width={20}
+              height={20}
+              alt="youtub logo"
+            />
+          </Link>
         </div>
       </div>
-      <div className="w-100">
+
+      <div className={`w-100 ${locale === "arab" ? "text-end" : ""}`}>
         <p className="channelTitle">{data.title}</p>
         <p className="channelUserName">{data.subTitle}</p>
         <p className="channelDescription">{data.description}</p>
         <div
           className={
-            false
+            locale === "arab"
               ? "d-flex justify-content-end mt-2"
               : "d-flex justify-content-start mt-2"
           }
@@ -79,7 +86,7 @@ const YoutubCard = ({ data }) => {
             />
           </button>
         </div>
-        <div className="align-items-center fs-6 mt-3  mx-auto text-center h-fit   px-1">
+        {/* <div className="align-items-center fs-6 mt-3  mx-auto text-center h-fit   px-1">
           <FontAwesomeIcon
             icon={faCaretUp}
             style={{ fontSize: "22" }}
@@ -91,7 +98,7 @@ const YoutubCard = ({ data }) => {
             style={{ fontSize: "22" }}
             onClick={() => updateNumLikes(-1)}
           />
-        </div>{" "}
+        </div>{" "} */}
       </div>
     </div>
   );

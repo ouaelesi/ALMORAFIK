@@ -39,7 +39,7 @@ const Resources = () => {
   ]);
 
   useEffect(() => {
-    let data = locale === "arab" ? ressourcePageDataAr : ressourcePageDataEn
+    let data = locale === "arab" ? ressourcePageDataAr : ressourcePageDataEn;
     setPageData(data);
     setProfileTablerData([
       {

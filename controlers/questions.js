@@ -1,12 +1,15 @@
 import questionModel from "../models/question";
 import answerModel from "../models/answer";
 import { IsLoggedIn } from "../utils/IsLoggedIn";
+// ______________________________________________________________
 // add question
 export const addQuestion = async (req, res) => {
-  if (!(await IsLoggedIn(req))) {
-    res.status(400).send({ message: "User Not Logged In!" });
-    return;
-  }
+  //todo: activate the auth checks
+  // if (!(await IsLoggedIn(req))) {
+  //   res.status(400).send({ message: "User Not Logged In!" });
+  //   return;
+  // }
+
   if (!req.body) {
     res.status(400).send({ message: "request empty!!", data: req.body });
     return;
@@ -15,10 +18,12 @@ export const addQuestion = async (req, res) => {
   const question = new questionModel({
     title: req.body.title,
     question: req.body.question,
-    creator: req.body.creator,
+    creator: req.body.creator ? req.body.creator : req.body.fullName,
     tags: req.body.tags.split(","),
     files: req.body.files,
-    creatorEmail: req.body.creatorEmail,
+    creatorEmail: req.body.creatorEmail
+      ? req.body.creatorEmail
+      : req.body.fullName,
   });
   question
     .save()
@@ -100,12 +105,9 @@ export const findOneQuestion = (req, res) => {
 // get all questions
 export const findQuestion = async (req, res) => {
   try {
-    const userEmail = await IsLoggedIn(req);
+    let userEmail = await IsLoggedIn(req);
 
-    if (!userEmail) {
-      res.status(400).send({ message: "User Not Logged In!" });
-      return;
-    }
+    userEmail = userEmail ? userEmail : "";
 
     const questionsWithActions = await questionModel.aggregate([
       {

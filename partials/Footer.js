@@ -25,13 +25,24 @@ const Footer = () => {
       <div className={`d-md-flex  justify-content-between py-5 gap-3 ${locale==="arab" ? 'flex-row-reverse' : ''}`}>
         <div className="col-md-4 px-5">
           <img
-            src="/assets/imgs/logo_white.png"
+           src={
+            locale === "arab"
+              ? "/assets/imgs/logoAr.png"
+              : "/assets/imgs/logo.png"
+          }
             width="180px"
             className="block mx-auto"
           />
           <div className="text-white mt-2 fs-6 text-center">
             {footerStaticData.description}
           </div>
+          <img
+            src="/assets/imgs/colorShapes.png"
+            width="200px"
+            className={`mt-7 mx-auto block ${
+              locale === "arab" ? "ml-auto" : ""
+            }  `}
+          ></img>
         </div>
         <div className="col-md-4 px-5 text-white text-center">
           <div className=" fs-4 fw-bold mb-3 yellowText">
@@ -97,7 +108,7 @@ const Footer = () => {
       </div>
 
       <div className="col-12  py-2">
-        <p className="footer_nav"> Copyright ©2020 SA9SINI Reserved.</p>
+        <p className="footer_nav"> Copyright ©2023 ALMORAFIK Reserved.</p>
       </div>
     </div>
   );

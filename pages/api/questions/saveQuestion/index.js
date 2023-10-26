@@ -1,5 +1,6 @@
+import { saveQuestion } from "../../../../controlers/questionActions/saveQuestions";
 import dbConnection from "../../../../utils/dbConnect";
-import { saveQuestion } from "../../../../controlers/saveQuestions";
+
 
 dbConnection();
 const ques = async (req, res) => {

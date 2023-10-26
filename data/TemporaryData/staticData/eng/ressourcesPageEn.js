@@ -5,6 +5,7 @@ export const ressourcePageDataEn = {
   },
   books: {
     title: "Best Books",
+    bookAction: "Get the book",
   },
   mediaPages: {
     title: "Media Pages",

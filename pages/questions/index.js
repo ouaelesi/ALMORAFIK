@@ -59,18 +59,18 @@ const Questions = ({ questions }) => {
         <div className="Questions_section ">
           <QuestionsMenu data={questionsData}></QuestionsMenu>
           {data
-            .sort((a, b) => {
-              return a.likeCount === b.likeCount
-                ? 0
-                : a.likeCount < b.likeCount
-                ? 1
-                : -1;
-            })
+            // .sort((a, b) => {
+            //   return a.likeCount === b.likeCount
+            //     ? 0
+            //     : a.likeCount < b.likeCount
+            //     ? 1
+            //     : -1;
+            // })
             .map(
               (elem, key) =>
                 IsOnCurrentPage(key) && (
                   <QuestionBox
-                    key={key}
+                    key={elem._id}
                     id={elem._id}
                     Time={elem.createdAt}
                     user_photo={elem.user_photo}
@@ -80,9 +80,11 @@ const Questions = ({ questions }) => {
                     Question={elem.question}
                     tags={elem.tags}
                     number_of_answers={elem.answers.length}
-                    number_of_likes={elem.likeCount}
+                    number_of_likes={elem.sumNotes}
                     title={elem.title}
                     staticData={questionsData}
+                    saved={elem.saved}
+                    userNote={elem.userNote}
                   />
                 )
             )}

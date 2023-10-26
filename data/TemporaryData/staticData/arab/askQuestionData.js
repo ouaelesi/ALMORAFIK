@@ -1,6 +1,6 @@
 export const askQuestionData = {
   bigTitle: "اسأل سؤالك",
-  title: "العنوان",
+  title: "عنوان السؤال",
   titleDecription: "كن محددًا وتخيل أنك تطرح سؤالًا على شخص آخر",
   body: "المحتوى",
   bodyDescription:
@@ -13,4 +13,6 @@ export const askQuestionData = {
     steps: ["اسأل سؤالك", "قم بتضمين المزيد من المعلومات", "أضف مجالات السؤال"],
   },
   action: "أضف السؤال",
+  fullName : "الاسم واللقب" , 
+  subject : "المادة الدراسية"
 };

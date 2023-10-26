@@ -1,4 +1,4 @@
-import resourcesModal from "../../../models/ressources/index";
+import resourcesModal from "../../../models/ressource.js";
 import { IsLoggedIn } from "../../../utils/IsLoggedIn";
 
 // Add a youtub channel
@@ -49,8 +49,22 @@ export const getAllResources_Mut = async (req, res) => {
 //--------------------------------------------------------
 // get all youtub channels
 export const getYoutubeChannels = async (req, res) => {
+
   resourcesModal
     .find({ type: "youtube" })
+    .then((channel) => res.send(channel))
+    .catch((err) =>
+      res.status(400).send({ message: err.message || "error occured !!" })
+    );
+};
+
+// ---------------------------------
+// Get all books
+
+// get all books
+export const getBooksMut = async (req, res) => {
+  resourcesModal
+    .find({ type: "book" })
     .then((channel) => res.send(channel))
     .catch((err) =>
       res.status(400).send({ message: err.message || "error occured !!" })

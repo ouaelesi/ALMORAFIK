@@ -20,6 +20,8 @@ export const questionsEngData = {
     submitAnswer: "Submit an answer",
     placeholder: "Write your answer here...",
     action: "Submit answer",
-    condition : "Register to answer"
+    condition: "Register to answer",
+    addTextBlock: "Add a text area",
+    addLatexBlock: "Add a mathematical text area",
   },
 };

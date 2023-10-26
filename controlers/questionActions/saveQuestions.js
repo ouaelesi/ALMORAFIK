@@ -1,6 +1,7 @@
-import { IsLoggedIn } from "../utils/IsLoggedIn";
-import savedQuestionModel from "../models/savedQuestions";
-import questionModal from "../models/question";
+import { IsLoggedIn } from "../../utils/IsLoggedIn";
+import questionModal from "../../models/question";
+import userQuestionsActions from "../../models/userQuestionActions";
+
 // Save && unsave Question
 export const saveQuestion = async (req, res) => {
   try {
@@ -11,32 +12,47 @@ export const saveQuestion = async (req, res) => {
       return;
     }
 
-    if (!req.body) {
-      res
-        .status(400)
-        .send({ message: "Request body is empty!", data: req.body });
-      return;
-    }
+    // if (!req.body) {
+    //   res
+    //     .status(400)
+    //     .send({ message: "Request body is empty!", data: req.body });
+    //   return;
+    // }
 
     // test if the User Has saved this question
-    const existingSavedQuestion = await savedQuestionModel.findOne({
+    const existingSavedQuestion = await userQuestionsActions.findOne({
       userId: userEmail.email,
-      questionId: req.body.questionId,
+      questionId: req.query.id,
     });
 
     if (!existingSavedQuestion) {
-      const newSavedQuestion = new savedQuestionModel({
+      const newSavedQuestion = new userQuestionsActions({
         userId: userEmail.email,
-        questionId: req.body.questionId,
+        questionId: req.query.id,
+        saved: true,
       });
 
       const savedData = await newSavedQuestion.save();
       res.send(savedData);
     } else {
-      await savedQuestionModel.deleteOne({
-        userId: userEmail.email,
-        questionId: req.body.questionId,
-      });
+      if (existingSavedQuestion.saved && existingSavedQuestion.note === 0) {
+        await userQuestionsActions.deleteOne({
+          userId: userEmail.email,
+          questionId: req.query.id,
+        });
+      } else {
+        await userQuestionsActions.findOneAndUpdate(
+          {
+            userId: userEmail.email,
+            questionId: req.query.id,
+          },
+          {
+            $set: {
+              saved: !existingSavedQuestion.saved,
+            },
+          }
+        );
+      }
 
       res.send({ message: "Question unmarked as saved." });
     }
@@ -58,7 +74,7 @@ export const isQuestionSaved = async (req, res) => {
   const userEmail = await IsLoggedIn(req);
   const questionId = req.query.id;
 
-  savedQuestionModel
+  userQuestionsActions
     .find({ userId: userEmail.email, questionId: questionId })
     .then((data) => {
       res.status(200).send(data);
@@ -79,7 +95,7 @@ export const getUserSavedQuestions = async (req, res) => {
 
   const userEmail = await IsLoggedIn(req);
 
-  savedQuestionModel
+  userQuestionsActions
     .find({ userId: userEmail.email })
     .then((data) => {
       const questionIds = data.map((question) => question.questionId);

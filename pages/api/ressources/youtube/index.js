@@ -14,11 +14,15 @@ const youtubManager = async (req, res) => {
         console.log("here");
         getYoutubeChannels(req, res);
       } catch (err) {
-        res.status(400).send("eroor");
+        res.status(400).send(err);
       }
       break;
     case "POST":
-      res.status(404).send("This route is not availabe");
+      try {
+        addYoutubRes(req, res);
+      } catch (err) {
+        res.status(400).send(err);
+      }
       break;
   }
 };

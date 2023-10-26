@@ -13,5 +13,7 @@ export const askQuestionEnData = {
     description: "How to draft your question",
     steps: ["Asking your question", "Include more informations", "Add a field"],
   },
-  action : "Add Question"
+  action : "Add Question" , 
+  fullName : "Full Name" , 
+  subject : "Subject"
 };

@@ -13,14 +13,15 @@ import { useRouter } from "next/router";
 import AuthContext from "../utils/AuthContext";
 
 import { displayDate } from "../utils/date";
+import { noteQuestionMut, saveQuestionMut } from "../services/questions";
 
 const QuestionBox = (props) => {
   //
   const { locale } = useRouter();
 
   const [numLikes, setNumLikes] = useState(props.number_of_likes);
-  const [isQuestionSaved, setSaved] = useState(false);
-
+  const [isQuestionSaved, setSaved] = useState(props.saved);
+  const [myNote, setMynote] = useState(props.userNote);
   const { user } = useContext(AuthContext);
   const router = useRouter();
   useEffect(() => {}, [user]);
@@ -59,30 +60,43 @@ const QuestionBox = (props) => {
 
   // save question
   const saveQuestion = async () => {
-    const response = await fetch("/api/questions/saveQuestion", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ userId: "d", questionId: props.id }),
-    });
-
+    const response = await saveQuestionMut(props.id);
     setSaved(!isQuestionSaved);
   };
 
-  // check if question is saved ;
-  const checkSavedQuestion = () => {
-    fetch("/api/questions/saveQuestion/" + props.id)
-      .then((res) => res.json())
-      .then((data) => {
-        data.length === 0 ? setSaved(false) : setSaved(true);
+  // save question
+  const noteQuestion = async (note) => {
+    setMynote(myNote + note);
+    setNumLikes(numLikes + note);
+    try {
+      const repsonse = noteQuestionMut({
+        questionId: props.id,
+        note: note,
       });
+    } catch {}
   };
 
-  useEffect(() => {
-    checkSavedQuestion();
-  }, [props.id]);
+  const renderMathQuill = (latex) => {
+    if (typeof window !== "undefined") {
+      const {
+        addStyles,
+        EditableMathField,
+        StaticMathField,
+      } = require("react-mathquill");
+      addStyles();
+      return (
+        <div>
+          <StaticMathField
+            className={` text-light bg-dark border px-3 py-2 outline-none border-dark rounded w-100 my-2`}
+          >
+            {latex}
+          </StaticMathField>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="QuestionBox my-3 px-md-5 py-2 px-3  border-secondary">
       <div
@@ -122,17 +136,33 @@ const QuestionBox = (props) => {
         className={`d-flex   ${locale === "arab" ? "flex-row-reverse" : ""}`}
       >
         <div className="align-items-center fs-4  mx-auto text-center h-fit my-auto  px-1">
-          <FontAwesomeIcon
-            icon={faCaretUp}
-            className="fs-1 "
-            onClick={() => updateQuesLikes(1)}
-          />
+          {myNote != 1 ? (
+            <FontAwesomeIcon
+              icon={faCaretUp}
+              className="fs-1 "
+              onClick={() => noteQuestion(1)}
+            />
+          ) : (
+            <FontAwesomeIcon
+              icon={faCaretDown}
+              className="fs-1 "
+              style={{ color: "transparent" }}
+            />
+          )}
           <div>{numLikes}</div>
-          <FontAwesomeIcon
-            icon={faCaretDown}
-            className="fs-1"
-            onClick={() => updateQuesLikes(-1)}
-          />
+          {myNote != -1 ? (
+            <FontAwesomeIcon
+              icon={faCaretDown}
+              className="fs-1"
+              onClick={() => noteQuestion(-1)}
+            />
+          ) : (
+            <FontAwesomeIcon
+              icon={faCaretDown}
+              className="fs-1 "
+              style={{ color: "transparent" }}
+            />
+          )}
         </div>
         <div className="px-md-5 py-3 px-2 w-100">
           <div
@@ -148,7 +178,21 @@ const QuestionBox = (props) => {
             }`}
             onClick={getQuestion}
           >
-            {props.Question}
+            {props.Question.split("|||").map((elem, key) =>
+              key % 2 === 0 ? (
+                <pre
+                  key={key}
+                  style={{
+                    direction: "rtl",
+                    whiteSpace: "pre-wrap",
+                  }}
+                >
+                  {elem}
+                </pre>
+              ) : (
+                renderMathQuill(elem)
+              )
+            )}
           </p>
           <p
             className={`question_details ${

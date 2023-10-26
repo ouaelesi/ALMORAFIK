@@ -21,5 +21,7 @@ export const questionsArData = {
     placeholder: "اكتب إجابتك هنا ...",
     action: "أضف الإجابة",
     condition: "قم بالتسجيل للإجابة",
+    addTextBlock: "إضافة مساحة نصية",
+    addLatexBlock: "إضافة نص رياضي",
   },
 };

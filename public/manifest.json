@@ -4,9 +4,9 @@
     "display": "standalone",
     "scope": "/",
     "start_url": "/",
-    "name": "sa9sini",
-    "short_name": "sa9sini app",
-    "description": "sa9sini phone app",
+    "name": "almorafik",
+    "short_name": "almorafik app",
+    "description": "almorafik phone app",
     "icons": [
         {
             "src": "/icon-192x192.png",

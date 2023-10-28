@@ -151,7 +151,7 @@ pre {
 .welcome_title {
   margin: 0 0 40px 0;
   font-size: 40px;
-  font-weight: bolder;
+  /* font-weight: bold; */
 }
 
 .welcome_text {

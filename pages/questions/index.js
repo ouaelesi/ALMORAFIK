@@ -7,8 +7,14 @@ import fetch from "isomorphic-unfetch";
 import { questionsArData } from "../../data/TemporaryData/staticData/arab/questionsPage";
 import { questionsEngData } from "../../data/TemporaryData/staticData/eng/questionsPage";
 import { useRouter } from "next/router";
+import Link from "next/link";
+import Image from "next/image";
+
+import Tilt from "react-parallax-tilt";
 
 const Questions = ({ questions }) => {
+  const [questionsLanuched, luanchQuestions] = useState(false);
+
   const { locale } = useRouter();
 
   // state
@@ -41,6 +47,56 @@ const Questions = ({ questions }) => {
         setLoading(false);
       });
   }, []);
+
+  // todo remove this and sidplay questions
+
+  if (!questionsLanuched)
+    return (
+      <div className="h-screen">
+        <Tilt tiltReverse>
+          <div className="w-1/4 mx-auto">
+            <Image
+              src="/assets/imgs/questionsillustration.svg"
+              width="200"
+              height="200"
+              alt="almorafiq success image"
+              className="block mx-auto mt-20 w-100 cursor-pointer"
+            />
+          </div>
+        </Tilt>
+
+        <p
+          className="text-center text-lg mt-4  "
+          style={{ fontSize: 35, fontWeight: "bold" }}
+        >
+          مرحبا بك في فضاء الأسئلة
+        </p>
+        <p
+          className="text-center text-lg mt-4 w-1/2 mx-auto "
+          style={{ fontSize: 20, fontWeight: "normal" }}
+        >
+          في هذه المساحة، يمكنك طرح أسئلتك وسيتاح للطلاب والأساتذة الآخرين
+          إمكانية رؤية سؤالك والإجابة عليه{" "}
+        </p>
+        <p
+          className="text-center text-lg mt-1 w-1/2 mx-auto "
+          style={{ fontSize: 17, fontWeight: "normal" }}
+        >
+          كخطوة أولى لإطلاق هذه الميزة نحتاج إلى جمع بعض أسئلتك الشائعة، بعد ذلك
+          عندما نقوم بجمع عدد من الأسئلة مع إجاباتها سنجعل جميع الأسئلة متاحة
+          للجميع مع إمكانية رؤية، إضافة والإجابة على الأسئلة الجديدة
+        </p>
+
+        <Link href="/collectQuestions">
+          <button
+            className="btn block mx-auto my-5 btn_answer px-5 py-2 "
+            style={{ fontSize: 20 }}
+          >
+            اطرح سؤالك الآن
+          </button>
+        </Link>
+      </div>
+    );
 
   // Rendring Content
   if (isLoading)

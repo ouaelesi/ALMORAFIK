@@ -20,11 +20,13 @@ import {
   El_Messiri,
   Cairo,
   Noto_Sans_Arabic,
+  Rubik , 
 } from "next/font/google";
 import { useRouter } from "next/router";
 
 //  If loading a variable font, you don't need to specify the font weight
 const mada = Noto_Sans_Arabic({ subsets: ["arabic"] });
+const rubicFont = Rubik({ subsets: ["latin"] });
 const montserrat = Montserrat({ subsets: ["latin"] });
 function MyApp({ Component, pageProps, userLoggedIn }) {
   //const { login, error, user, isLoad } = useContext(AuthContext);
@@ -62,7 +64,7 @@ function MyApp({ Component, pageProps, userLoggedIn }) {
         <link rel="icon" href="/favicon.png" />
       </Head>
       <main
-        className={locale === "arab" ? mada.className : montserrat.className}
+        className={locale === "arab" ? rubicFont.className : montserrat.className}
       >
         <Header token={userLoggedIn} userLoggedIn={userLoggedIn} />
         <Component {...pageProps} />

@@ -31,13 +31,18 @@ const YoutubResouces = () => {
     <div>
       {youtubChannels ? (
         <div
-          className={`d-flex gap-4 mt-4 ${
+          className={`row gap-y-4 justify-between  mt-4 ${
             locale === "arab" ? "flex-row-reverse" : ""
           }`}
         >
-          {youtubChannels.map((channel) => (
-            <div key={channel._id} className="w-1/2">
-              <YoutubCard data={channel}  />
+          {youtubChannels.map((channel, index) => (
+            <div
+              key={channel._id}
+              className={`col-md-6 col-12 ${index % 2 === 0 ? "order-2" : "order-1"}`}
+              
+            >
+              {/* 'order-2' and 'order-1' classes are used to change the order of items on every second row */}
+              <YoutubCard data={channel} />
             </div>
           ))}
         </div>

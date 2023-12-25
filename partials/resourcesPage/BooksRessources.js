@@ -30,14 +30,14 @@ const BooksRessources = () => {
   return (
     <div>
       <div
-        className={`d-flex gap-4 mt-4 ${
+        className={`row gap-y-4 mt-4 ${
           locale === "arab" ? "flex-row-reverse" : ""
         }`}
       >
         {" "}
         {booksData ? (
           booksData.map((channel) => (
-            <div key={channel._id} className="w-1/2">
+            <div key={channel._id} className="col-md-6 col-12">
               <BookRessourcesCard data={channel} />
             </div>
           ))

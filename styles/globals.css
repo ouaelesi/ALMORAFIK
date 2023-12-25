@@ -60,7 +60,9 @@ pre {
   overflow-x: auto;
   margin-top: 5px;
 }
-
+.bg-blue-color {
+  background-color: var(--blue-color);
+}
 .bg-yellow-color {
   background-color: var(--yellow-color);
 }
@@ -759,14 +761,11 @@ pre {
 /* resources page */
 /* 1. Youtube */
 .channelTitle {
-  font-size: 20px;
   font-weight: 700;
 }
 .channelUserName {
   color: var(--yellow-color);
   font-weight: 500;
-  font-size: 12px;
-  margin-top: -5px;
 }
 
 .channelDescription {

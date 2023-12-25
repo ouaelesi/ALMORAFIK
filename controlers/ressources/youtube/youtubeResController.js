@@ -23,6 +23,7 @@ export const addYoutubRes = async (req, res) => {
     link: req.body.link,
   });
 
+  console.log('its working ')
   resource
     .save()
     .then((data) => {
@@ -49,7 +50,6 @@ export const getAllResources_Mut = async (req, res) => {
 //--------------------------------------------------------
 // get all youtub channels
 export const getYoutubeChannels = async (req, res) => {
-
   resourcesModal
     .find({ type: "youtube" })
     .then((channel) => res.send(channel))

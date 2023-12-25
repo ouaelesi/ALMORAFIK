@@ -18,7 +18,7 @@ const Calculator = () => {
   const { locale } = useRouter();
   const router = useRouter();
 
-  const [average, setAverage] = useState(15.5);
+  const [average, setAverage] = useState(0);
 
   const [memePic, setMemePic] = useState("");
 

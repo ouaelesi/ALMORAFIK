@@ -13,7 +13,7 @@ import Image from "next/image";
 import Tilt from "react-parallax-tilt";
 
 const Questions = ({ questions }) => {
-  const [questionsLanuched, luanchQuestions] = useState(false);
+  const [questionsLanuched, luanchQuestions] = useState(true);
 
   const { locale } = useRouter();
 

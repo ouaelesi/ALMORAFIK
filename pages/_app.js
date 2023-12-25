@@ -20,7 +20,7 @@ import {
   El_Messiri,
   Cairo,
   Noto_Sans_Arabic,
-  Rubik , 
+  Rubik,
 } from "next/font/google";
 import { useRouter } from "next/router";
 
@@ -62,13 +62,18 @@ function MyApp({ Component, pageProps, userLoggedIn }) {
         <title>{locale === "arab" ? "المرافق" : "ALMORAFIK"}</title>
         <link rel="manifest" href="/manifest.json" />
         <link rel="icon" href="/favicon.png" />
+     
       </Head>
       <main
-        className={locale === "arab" ? rubicFont.className : montserrat.className}
+        className={
+          locale === "arab" ? rubicFont.className : montserrat.className
+        }
       >
         <Header token={userLoggedIn} userLoggedIn={userLoggedIn} />
         <Component {...pageProps} />
         <Footer />
+      
+        
       </main>
     </AuthProvider>
   );

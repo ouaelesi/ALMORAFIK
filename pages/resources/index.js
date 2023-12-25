@@ -64,7 +64,7 @@ const Resources = () => {
 
   return (
     <div className="Question_container">
-      <div className="h-screen Questions_section  py-3">
+      <div className="Questions_section px-2 py-3">
         <div
           className={`px-md-5 px-3   py-5   QuestionMenu  border-2 border-light text-white fs-2 ${
             locale === "arab" ? "text-end" : ""
@@ -73,19 +73,24 @@ const Resources = () => {
           {pageData.title}
         </div>
         <div
-          className={`d-flex mt-4 w-fit  p-1 border-2 rounded-md bg-light ${
+          className={`d-md-flex  mt-4 md:w-fit  w-full   p-1 border-2 rounded-md bg-light ${
             locale === "arab" ? "flex-row-reverse ml-auto" : ""
           }`}
         >
           {profileTablerData.map((tab, key) => (
             <div
               key={key}
-              className={`${
+              className={`
+              
+              ${
                 tab.name === activeTab.name
                   ? "text-white bg-yellow-color fw-semibold"
                   : ""
               }
-              cursor-pointer hover-text-warning px-4 py-2 rounded-md d-flex gap-2`}
+              ${
+                locale === "arab" ? "md:justify-end" : "md:justify-start"
+              }
+              cursor-pointer justify-center hover-text-warning px-4 py-2 rounded-md d-flex gap-2`}
               onClick={() => setTab(tab)}
             >
               {" "}

@@ -15,6 +15,19 @@ import AuthContext from "../utils/AuthContext";
 import { displayDate } from "../utils/date";
 import { noteQuestionMut, saveQuestionMut } from "../services/questions";
 
+import {
+  FacebookShareButton,
+  FacebookIcon,
+  TwitterShareButton,
+  TwitterIcon,
+  EmailShareButton,
+  EmailIcon,
+  FacebookMessengerShareButton,
+  FacebookMessengerIcon,
+  WhatsappShareButton,
+  WhatsappIcon,
+} from "next-share";
+
 const QuestionBox = (props) => {
   //
   const { locale } = useRouter();
@@ -245,6 +258,43 @@ const QuestionBox = (props) => {
               ))}
             </div>
           </div>
+          <div className="flex gap-2">
+            <FacebookShareButton
+              url={"https://sa-9-sini-website.vercel.app/questions/" + props.id}
+              quote={props.title + "\n" + "Ouael"}
+              hashtag={"#ALMORAFIK"}
+              windowHeight={700}
+              windowWidth={800}
+            >
+              <FacebookIcon size={25} round />
+            </FacebookShareButton>
+
+            <TwitterShareButton
+              url={"https://sa-9-sini-website.vercel.app/questions/" + props.id}
+              title={"سؤال على منصة المرافق:" + "\n" + props.title + "\n" + ""}
+              windowHeight={700}
+              windowWidth={800}
+            >
+              <TwitterIcon size={25} round />
+            </TwitterShareButton>
+            <WhatsappShareButton
+              url={"https://sa-9-sini-website.vercel.app/questions/" + props.id}
+              title={"سؤال على منصة المرافق:" + "\n" + props.title + "\n" + ""}
+              windowHeight={700}
+              windowWidth={800}
+            >
+              <WhatsappIcon size={25} round />
+            </WhatsappShareButton>
+            <EmailShareButton
+              url={"https://sa-9-sini-website.vercel.app/questions/" + props.id}
+              title={"سؤال على منصة المرافق:" + "\n" + props.title + "\n" + ""}
+              windowHeight={700}
+              windowWidth={800}
+            >
+              <EmailIcon size={25} round />
+            </EmailShareButton>
+          </div>
+
           {user && user.email == props.creatorEmail && (
             <div>
               <button className="btn border mx-1" onClick={editQuestion}>

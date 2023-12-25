@@ -3,6 +3,7 @@ export const headerData = {
     home: "الرئيسية",
     contact: "تواصل معنا",
     about: "من نحن",
+    tools: "أدوات الطالب",
     questions: "الأسئلة",
     resources: "المصادر",
   },

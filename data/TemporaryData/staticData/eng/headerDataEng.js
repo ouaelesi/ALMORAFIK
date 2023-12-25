@@ -3,6 +3,7 @@ export const headerDataEng = {
     home: "HOME",
     contact: "CONTACT US",
     about: "ABOUT US",
+    tools : 'TOOLS',
     questions: "QUESTIONS",
     resources : "RESOURCES"
   },

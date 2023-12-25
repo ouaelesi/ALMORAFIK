@@ -126,8 +126,8 @@ const Links = ({ token, classNames }) => {
         <Link href="/resources" className="navlink text-dark d-block">
           {navData.links.resources}
         </Link>
-        <Link href="/aboutUs" className="navlink text-dark d-block">
-          {navData.links.about}
+        <Link href="/tools" className="navlink text-dark d-block">
+          {navData.links.tools}
         </Link>
         <Link href="/aboutUs" className="navlink text-dark d-block">
           {navData.links.contact}
@@ -148,7 +148,7 @@ const Links = ({ token, classNames }) => {
             </Link>
           )}
         </div>
-        <div className="mx-3 mt-1">
+        {/* <div className="mx-3 mt-1">
           {!user && (
             <Link href="/signUp" className=" d-flex justify-content-center">
               <Button className="signbutton signup">
@@ -157,7 +157,7 @@ const Links = ({ token, classNames }) => {
               </Button>
             </Link>
           )}
-        </div>
+        </div> */}
         <div className="mx-2 mt-1">
           {user && (
             <div

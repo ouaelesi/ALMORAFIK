@@ -30,7 +30,7 @@ const CollectQuestions = () => {
             className={`col-12 col-md-8 my-4 ${
               locale === "arab" ? "order-2" : "order-1"
             }`}
-          >
+          > 
             <QuestionBody staticData={staticData}></QuestionBody>
           </div>
           <div

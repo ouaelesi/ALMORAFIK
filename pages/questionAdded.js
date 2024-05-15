@@ -43,7 +43,7 @@ const QuestionAdded = () => {
         />
       )}
       <Tilt tiltReverse>
-        <div className="w-1/4 mx-auto">
+        <div className="md:w-1/4 w-10/12 mx-auto">
           <Image
             src="/assets/imgs/successillustration.svg"
             width="200"
@@ -66,15 +66,16 @@ const QuestionAdded = () => {
       >
         سوف نتواصل معك بمجرد نشر الأسئلة
       </p>
-
-      <Link href="/">
-        <button
-          className="btn block mx-auto my-5 btn_answer px-5 py-2 "
-          style={{ fontSize: 20 }}
-        >
-          العودة إلى الصفحة الرئيسية
-        </button>
-      </Link>
+      <div className="w-10/12 md:w-1/4 mx-auto">
+        <Link href="/" className="w-full">
+          <button
+            className="btn w-100 block  my-5 btn_answer px-5 py-2 "
+            style={{ fontSize: 15 }}
+          >
+            العودة إلى الصفحة الرئيسية
+          </button>
+        </Link>
+      </div>
     </div>
   );
 };

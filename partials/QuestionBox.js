@@ -132,11 +132,18 @@ const QuestionBox = (props) => {
               locale === "arab" ? "flex-row-reverse" : ""
             }`}
           >
-            <p> {props.staticData.questionsBox.askedBy}</p>
+            <p>
+              {" "}
+              {props.staticData.questionsBox.askedBy}
+              <p>
+                {" "}
+                <b className="text-black/40 text-xs ">{displayDate(props.Time)}</b>
+              </p>
+            </p>
             <b className="text-dark underline">{props.creator}</b>
-            <b className="text-dark">{displayDate(props.Time)}</b>
           </div>
         </div>
+
         <button className="" onClick={() => saveQuestion()}>
           <FontAwesomeIcon
             icon={isQuestionSaved ? solidBookMark : faBookmark}
@@ -261,7 +268,7 @@ const QuestionBox = (props) => {
           <div className="flex gap-2">
             <FacebookShareButton
               url={"https://sa-9-sini-website.vercel.app/questions/" + props.id}
-              quote={props.title + "\n" + "Ouael"}
+              quote={props.title + "\n"}
               hashtag={"#ALMORAFIK"}
               windowHeight={700}
               windowWidth={800}
@@ -296,7 +303,7 @@ const QuestionBox = (props) => {
           </div>
 
           {user && user.email == props.creatorEmail && (
-            <div>
+            <div className="mt-3">
               <button className="btn border mx-1" onClick={editQuestion}>
                 <FontAwesomeIcon icon={faPen} />
               </button>

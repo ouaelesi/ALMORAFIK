@@ -13,6 +13,9 @@ import {
   faX,
 } from "@fortawesome/free-solid-svg-icons";
 
+import { MODE } from "../utils/prod";
+import axios from "axios";
+
 const QuestionBody = ({ staticData }) => {
   const { locale } = useRouter();
 
@@ -76,6 +79,32 @@ const QuestionBody = ({ staticData }) => {
               Equation
             </div>
           </div>
+          <div className="d-flex justify-between align-items-center">
+            <button
+              onClick={() => insertSymbol(_id, "+")}
+              className="btn btn-primary mx-1"
+            >
+              +
+            </button>
+            <button
+              onClick={() => insertSymbol(_id, "-")}
+              className="btn btn-primary mx-1"
+            >
+              -
+            </button>
+            <button
+              onClick={() => insertSymbol(_id, "*")}
+              className="btn btn-primary mx-1"
+            >
+              *
+            </button>
+            <button
+              onClick={() => insertSymbol(_id, "/")}
+              className="btn btn-primary mx-1"
+            >
+              /
+            </button>
+          </div>
 
           <EditableMathField
             latex={""}
@@ -121,7 +150,6 @@ const QuestionBody = ({ staticData }) => {
     console.log("the values ===>", getValues());
     setIsSubmiting(true);
     createQuestion();
-    router.push("/questions");
   };
 
   const removeBox = (_id) => {
@@ -135,15 +163,22 @@ const QuestionBody = ({ staticData }) => {
 
   const createQuestion = async () => {
     try {
-      const res = await fetch("/api/questions", {
-        method: "POST",
+      const res = await axios.post("/api/questions", getValues(), {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(getValues()),
       });
-    } catch (err) {}
+
+      if (MODE === "pre-Launch") {
+        router.push("/questionAdded");
+      } else {
+        console.log("this is the response: ", res);
+        router.push("/questions/" + res.data._id);
+      }
+    } catch (err) {
+      console.log(err.message);
+    }
   };
 
   const handleChange = (_id, value) => {
@@ -158,7 +193,9 @@ const QuestionBody = ({ staticData }) => {
   return (
     <div>
       {isSubmiting ? (
-        <Spinner />
+        <div className="w-fit mx-auto py-20">
+          <Spinner />
+        </div>
       ) : (
         <div>
           <div className="ASKYOURQUES">{staticData.bigTitle}</div>

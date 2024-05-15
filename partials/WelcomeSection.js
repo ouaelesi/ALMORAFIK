@@ -56,7 +56,7 @@ const Welcome = () => {
           <p className="welcome_text h6 font-light">
             {HeaderData.header.description}
           </p>
-          <Link href="/questions">
+          <Link href="/collectQuestions">
             <Button className="explore_btn px-7 fw-medium  signup">
               {HeaderData.header.action}
             </Button>
@@ -130,7 +130,7 @@ const Welcome = () => {
             <p className="mt-5 py-5 px-md-10 px-2 fs-md-1 fs-2 fw-bolder w-75 mx-auto">
               {HeaderData.howItWorks.quote}
             </p>
-            <Link href="/askQuestion">
+            <Link href="/collectQuestions">
               <Button className="askQuestionButton fw-bold">
                 {HeaderData.howItWorks.action}
               </Button>

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Button } from "reactstrap";
 import { homeData } from "../data/TemporaryData/staticData/arab/homeData";
 import { homeDataEng } from "../data/TemporaryData/staticData/eng/homeData";
+import Link from "next/link";
 
 const Motivation = () => {
   const { locale } = useRouter();
@@ -24,7 +25,12 @@ const Motivation = () => {
         >
           {HeaderData.motivation.description}
         </div>
-        <Button className="my-3"> {HeaderData.motivation.action}</Button>
+        <Button>
+          <Link className="my-3 hover:text-white" href="/collectQuestions">
+            {" "}
+            {HeaderData.motivation.action}
+          </Link>
+        </Button>
       </div>
     </div>
   );

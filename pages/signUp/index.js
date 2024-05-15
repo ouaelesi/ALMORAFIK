@@ -6,6 +6,9 @@ import { Store } from "../../utils/AuthContext";
 import { useRouter } from "next/router";
 import { authArData } from "../../data/TemporaryData/staticData/arab/authData";
 import { authData } from "../../data/TemporaryData/staticData/eng/authData";
+import Image from "next/image";
+import Link from "next/link";
+import { MODE } from "../../utils/prod";
 
 function SignUp({ token }) {
   const { locale } = useRouter();
@@ -18,6 +21,23 @@ function SignUp({ token }) {
     locale === "arab" ? setData(authArData) : setData(authData);
   }, [locale]);
 
+  if (MODE === "pre-Launch")
+    return (
+      <div className="h-screen w-full">
+        <Image
+          width={400}
+          height={400}
+          className="block mx-auto md:mt-28 md:w-1/4 w-4/4 mt-10"
+          alt="in progress almorafik "
+          src="/assets/imgs/inProgress.png"
+        />
+        <div className="px-4"> 
+          <button className="btn btn_answer  w-full md:w-1/4 mx-auto mt-2 block">
+            <Link href="/">GO HOME</Link>
+          </button>
+        </div>
+      </div>
+    );
   return (
     <>
       {/* this is the var from the context {myVar}

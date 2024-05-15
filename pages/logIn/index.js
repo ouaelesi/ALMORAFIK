@@ -3,6 +3,9 @@ import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { authArData } from "../../data/TemporaryData/staticData/arab/authData";
 import { authData } from "../../data/TemporaryData/staticData/eng/authData";
+import Image from "next/image";
+import { MODE } from "../../utils/prod";
+import Link from "next/link";
 
 const LogIn = () => {
   const { locale } = useRouter();
@@ -47,6 +50,23 @@ const LogIn = () => {
     }
   };
 
+  if (MODE === "pre-Launch")
+    return (
+      <div className="h-screen w-full">
+        <Image
+          width={400}
+          height={400}
+          className="block mx-auto md:mt-28 md:w-1/4 w-4/4 mt-10"
+          alt="in progress almorafik "
+          src="/assets/imgs/inProgress.png"
+        />
+        <div className="px-4">
+          <button className="btn btn_answer w-full md:w-1/4 mx-auto mt-2 block">
+            <Link href="/">GO HOME</Link>
+          </button>
+        </div>
+      </div>
+    );
   return (
     <div
       className={`page_container row d-flex justify-content-center ${
@@ -54,13 +74,14 @@ const LogIn = () => {
       }`}
     >
       <div className="login_container col-10 col-xl-3 col-lg-4 col-md-5 col-sm-8">
-        <button className=" btn login_with_google">
+        {/* <button className=" btn login_with_google">
           {authStaticData.login.loginGoogle}
-        </button>
+        </button> */}
 
-        <button className=" btn login_with_facebook">
+        {/* <button className=" btn login_with_facebook">
           {authStaticData.login.loginFaceBook}
-        </button>
+        </button> */}
+
         <div>
           {loading ? (
             <div className="spinner-border block mx-auto my-2" role="status">

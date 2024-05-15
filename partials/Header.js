@@ -138,7 +138,7 @@ const Links = ({ token, classNames }) => {
           locale === "arab" ? "flex-row-reverse" : ""
         } d-md-flex  w-md-fit  mx-auto   justify-content-between`}
       >
-        <div className="mx-3 mt-1">
+        {/* <div className="mx-3 mt-1">
           {!user && (
             <Link href="/logIn" className="d-flex justify-content-center">
               <Button className="signbutton login ">
@@ -147,7 +147,7 @@ const Links = ({ token, classNames }) => {
               </Button>
             </Link>
           )}
-        </div>
+        </div> */}
         {/* <div className="mx-3 mt-1">
           {!user && (
             <Link href="/signUp" className=" d-flex justify-content-center">

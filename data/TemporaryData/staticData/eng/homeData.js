@@ -3,7 +3,7 @@ export const homeDataEng = {
     title: "WELCOME WITH US",
     description:
       "A learning platform to ask questions about anything related to study in all subjects, offered for all majors that have a baccalaureate exam to find the answer from teachers, colleagues or bachelors.",
-    action: "EXPLORE MORE",
+    action: "ASK YOUR QUESTION",
   },
   howItWorks: {
     title: "How It Works!",
@@ -31,7 +31,7 @@ export const homeDataEng = {
   motivation: {
     title: "QESTION IS THE HALF OF THE ANSWER",
     description:
-      "Hey ! i want to ask you a question ten years from now where do u want to see yourself ? If you have an answer now that means you have a dream and u want to make it true so i'm here to tell you if you are working hard work harder if you didnt start yet start now .don't give up don't ever stop building yourself though it is exhausting because i know it won't be easy .it will be hard and painful you will have to sacrifice a lot for this dream but there is a secret you should know it will be worth it so much ..and we create this website SA9SINI as a support for you in your studies.",
+      "Hey there! I'd like to pose a question: Where do you see yourself in ten years? If you have an answer already, it means you have a dream and you're determined to make it a reality. I'm here to remind you that if you're already working hard, keep pushing yourself even further. If you haven't started yet, now is the perfect time to begin. Don't give up, and never stop investing in yourself, even when it feels exhausting. I know it won't be easy; it will require hard work and sacrifices. But here's a secret: It will all be worth it in the end. That's why we created the SA9SINI website—to support you in your academic journey.",
     action: "Get Motivated!",
   },
 };

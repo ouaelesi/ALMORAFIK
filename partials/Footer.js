@@ -6,6 +6,7 @@ import {
   faInstagram,
   faGoogle,
   faFacebookMessenger,
+  faWhatsapp,
 } from "@fortawesome/free-brands-svg-icons";
 
 import { footerData } from "../data/TemporaryData/staticData/eng/FooterData";
@@ -80,13 +81,20 @@ const Footer = () => {
           </div>
           <div className="d-flex gap-2 mb-3 w-fit mx-auto">
             <FontAwesomeIcon
+              icon={faWhatsapp}
+              style={{ marginTop: "5", fontSize: "20" }}
+            />
+            +213 559 88 73 85
+          </div>
+          <div className="d-flex gap-2 mb-3 w-fit mx-auto">
+            <FontAwesomeIcon
               icon={faPhone}
               style={{ marginTop: "5", fontSize: "20" }}
             />
-            07 95 95 15 19
+            05 53 18 20 93
           </div>
 
-          <div className="d-flex gap-4 mt-4 mb-3 w-fit mx-auto">
+          {/* <div className="d-flex gap-4 mt-4 mb-3 w-fit mx-auto">
             <FontAwesomeIcon
               icon={faFacebookF}
               style={{ marginTop: "5", fontSize: "30" }}
@@ -103,12 +111,12 @@ const Footer = () => {
               icon={faFacebookMessenger}
               style={{ marginTop: "5", fontSize: "30" }}
             />
-          </div>
+          </div> */}
         </div>
       </div>
 
       <div className="col-12  py-2">
-        <p className="footer_nav"> Copyright ©2023 ALMORAFIK Reserved.</p>
+        <p className="footer_nav"> Copyright ©2024 ALMORAFIK Reserved.</p>
       </div>
     </div>
   );

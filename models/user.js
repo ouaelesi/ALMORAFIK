@@ -22,6 +22,10 @@ const UserSchema = mongoose.Schema({
     type: Number,
     default: 0,
   },
+  googleId : {
+    type: String,
+    default: null
+  }
 });
 
 UserSchema.methods.comparePassword = (password, hashPassWord) => {

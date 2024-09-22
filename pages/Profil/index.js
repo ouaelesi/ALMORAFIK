@@ -1,11 +1,9 @@
-import React, { useState, useEffect, useContext } from "react";
-import AuthContext from "../../utils/AuthContext";
+import React, { useState, useEffect } from "react";
 import UserAskedQues from "../../partials/UserAskedQues";
 import UserSavedQuestions from "../../partials/UserSavedQuestions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { profileStaticData } from "../../data/TemporaryData/staticData/eng/profileStaticData";
 import { profileStaticDataAr } from "../../data/TemporaryData/staticData/arab/profileStaticDataAr";
-
 import {
   faPen,
   faEnvelope,
@@ -14,9 +12,11 @@ import {
   faBookmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 
 const Profil = () => {
-  const { locale } = useRouter();
+  const { locale, push } = useRouter();
+  const { data: session, status } = useSession();
 
   const [profilData, setProfilData] = useState("There Is No Data");
   const [isLoading, setLoading] = useState(true);
@@ -44,26 +44,26 @@ const Profil = () => {
 
   const [staticData, setStaticData] = useState(profileStaticDataAr);
 
-  // infos of the Auth user
-  const { user } = useContext(AuthContext);
-  // icons
-
   useEffect(() => {
-    setLoading(true);
-
-    if (user) {
-      fetch(`/api/users/${user.email}`)
+    if (status === "loading") {
+      setLoading(true);
+    } else if (status === "unauthenticated") {
+      push("/");
+    } else if (status === "authenticated") {
+      setLoading(true);
+      fetch(`/api/users/${session.user.email}`)
         .then((res) => res.json())
         .then((data) => {
           setProfilData(data);
           setUpdateProfil(data);
           setLoading(false);
         })
-        .catch((err) => console.log("there is an error", user));
-    } else {
-      setLoading(false);
+        .catch((err) => {
+          console.log("there is an error", session.user);
+          setLoading(false);
+        });
     }
-  }, [user]);
+  }, [status, session, push]);
 
   useEffect(() => {
     locale === "arab"
@@ -77,17 +77,18 @@ const Profil = () => {
 
     formData.append("theFiles", imgInput.files[0]);
 
-    fetch(`/api/upload/${user.email}`, {
+    fetch(`/api/upload/${session.user.email}`, {
       method: "POST",
-
       body: formData,
     })
       .then(() => console.log("We have changed Your Profil Pic"))
       .catch((err) =>
-        console.log("there is an error when changing the profil photo of", user)
+        console.log("there is an error when changing the profil photo of", session.user)
       );
   };
+
   const handleP = (e) => {};
+
   if (isLoading)
     return (
       <div className=" pt-20">
@@ -96,6 +97,7 @@ const Profil = () => {
         </div>
       </div>
     );
+
   return (
     <div
       className={`bg-light ${locale === "arab" ? "text-end" : "text-start"}`}

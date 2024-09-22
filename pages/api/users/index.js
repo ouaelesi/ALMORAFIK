@@ -1,5 +1,5 @@
 import dbConnection from "../../../utils/dbConnect";
-import { addUser, getUsers } from "../../../controlers/users";
+import { addUser, getUsers, signUp } from "../../../controlers/users";
 
 dbConnection();
 const singUp = async (req, res) => {
@@ -14,7 +14,7 @@ const singUp = async (req, res) => {
       }
       break;
     case "POST":
-      addUser(req, res);
+      signUp(req, res);
       break;
   }
 };

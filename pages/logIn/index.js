@@ -3,8 +3,8 @@ import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { authArData } from "../../data/TemporaryData/staticData/arab/authData";
 import { authData } from "../../data/TemporaryData/staticData/eng/authData";
+import { signIn } from "next-auth/react";
 import Image from "next/image";
-import { MODE } from "../../utils/prod";
 import Link from "next/link";
 
 const LogIn = () => {
@@ -16,57 +16,35 @@ const LogIn = () => {
   }, [locale]);
 
   const [loading, setLoading] = useState(false);
-  // Form Validation
   const {
     register,
+    handleSubmit,
     getValues,
     formState: { errors, isDirty, isValid, isSubmitted },
   } = useForm({ mode: "onTouched" });
 
-  // The Next Router
   const router = useRouter();
-
-  // This function will be executed when the user hit the login button
   const [ErrorMessage, setErrorMessage] = useState(null);
-  const handleSubmit = async (e) => {
+
+  const onSubmit = async (data) => {
     setLoading(true);
     setErrorMessage(null);
-    e.preventDefault();
-    const userInfo = getValues();
-    const res = await fetch("/api/users/logIn", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userInfo),
+
+    const result = await signIn("credentials", {
+      redirect: false,
+      email: data.email,
+      password: data.hashPassword,
     });
+
     setLoading(false);
-    if (res.status === 200) {
-      router.push("/");
-      router.reload("/");
+
+    if (result.error) {
+      setErrorMessage("Email or Password not correct!");
     } else {
-      setErrorMessage("Email Or Password not correct !!");
+      router.push("/");
     }
   };
 
-  if (MODE === "pre-Launch")
-    return (
-      <div className="h-screen w-full">
-        <Image
-          width={400}
-          height={400}
-          className="block mx-auto md:mt-28 md:w-1/4 w-4/4 mt-10"
-          alt="in progress almorafik "
-          src="/assets/imgs/inProgress.png"
-        />
-        <div className="px-4">
-          <button className="btn btn_answer w-full md:w-1/4 mx-auto mt-2 block">
-            <Link href="/">GO HOME</Link>
-          </button>
-        </div>
-      </div>
-    );
   return (
     <div
       className={`page_container row d-flex justify-content-center ${
@@ -74,18 +52,24 @@ const LogIn = () => {
       }`}
     >
       <div className="login_container col-10 col-xl-3 col-lg-4 col-md-5 col-sm-8">
-        {/* <button className=" btn login_with_google">
+        <button
+          className="btn login_with_google"
+          onClick={() => signIn("google")}
+        >
           {authStaticData.login.loginGoogle}
-        </button> */}
+        </button>
 
-        {/* <button className=" btn login_with_facebook">
+        <button
+          className="btn login_with_facebook"
+          onClick={() => signIn("facebook")}
+        >
           {authStaticData.login.loginFaceBook}
-        </button> */}
+        </button>
 
         <div>
           {loading ? (
             <div className="spinner-border block mx-auto my-2" role="status">
-              <span className="sr-only ">Loading...</span>
+              <span className="sr-only">Loading...</span>
             </div>
           ) : ErrorMessage ? (
             <div className="alert alert-danger" role="alert">
@@ -99,7 +83,7 @@ const LogIn = () => {
             )
           )}
         </div>
-        <form className="login_form" onSubmit={(e) => handleSubmit(e)}>
+        <form className="login_form" onSubmit={handleSubmit(onSubmit)}>
           <div className="form-group Loginstitles" id="usernamelogin">
             {authStaticData.login.email}
             <input
@@ -109,36 +93,33 @@ const LogIn = () => {
                 errors.email
                   ? "border border-danger text-danger"
                   : "border border-dark"
-              } form-control   fs-6 mb-0`}
+              } form-control fs-6 mb-0`}
               placeholder={authStaticData.login.emailPlace}
               name="email"
               type="email"
-              required="true"
               {...register("email", { required: true, minLength: 3 })}
             ></input>
             {errors.email && (
-              <p className="fs-6 text-danger fw-light ">
-                a Valid adress email is required
+              <p className="fs-6 text-danger fw-light">
+                A valid email address is required
               </p>
             )}
             <label className="mt-4">{authStaticData.login.password}</label>
             <input
               className={`
-            
               ${locale === "arab" ? "text-end" : "text-start"}
               ${
                 errors.hashPassword
                   ? "border border-danger text-danger"
                   : "border border-dark"
-              } form-control   fs-6 mb-0`}
+              } form-control fs-6 mb-0`}
               placeholder={authStaticData.login.passwordPlace}
               type="password"
               name="hashPassword"
-              required="true"
               {...register("hashPassword", { required: true })}
             ></input>
             {errors.hashPassword && (
-              <p className="fs-6 text-danger fw-light ">Password is required</p>
+              <p className="fs-6 text-danger fw-light">Password is required</p>
             )}
             <button
               className="btn loginbtn btn-dark mt-4 text-light"
@@ -150,10 +131,10 @@ const LogIn = () => {
           </div>
         </form>
         <div className="text-center mt-2">
-          You Don t have an account?{" "}
-          <a href="signUp" className="underline  fw-bold">
+          You dont have an account?{" "}
+          <Link href="signUp" className="underline fw-bold">
             Sign Up
-          </a>
+          </Link>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
+import { signIn } from "next-auth/react";
 
 const SignUP = ({ staticData }) => {
   const { locale } = useRouter();
@@ -16,40 +17,48 @@ const SignUP = ({ staticData }) => {
 
   const router = useRouter();
 
-  const onSubmit = (e) => {
+  const onSubmit = async (data) => {
     setBackErrors([]);
-    e.preventDefault();
-    signUp(e);
-  };
-
-  const signUp = async (e) => {
-    e.preventDefault();
-    const UserData = getValues();
     const res = await fetch("/api/users", {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(UserData),
+      body: JSON.stringify(data),
     });
-    if (res.status == 409) {
-      const err = backErrors;
-      err.push("email Alredy Exists");
-      setBackErrors(err);
-    }
-    if (res.status == 200) {
-      router.push("/");
-      router.reload(window.location.pathname);
+
+    if (res.ok) {
+      const result = await signIn("credentials", {
+        redirect: false,
+        email: data.email,
+        password: data.hashPassword,
+      });
+
+      if (result.error) {
+        setBackErrors([result.error]);
+      } else {
+        router.push("/");
+      }
+    } else {
+      const errorData = await res.json();
+      setBackErrors([errorData.message]);
     }
   };
+
   return (
     <div>
       <div className="login_container">
-        <button disabled="true" className=" btn login_with_google">
+        <button
+          className="btn login_with_google"
+          onClick={() => signIn("google")}
+        >
           {staticData.signUp.loginGoogle}
         </button>
-        <button disabled="true" className=" btn login_with_facebook">
+        <button
+          className="btn login_with_facebook hover:text-white"
+          onClick={() => signIn("facebook")}
+        >
           {staticData.signUp.loginFaceBook}
         </button>
         <div>
@@ -59,16 +68,13 @@ const SignUP = ({ staticData }) => {
             </div>
           ))}
         </div>
-        <form
-          className="login_form"
-          onSubmit={(e) => handleSubmit(onSubmit(e))}
-        >
+        <form className="login_form" onSubmit={handleSubmit(onSubmit)}>
           <div className="form-group Loginstitles" id="usernamelogin">
             {staticData.signUp.userName}
             <input
-              className={`form-control
-              ${locale === "arab" ? "text-end" : "text-start"}
-              ${
+              className={`form-control ${
+                locale === "arab" ? "text-end" : "text-start"
+              } ${
                 errors.userName
                   ? "border-danger text-danger"
                   : "border-muted text-dark"
@@ -80,14 +86,14 @@ const SignUP = ({ staticData }) => {
             ></input>
             {errors.userName && (
               <div className="text-danger fs-6 fw-light">
-                The UserName must be grater or equal to 3 chars
+                The UserName must be greater or equal to 3 chars
               </div>
             )}
             {staticData.signUp.email}
             <input
-              className={`form-control
-              ${locale === "arab" ? "text-end" : "text-start"}
-              ${
+              className={`form-control ${
+                locale === "arab" ? "text-end" : "text-start"
+              } ${
                 errors.email
                   ? "border-danger text-danger"
                   : "border-muted text-dark"
@@ -110,8 +116,9 @@ const SignUP = ({ staticData }) => {
             )}
             {staticData.signUp.password}
             <input
-              className={`form-control
-              ${locale === "arab" ? "text-end" : "text-start"} ${
+              className={`form-control ${
+                locale === "arab" ? "text-end" : "text-start"
+              } ${
                 errors.hashPassword
                   ? "border-danger text-danger"
                   : "border-muted text-dark"
@@ -122,12 +129,11 @@ const SignUP = ({ staticData }) => {
               {...register("hashPassword", {
                 minLength: 8,
                 required: true,
-                type: "email",
               })}
             ></input>
             {errors.hashPassword && (
               <div className="text-danger fs-6 fw-light">
-                The MinLenght Must Be 8 chars
+                The MinLength Must Be 8 chars
               </div>
             )}
             <button
@@ -141,7 +147,7 @@ const SignUP = ({ staticData }) => {
         </form>
         <div className="text-center mt-2">
           You already have an account?{" "}
-          <a href="logIn" className="underline  fw-bold">
+          <a href="logIn" className="underline fw-bold">
             Log In
           </a>
         </div>

@@ -16,7 +16,13 @@ export const authArData = {
     emailPlace: "بريدك الإلكتروني ",
     password: "كلمة السر",
     passwordPlace: "كلمة المرور الخاصة بك ",
-    action : "اشتراك"
+    action : "اشتراك",
+    wilaya : "الولاية",
+    wilayaPlace : "الولاية التي تعيش فيها",
+    level : "المستوى",
+    levelPlace : "المستوى الدراسي الخاص بك",
+    speciality : "الشعبة",
+    specialityPlace : "الشعبة التي تدرسها",
   },
   login: {
     loginGoogle: "تسجيل الدخول عبر جوجل",

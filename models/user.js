@@ -43,7 +43,8 @@ const UserSchema = mongoose.Schema({
     type: String,
     enum: [
       "mathematics",
-      "experimental_sciences_and_math_techniques",
+      "experimental_sciences",
+      "technical_maths",
       "literature_and_philosophy",
       "management_and_economics",
       "foreign_languages"

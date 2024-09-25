@@ -78,7 +78,7 @@ export const signUp = async (req, res) => {
     return res.status(405).end(); 
   }
 
-  const { userName, email, hashPassword } = req.body;
+  const { userName, email, hashPassword , wilaya , speciality , level } = req.body;
 
   console.log(req.body);
 
@@ -97,6 +97,9 @@ export const signUp = async (req, res) => {
     userName,
     email,
     hashPassword: hashedPassword,
+    wilaya,
+    speciality,
+    level
   });
 
   await user.save();

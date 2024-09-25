@@ -17,6 +17,12 @@ export const authData = {
     password: "Password",
     passwordPlace: "Your Password here",
     action: "Sign Up",
+    wilaya: "Wilaya",
+    wilayaPlace: "Wilaya you live in",
+    level: "Level",
+    levelPlace: "Your Level",
+    speciality: "Speciality",
+    specialityPlace: "Your Speciality",
   },
   login: {
     loginGoogle: "Log In with Google",

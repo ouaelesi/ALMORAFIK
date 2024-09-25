@@ -2,9 +2,18 @@ import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
+import wilaya from "../data/TemporaryData/staticData/eng/wilaya";
+import wilayaAr from "../data/TemporaryData/staticData/arab/wilayaAr";
+import specialities from "../data/TemporaryData/staticData/eng/specialities";
+import specialitiesAr from "../data/TemporaryData/staticData/arab/specialitiesAr";
+
 
 const SignUP = ({ staticData }) => {
   const { locale } = useRouter();
+
+  const wilayas = locale === "arab" ? wilayaAr : wilaya;
+  const specialitiesList = locale === "arab" ? specialitiesAr : specialities;
+
 
   const {
     register,
@@ -134,6 +143,73 @@ const SignUP = ({ staticData }) => {
             {errors.hashPassword && (
               <div className="text-danger fs-6 fw-light">
                 The MinLength Must Be 8 chars
+              </div>
+            )}
+            {staticData.signUp.wilaya}
+            <select
+              className={`form-control ${
+                locale === "arab" ? "text-end" : "text-start"
+              } ${
+                errors.wilaya
+                  ? "border-danger text-danger"
+                  : "border-muted text-dark"
+              }`}
+              name="wilaya"
+              {...register("wilaya", { required: true })}
+            >
+              {wilayas.map((wilaya, index) => (
+                <option key={index} value={wilaya.name}>
+                  {wilaya.name}
+                </option>
+              ))}
+            </select>
+            {errors.wilaya && (
+              <div className="text-danger fs-6 fw-light">
+                The Wilaya is required
+              </div>
+            )}
+            {staticData.signUp.level}
+            <select
+              className={`form-control ${
+                locale === "arab" ? "text-end" : "text-start"
+              } ${
+                errors.level
+                  ? "border-danger text-danger"
+                  : "border-muted text-dark"
+              }`}
+              name="level"
+              {...register("level", { required: true })}
+            >
+              <option value="1AS">1AS</option>
+              <option value="2AS">2AS</option>
+              <option value="3AS">3AS</option>
+            </select>
+            {errors.level && (
+              <div className="text-danger fs-6 fw-light">
+                The Level is required
+              </div>
+            )}
+            {staticData.signUp.speciality}
+            <select
+              className={`form-control ${
+                locale === "arab" ? "text-end" : "text-start"
+              } ${
+                errors.speciality
+                  ? "border-danger text-danger"
+                  : "border-muted text-dark"
+              }`}
+              name="speciality"
+              {...register("speciality", { required: true })}
+            >
+              {specialitiesList.map((speciality, index) => (
+                <option key={index} value={speciality.value}>
+                  {speciality.name}
+                </option>
+              ))}
+            </select>
+            {errors.speciality && (
+              <div className="text-danger fs-6 fw-light">
+                The Speciality is required
               </div>
             )}
             <button

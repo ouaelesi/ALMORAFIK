@@ -14,6 +14,10 @@ const UserSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  role: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Role",
+  },
   photo: {
     type: String,
     default: null,
@@ -25,7 +29,27 @@ const UserSchema = mongoose.Schema({
   googleId : {
     type: String,
     default: null
-  }
+  },
+  wilaya : {
+    type : String,
+    default: null
+  },
+  level: {
+    type: String,
+    enum: ["1AS", "2AS", "3AS"],
+    default: "3AS",
+  },
+  speciality: {
+    type: String,
+    enum: [
+      "mathematics",
+      "experimental_sciences_and_math_techniques",
+      "literature_and_philosophy",
+      "management_and_economics",
+      "foreign_languages"
+    ],
+    default: "mathematics",
+  },
 });
 
 UserSchema.methods.comparePassword = (password, hashPassWord) => {

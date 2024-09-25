@@ -45,14 +45,15 @@ export default NextAuth({
           // Find or create user in your database
           let user = await userModel.findOne({ email: profile.email });
           if (!user) {
-            user = await userModel.create({
-              userName: profile.name,
-              email: profile.email,
-              facebookId: profile.id,
-              hashPassword: bcrypt.hashSync(profile.id, 10)
-            });
+            const defaultRole = await Role.findOne({ name: "student" }); 
+          user = await User.create({
+            userName: profile.name,
+            email: profile.email,
+            googleId: profile.sub,
+            role: defaultRole._id,
+          });
           }
-          return { ...user.toObject(), id: user._id };
+          return { ...user.toObject(), id: user._id, role: user.role.name };
         }
       })
   ],
@@ -61,11 +62,13 @@ export default NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.role = user.role;
       }
       return token;
     },
     async session({ session, token }) {
       session.user.id = token.id;
+      session.user.role = token.role;
       return session;
     }
   },

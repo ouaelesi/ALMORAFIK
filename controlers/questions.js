@@ -1,7 +1,7 @@
 import questionModel from "../models/question";
 import answerModel from "../models/answer";
 import { IsLoggedIn } from "../utils/IsLoggedIn";
-// ______________________________________________________________
+// _______________________________________________________________
 // add question
 export const addQuestion = async (req, res) => {
   //todo: activate the auth checks

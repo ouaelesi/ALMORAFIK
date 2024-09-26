@@ -72,6 +72,58 @@ export const getUsers = (req, res) => {
   });
 };
 
+// signup 
+export const signUp = async (req, res) => {
+  if (req.method !== "POST") {
+    return res.status(405).end(); 
+  }
+
+  const { userName, email, hashPassword } = req.body;
+
+  console.log(req.body);
+
+  if (!userName || !email || !hashPassword) {
+    return res.status(400).send({ message: "All fields are required" });
+  }
+
+  const existingUser = await userModel.findOne({ email });
+  if (existingUser) {
+    return res.status(409).send({ message: "This email already exists" });
+  }
+
+  const hashedPassword = bcrypt.hashSync(hashPassword, 10);
+
+  const user = new userModel({
+    userName,
+    email,
+    hashPassword: hashedPassword,
+  });
+
+  await user.save();
+
+  const token = await new jose.SignJWT({
+    exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30, // 30 days
+    username: userName,
+    email,
+    userId: user._id,
+  })
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime("30d")
+    .sign(new TextEncoder().encode(process.env.SECRET || "secret"));
+
+  const serialized = serialize("OursiteJWT", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV !== "development",
+    sameSite: "strict",
+    maxAge: 60 * 60 * 24 * 30,
+    path: "/",
+  });
+
+  res.setHeader("Set-Cookie", serialized);
+  res.status(200).send(user);
+};
+
 // add user
 export const addUser = async (req, res) => {
   if (!req.body) {

@@ -15,6 +15,7 @@ import {
 
 import { MODE } from "../utils/prod";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 
 const QuestionBody = ({ staticData }) => {
   const { locale } = useRouter();
@@ -34,7 +35,9 @@ const QuestionBody = ({ staticData }) => {
     formState: { errors, isDirty, isValid },
   } = useForm({ mode: "onTouched" });
 
-  const { user } = useContext(AuthContext);
+  // const { user } = useContext(AuthContext);
+  const {data:session , status}=useSession();
+  const user = session.user;
 
   const [isUpdateBoxs, updateBoxs] = useState(false);
 

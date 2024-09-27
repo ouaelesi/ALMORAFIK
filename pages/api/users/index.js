@@ -10,7 +10,7 @@ const singUp = async (req, res) => {
       try {
         getUsers(req, res);
       } catch (err) {
-        res.status(400).send("eroor");
+        res.status(400).send("error");
       }
       break;
     case "POST":

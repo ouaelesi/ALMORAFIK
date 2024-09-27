@@ -1,42 +1,47 @@
 import answerModel from "../models/answer.js";
 import questionModel from "../models/question.js";
+import userModel from "../models/user.js";
+import {createAnswerNotification} from "../services/notifications/index.js";
 
 // add answer
-export const addAnswer = (req, res) => {
+export const addAnswer = async (req, res) => {
   if (!req.body) {
-    res.sattus(400).send({ message: "request body is empty !!" });
-    return;
+    return res.status(400).send({ message: "Request body is empty!" });
   }
-  const answer = new answerModel({
-    answer: req.body.answer,
-    creator: req.body.creator,
-    question: req.body.question,
-    sharedFile: req.body.sharedFile,
-    likes: Number(req.body.likes),
-  });
 
-  answer
-    .save()
-    .then((answer) => res.send(answer))
-    .catch((err) => res.send({ message: err.message }));
+  try {
+    const answer = new answerModel({
+      answer: req.body.answer,
+      creator: req.body.creator,
+      question: req.body.question,
+      sharedFile: req.body.sharedFile,
+      likes: Number(req.body.likes),
+    });
 
-  // Adding the andswer Id to its question
-  let newAnswers = [];
-  questionModel.findById(req.body.question).then((question) => {
-    newAnswers = question.answers;
-    // adding the new answer id
-    newAnswers.push(answer._id);
-    // updating the question's answers
-    questionModel
-      .findByIdAndUpdate(req.body.question, { answers: newAnswers })
-      .then((question) => {
-        if (!question) {
-          console.log("yaw makanch questions ");
-        } else {
-          console.log(question);
-        }
-      });
-  });
+    const savedAnswer = await answer.save();
+    
+    // Adding the answer ID to its question
+    const question = await questionModel.findById(req.body.question);
+    if (!question) {
+      return res.status(404).send({ message: "Question not found!" });
+    }
+    
+    question.answers.push(savedAnswer._id);
+    await question.save();
+    
+    // Fetch the user who asked the question
+    const user = await userModel.findOne( {email:question.creatorEmail});
+    if (!user) {
+      return res.status(404).send({ message: "User not found!" });
+    }
+    // Create a notification for the user
+    console.log(user._id, question._id, savedAnswer._id);
+    await createAnswerNotification(user._id, question._id, savedAnswer._id);
+
+    return res.send(savedAnswer);
+  } catch (err) {
+    return res.status(500).send({ message: err.message });
+  }
 };
 
 // delete answer

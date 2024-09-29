@@ -8,9 +8,7 @@ export async function middleware(req) {
 
   const { pathname, origin } = req.nextUrl;
 
-  console.log("Token:", token); // Log the token for debugging
 
-  // Allow access to login and signup pages if the user is not authenticated
   if (pathname.includes("/logIn") || pathname.includes("/signUp")) {
     if (token) {
       return NextResponse.redirect(`${origin}/`);
@@ -18,8 +16,7 @@ export async function middleware(req) {
     return NextResponse.next();
   }
 
-  // Protect routes that require authentication
-  if (pathname.includes("/Profil") || pathname.includes("/askQuestion") || pathname.startsWith("/admin")) {
+  if (pathname.includes("/Profil") || pathname.includes("/askQuestion") || pathname.startsWith("/admin") || pathname.startsWith("/api")) {
     if (!token) {
       console.log("No token found, redirecting to login"); // Log for debugging
       return NextResponse.redirect(`${origin}/logIn`);
@@ -31,5 +28,5 @@ export async function middleware(req) {
 }
 
 export const config = {
-  matcher: ['/logIn', '/signUp', '/Profil', '/askQuestion', '/admin/:path*'],
+  matcher: ['/logIn', '/signUp', '/Profil', '/askQuestion', '/admin/:path*','/api/:path*'],
 };

@@ -23,6 +23,18 @@ export default async function handler(req, res) {
             } catch (error) {
                 return res.status(500).json({ error: 'Internal Server Error' });
             }
+        case 'PATCH':
+            try {
+                const notification = await Notification.findById(id);
+                if (!notification) {
+                    return res.status(404).json({ error: 'Notification not found' });
+                }
+                notification.read = true;
+                await notification.save();
+                return res.json(notification);
+            } catch (error) {
+                return res.status(500).json({ error: 'Internal Server Error' });
+            }
         
         default:
             return res.status(405).json({ error: 'Method Not Allowed' });

@@ -8,6 +8,8 @@ import LangSwitcher from "./shared/LangSwitcher";
 import { headerData } from "../data/TemporaryData/staticData/arab/headerData";
 import { headerDataEng } from "../data/TemporaryData/staticData/eng/headerDataEng";
 import Modal from "./Modal";
+import Pusher from 'pusher-js';
+
 
 const Header = () => {
   const { locale } = useRouter();
@@ -69,22 +71,43 @@ const Links = ({ classNames }) => {
 
   const handleNotificationClick = (notification) => {
     setSelectedNotification(notification);
+    // Mark notification as read
+    fetch(`/api/notifications/${notification._id}`, {
+      method: "PATCH",
+    });
+    setNotifications((prevNotifications) =>
+      prevNotifications.map((n) =>
+        n._id === notification._id ? { ...n, read: true } : n
+      )
+    );
     toggleModal();
   };
 
-  // useEffect(() => {
-  //   // Join the room for the user
-  //   socket.emit('joinRoom', session?.user.id);
+  useEffect(() => {
+    if (status === 'authenticated' && session?.user?.id) {
+      const pusher = new Pusher('c136048a3b3fdd39b363', {
+        cluster: 'eu',
+        authEndpoint: '/api/pusher/auth',
+        auth: {
+          headers: {
+            contentType : "application/json",
+          },
+        },
+      });
 
-  //   socket.on('newNotification', (notification) => {
-  //     setNotifications((prevNotifications) => [notification, ...prevNotifications]);
-  //     console.log("signal received");
-  //   });
+      const channel = pusher.subscribe(`private-user-${session.user.id}`);
+      console.log('Subscribed to pusher channel', channel);
 
-  //   return () => {
-  //     socket.off('newNotification');
-  //   };
-  // }, [session , status]);
+      channel.bind('new-notification', (notification) => {
+        setNotifications((prevNotifications) => [notification, ...prevNotifications]);
+        console.log('New notification received', notification);
+      });
+
+      return () => {
+        pusher.unsubscribe(`private-user-${session.user.id}`);
+      };
+    }
+  }, [session, status]);
 
   useEffect(() => {
     locale === "arab" ? setNavData(headerData) : setNavData(headerDataEng);

@@ -2,8 +2,7 @@ import Notification from '../../models/notification';
 import dbConnection from '../../utils/dbConnect';
 import User from '../../models/user';
 import Question from '../../models/question';
-// import { io } from '../../server';
-
+import pusher from "../../utils/pusher";
 
 const createAnswerNotification = async (userId, questionId, answerId) => {
     dbConnection();
@@ -27,8 +26,8 @@ const createAnswerNotification = async (userId, questionId, answerId) => {
             answerId,
         });
         await notification.save();
-        // io.to(userId).emit('newNotification', notification);
-        console.log('notification created and signal sent');
+        pusher.trigger(`private-user-${userId}`, 'new-notification', notification);
+        console.log('notification created and signal sent to :', `private-user-${userId}`);
     } catch (error) {
         console.log('error', error);
     }

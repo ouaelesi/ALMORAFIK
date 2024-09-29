@@ -3,12 +3,19 @@ import dbConnection from '../../utils/dbConnect';
 import User from '../../models/user';
 import Question from '../../models/question';
 import pusher from "../../utils/pusher";
+import Answer from '../../models/answer';
+import { emailExists } from '../../controlers/users';
 
 const createAnswerNotification = async (userId, questionId, answerId) => {
     dbConnection();
 
     try {
-        const user = await User.findById(userId);
+        const answer = await Answer.findById(answerId);
+        console.log('answer', answer);
+        if (!answer) {
+            throw new Error('Answer not found');
+        }
+        const user = await User.findOne({ email: answer.creator });
         if (!user) {
             throw new Error('User not found');
         }
@@ -16,7 +23,6 @@ const createAnswerNotification = async (userId, questionId, answerId) => {
         if (!question) {
             throw new Error('Question not found');
         }
-
         const notification = new Notification({
             userId: userId,
             type: 'answer',

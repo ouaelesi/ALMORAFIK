@@ -113,19 +113,6 @@ const Links = ({ classNames }) => {
     locale === "arab" ? setNavData(headerData) : setNavData(headerDataEng);
   }, [locale]);
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDropdownOpen(false);
-        setDropdownOpen2(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [dropdownRef]);
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -140,6 +127,7 @@ const Links = ({ classNames }) => {
   };
 
   const handleSignOut = async (e) => {
+    console.log("signing out");
     e.preventDefault();
     setDropdownOpen(false);
     await signOut({ redirect: false });

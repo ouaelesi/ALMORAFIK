@@ -16,7 +16,7 @@ export async function middleware(req) {
     return NextResponse.next();
   }
 
-  if (pathname.includes("/Profil") || pathname.includes("/askQuestion") || pathname.startsWith("/admin") || pathname.startsWith("/api")) {
+  if (pathname.includes("/Profil") || pathname.includes("/askQuestion") || pathname.startsWith("/admin") ) {
     if (!token) {
       console.log("No token found, redirecting to login"); // Log for debugging
       return NextResponse.redirect(`${origin}/logIn`);

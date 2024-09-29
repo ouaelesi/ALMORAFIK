@@ -227,6 +227,8 @@ const AnswerQuestion = () => {
           <div className="">
             {answers
               .sort((a, b) => {
+                if (a.pinned && !b.pinned) return -1;
+                if (!a.pinned && b.pinned) return 1;
                 return a.likes === b.likes ? 0 : a.likes < b.likes ? 1 : -1;
               })
               .map((elem, key) => (
@@ -234,6 +236,7 @@ const AnswerQuestion = () => {
                   data={elem}
                   key={key}
                   staticData={questionsData}
+                  pinned={elem.pinned ? true : false}
                 ></BoxAnswer>
               ))}
           </div>

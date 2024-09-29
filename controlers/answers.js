@@ -2,12 +2,22 @@ import answerModel from "../models/answer.js";
 import questionModel from "../models/question.js";
 import userModel from "../models/user.js";
 import {createAnswerNotification} from "../services/notifications/index.js";
+import Role from "../models/role.js";
 
 // add answer
 export const addAnswer = async (req, res) => {
   if (!req.body) {
     return res.status(400).send({ message: "Request body is empty!" });
   }
+  //check if the creator is of role teacher
+  const user = await userModel.findOne({ email: req.body.creator });
+  if (!user) {
+    return res.status(404).send({ message: "User not found!" });
+  }
+  //role is actually a different model which the user model refrerences
+  const role = await Role.findById(user.role);
+  const isTeacher = role.name === "teacher";
+  console.log("is it pinned ? ", isTeacher);
 
   try {
     const answer = new answerModel({
@@ -15,6 +25,7 @@ export const addAnswer = async (req, res) => {
       creator: req.body.creator,
       question: req.body.question,
       sharedFile: req.body.sharedFile,
+      pinned:isTeacher,
       likes: Number(req.body.likes),
     });
 

@@ -23,6 +23,8 @@ export const authArData = {
     levelPlace : "المستوى الدراسي الخاص بك",
     speciality : "الشعبة",
     specialityPlace : "الشعبة التي تدرسها",
+    justification : "يرجى تقديم مبرر يوضح أنك مدرس",
+    justificationPlace : "مبرر توضح فيه أنك مدرس",
   },
   login: {
     loginGoogle: "تسجيل الدخول عبر جوجل",

@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import { sign } from "jsonwebtoken";
 import { serialize } from "cookie";
 import * as jose from "jose";
+import Role from "../models/role.js"
 
 // login required
 const loginReaquired = (req, res, next) => {
@@ -78,7 +79,7 @@ export const signUp = async (req, res) => {
     return res.status(405).end(); 
   }
 
-  const { userName, email, hashPassword , wilaya , speciality , level } = req.body;
+  const { userName, email, hashPassword , wilaya , speciality , level , role } = req.body;
 
   console.log(req.body);
 
@@ -93,15 +94,18 @@ export const signUp = async (req, res) => {
 
   const hashedPassword = bcrypt.hashSync(hashPassword, 10);
 
+  const roleUser = await Role.findOne({ name: role || "student" });
+
+
   const user = new userModel({
     userName,
     email,
     hashPassword: hashedPassword,
     wilaya,
     speciality,
-    level
+    level,
+    role: roleUser._id,
   });
-
   await user.save();
 
   const token = await new jose.SignJWT({

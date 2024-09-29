@@ -15,8 +15,9 @@ const UserSchema = mongoose.Schema({
     required: true,
   },
   role: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Role",
+    type : mongoose.Schema.Types.ObjectId,
+    ref : "role",
+    required: true
   },
   photo: {
     type: String,

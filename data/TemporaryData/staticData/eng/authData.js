@@ -23,6 +23,8 @@ export const authData = {
     levelPlace: "Your Level",
     speciality: "Speciality",
     specialityPlace: "Your Speciality",
+    justification: "Justification that you are a teacher",
+    justificationPlace: "Justification that you are a teacher",
   },
   login: {
     loginGoogle: "Log In with Google",

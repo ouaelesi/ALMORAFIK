@@ -7,6 +7,7 @@ import Link from "next/link";
 import LangSwitcher from "./shared/LangSwitcher";
 import { headerData } from "../data/TemporaryData/staticData/arab/headerData";
 import { headerDataEng } from "../data/TemporaryData/staticData/eng/headerDataEng";
+import Modal from "./Modal";
 
 const Header = () => {
   const { locale } = useRouter();
@@ -60,6 +61,30 @@ const Links = ({ classNames }) => {
   const [dropdownOpen2, setDropdownOpen2] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const dropdownRef = useRef(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedNotification, setSelectedNotification] = useState(null);
+
+
+  const toggleModal = () => setModalOpen(!modalOpen);
+
+  const handleNotificationClick = (notification) => {
+    setSelectedNotification(notification);
+    toggleModal();
+  };
+
+  // useEffect(() => {
+  //   // Join the room for the user
+  //   socket.emit('joinRoom', session?.user.id);
+
+  //   socket.on('newNotification', (notification) => {
+  //     setNotifications((prevNotifications) => [notification, ...prevNotifications]);
+  //     console.log("signal received");
+  //   });
+
+  //   return () => {
+  //     socket.off('newNotification');
+  //   };
+  // }, [session , status]);
 
   useEffect(() => {
     locale === "arab" ? setNavData(headerData) : setNavData(headerDataEng);
@@ -178,33 +203,47 @@ const Links = ({ classNames }) => {
                 onClick={toggleDropdown2}
               />
               {dropdownOpen2 && (
-                <div
-                  className={`absolute top-full mt-2 w-fit bg-white shadow-lg rounded-md z-10 ${
-                    locale === "arab" ? "left-auto" : "right-0"
-                  }`}
-                >
-                  {notifications.length > 0 ? (
-                    notifications.map((notification, index) => (
-                      <div
-                        key={index}
-                        className={`block font-normal text-sm px-4 py-2 text-gray-800 hover:bg-gray-100 cursor-pointer ${!notification.read ? "bg-red-100" : ""}`}
-                      >
-                        {notification.message}
-                        {!notification.read && (
-                          <FontAwesomeIcon
-                            icon={faCircle}
-                            className="text-red-500 ml-3"
-                          />
-                        )}
-                      </div>
-                    ))
-                  ) : (
-                    <div className="block px-4 py-2 text-gray-800">
-                      No notifications
-                    </div>
-                  )}
-                </div>
-              )}
+        <div
+          className={`absolute top-full mt-2 w-fit bg-white shadow-lg rounded-md z-10 ${
+            locale === "arab" ? "left-0" : "right-0"
+          }`}
+        >
+          {notifications.length > 0 ? (
+            notifications.map((notification, index) => (
+              <div
+                key={index}
+                className={`block font-normal text-sm px-4 py-2 text-gray-800 hover:bg-gray-100 cursor-pointer ${!notification.read ? "bg-red-100" : ""}`}
+                onClick={() => handleNotificationClick(notification)}
+              >
+                {notification.title}
+                {!notification.read && (
+                  <FontAwesomeIcon
+                    icon={faCircle}
+                    className="text-red-500 ml-3"
+                  />
+                )}
+              </div>
+            ))
+          ) : (
+            <div className="block px-4 py-2 text-gray-800">
+              No notifications
+            </div>
+          )}
+        </div>
+      )}
+
+      {modalOpen && selectedNotification && (
+        <Modal onClose={toggleModal}>
+          <div className="p-4">
+            <p>{selectedNotification.message}</p>
+            <div className="mt-4">
+              <Link className="text-blue-500 hover:underline" href={`/questions/${selectedNotification.questionId}`} onClick={()=>{setModalOpen(false);setDropdownOpen2(false)}}>
+                  View Question
+              </Link>
+            </div>
+          </div>
+        </Modal>
+      )}
             </div>
           )}
         </div>

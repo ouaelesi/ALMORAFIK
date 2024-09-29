@@ -44,7 +44,9 @@
     "react-mathquill": "^1.0.3",
     "react-parallax-tilt": "^1.7.171",
     "react-router-dom": "^5.3.0",
-    "reactstrap": "^8.10.0"
+    "reactstrap": "^8.10.0",
+    "socket.io": "^4.8.0",
+    "socket.io-client": "^4.8.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.2",

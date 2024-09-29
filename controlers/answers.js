@@ -34,9 +34,8 @@ export const addAnswer = async (req, res) => {
     if (!user) {
       return res.status(404).send({ message: "User not found!" });
     }
-    // Create a notification for the user
-    console.log(user._id, question._id, savedAnswer._id);
     await createAnswerNotification(user._id, question._id, savedAnswer._id);
+
 
     return res.send(savedAnswer);
   } catch (err) {

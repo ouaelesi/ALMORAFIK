@@ -74,12 +74,15 @@ export const getUsers = (req, res) => {
 };
 
 // signup 
+
 export const signUp = async (req, res) => {
   if (req.method !== "POST") {
     return res.status(405).end(); 
   }
 
-  const { userName, email, hashPassword , wilaya , speciality , level , role } = req.body;
+  console.log(req.body);
+
+  const { userName, email, hashPassword, wilaya, speciality, level, role } = req.body;
 
   console.log(req.body);
 
@@ -96,6 +99,7 @@ export const signUp = async (req, res) => {
 
   const roleUser = await Role.findOne({ name: role || "student" });
 
+  const profilePictureUrl = req.file ? `/uploads/profilePictures/${req.file.filename}` : '';
 
   const user = new userModel({
     userName,
@@ -105,6 +109,7 @@ export const signUp = async (req, res) => {
     speciality,
     level,
     role: roleUser._id,
+    photo: profilePictureUrl,
   });
   await user.save();
 

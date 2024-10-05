@@ -122,11 +122,11 @@ const QuestionBox = (props) => {
             locale === "arab" ? "flex-row-reverse" : ""
           }`}
         >
-          <FontAwesomeIcon
+          {!props.user_photo ? <FontAwesomeIcon
             icon={faCircleUser}
             style={{ fontSize: "30", marginRight: 10 }}
             className="text-dark"
-          />
+          />: <img src={props.user_photo} className="rounded-full h-9 w-9 cursor-pointer border-2 border-gray-300" />}
           <div
             className={`pt-1 d-flex gap-2  ${
               locale === "arab" ? "flex-row-reverse" : ""

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleUser, faBell, faRightFromBracket , faBars , faCircle } from "@fortawesome/free-solid-svg-icons";
+import { faCircleUser, faBell, faRightFromBracket, faBars, faCircle } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
@@ -9,7 +9,6 @@ import { headerData } from "../data/TemporaryData/staticData/arab/headerData";
 import { headerDataEng } from "../data/TemporaryData/staticData/eng/headerDataEng";
 import Modal from "./Modal";
 import Pusher from 'pusher-js';
-
 
 const Header = () => {
   const { locale } = useRouter();
@@ -61,25 +60,24 @@ const Links = ({ classNames }) => {
   const [navData, setNavData] = useState(headerData);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [dropdownOpen2, setDropdownOpen2] = useState(false);
-  const [notifications, setNotifications] = useState([]);//TODO : handle when it's empty
+  const [notifications, setNotifications] = useState([]);
+  const [profilePicture, setProfilePicture] = useState(null);
   const dropdownRef = useRef(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState(null);
-
 
   const toggleModal = () => setModalOpen(!modalOpen);
 
   const handleNotificationClick = (notification) => {
     setSelectedNotification(notification);
-    // Mark notification as read
     fetch(`/api/notifications/${notification._id}`, {
       method: "PATCH",
     });
     if (notifications && notifications.length > 0) {
       setNotifications((prevNotifications) =>
-      prevNotifications.map((n) =>
-        n._id === notification._id ? { ...n, read: true } : n
-      )
+        prevNotifications.map((n) =>
+          n._id === notification._id ? { ...n, read: true } : n
+        )
       );
     }
     toggleModal();
@@ -92,7 +90,7 @@ const Links = ({ classNames }) => {
         authEndpoint: '/api/pusher/auth',
         auth: {
           headers: {
-            contentType : "application/json",
+            contentType: "application/json",
           },
         },
       });
@@ -115,10 +113,10 @@ const Links = ({ classNames }) => {
     locale === "arab" ? setNavData(headerData) : setNavData(headerDataEng);
   }, [locale]);
 
-
   useEffect(() => {
     if (status === "authenticated") {
       fetchNotifications();
+      fetchUserProfilePicture();
     }
   }, [status]);
 
@@ -126,6 +124,13 @@ const Links = ({ classNames }) => {
     const res = await fetch(`/api/notifications/${session.user.id}`);
     const data = await res.json();
     setNotifications(data);
+  };
+
+  const fetchUserProfilePicture = async () => {
+    const res = await fetch(`/api/users/${session.user.email}`);
+    const data = await res.json();
+    console.log(res);
+    setProfilePicture(data.photo);
   };
 
   const handleSignOut = async (e) => {
@@ -142,7 +147,8 @@ const Links = ({ classNames }) => {
 
   const toggleDropdown2 = () => {
     setDropdownOpen2(!dropdownOpen2);
-  }
+  };
+
   return (
     <div
       className={` ${
@@ -178,11 +184,20 @@ const Links = ({ classNames }) => {
         <div className="mx-2 mt-1 relative">
           {status === "authenticated" && session?.user && (
             <div className="d-flex align-items-center" ref={dropdownRef}>
-              <FontAwesomeIcon
-                icon={faCircleUser}
-                style={{ fontSize: 30, cursor: "pointer" }}
-                onClick={toggleDropdown}
-              />
+              {profilePicture ? (
+                <img
+                  src={profilePicture}
+                  alt="Profile Picture"
+                  className="rounded-full h-9 w-14 cursor-pointer border-2 border-gray-300"
+                  onClick={toggleDropdown}
+                />
+              ) : (
+                <FontAwesomeIcon
+                  icon={faCircleUser}
+                  style={{ fontSize: 30, cursor: "pointer" }}
+                  onClick={toggleDropdown}
+                />
+              )}
               {dropdownOpen && (
                 <div
                   className={`absolute top-full mt-2 w-48 bg-white shadow-lg rounded-md z-10 ${
@@ -216,47 +231,47 @@ const Links = ({ classNames }) => {
                 onClick={toggleDropdown2}
               />
               {dropdownOpen2 && (
-        <div
-          className={`absolute top-full mt-2 w-fit bg-white shadow-lg rounded-md z-10 ${
-            locale === "arab" ? "left-0" : "right-0"
-          }`}
-        >
-          {notifications.length > 0 ? (
-            notifications.map((notification, index) => (
-              <div
-                key={index}
-                className={`block font-normal text-sm px-4 py-2 text-gray-800 hover:bg-gray-100 cursor-pointer ${!notification.read ? "bg-red-100" : ""}`}
-                onClick={() => handleNotificationClick(notification)}
-              >
-                {notification.title}
-                {!notification.read && (
-                  <FontAwesomeIcon
-                    icon={faCircle}
-                    className="text-red-500 ml-3"
-                  />
-                )}
-              </div>
-            ))
-          ) : (
-            <div className="block px-4 py-2 text-gray-800">
-              No notifications
-            </div>
-          )}
-        </div>
-      )}
+                <div
+                  className={`absolute top-full mt-2 w-fit bg-white shadow-lg rounded-md z-10 ${
+                    locale === "arab" ? "left-0" : "right-0"
+                  }`}
+                >
+                  {notifications.length > 0 ? (
+                    notifications.map((notification, index) => (
+                      <div
+                        key={index}
+                        className={`block font-normal text-sm px-4 py-2 text-gray-800 hover:bg-gray-100 cursor-pointer ${!notification.read ? "bg-red-100" : ""}`}
+                        onClick={() => handleNotificationClick(notification)}
+                      >
+                        {notification.title}
+                        {!notification.read && (
+                          <FontAwesomeIcon
+                            icon={faCircle}
+                            className="text-red-500 ml-3"
+                          />
+                        )}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="block px-4 py-2 text-gray-800">
+                      No notifications
+                    </div>
+                  )}
+                </div>
+              )}
 
-      {modalOpen && selectedNotification && (
-        <Modal onClose={toggleModal}>
-          <div className="p-4">
-            <p>{selectedNotification.message}</p>
-            <div className="mt-4">
-              <Link className="text-blue-500 hover:underline" href={`/questions/${selectedNotification.questionId}`} onClick={()=>{setModalOpen(false);setDropdownOpen2(false)}}>
-                  View Question
-              </Link>
-            </div>
-          </div>
-        </Modal>
-      )}
+              {modalOpen && selectedNotification && (
+                <Modal onClose={toggleModal}>
+                  <div className="p-4">
+                    <p>{selectedNotification.message}</p>
+                    <div className="mt-4">
+                      <Link className="text-blue-500 hover:underline" href={`/questions/${selectedNotification.questionId}`} onClick={()=>{setModalOpen(false);setDropdownOpen2(false)}}>
+                        View Question
+                      </Link>
+                    </div>
+                  </div>
+                </Modal>
+              )}
             </div>
           )}
         </div>

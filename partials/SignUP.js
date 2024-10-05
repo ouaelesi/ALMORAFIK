@@ -27,14 +27,22 @@ const SignUP = ({ staticData, isStudent }) => {
   const onSubmit = async (data) => {
     setBackErrors([]);
     const role = isStudent ? "student" : "teacher";
+    const formData = new FormData();
+    formData.append('userName', data.userName);
+    formData.append('email', data.email);
+    formData.append('hashPassword', data.hashPassword);
+    formData.append('wilaya', data.wilaya);
+    formData.append('speciality', data.speciality);
+    formData.append('level', data.level);
+    formData.append('role', role);
+    formData.append('fileType', "profilePictures");
+    formData.append('profilePicture', data.profilePicture[0]);
+
     const res = await fetch("/api/users", {
       method: "POST",
-      headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ ...data, role }),
+      body: formData,
     });
+
     if (res.ok) {
       const result = await signIn("credentials", {
         redirect: false,
@@ -140,6 +148,25 @@ const SignUP = ({ staticData, isStudent }) => {
             {errors.hashPassword && (
               <div className="text-danger fs-6 fw-light">
                 The MinLength Must Be 8 chars
+              </div>
+            )}
+            {staticData.signUp.profilePicture}
+            <input
+              className={`form-control ${
+                locale === "arab" ? "text-end" : "text-start"
+              } ${
+                errors.profilePicture
+                  ? "border-danger text-danger"
+                  : "border-muted text-dark"
+              }`}
+              placeholder={staticData.signUp.profilePicturePlace}
+              name="profilePicture"
+              type="file"
+              {...register("profilePicture", { required: true })}
+            ></input>
+            {errors.profilePicture && (
+              <div className="text-danger fs-6 fw-light">
+                The Profile Picture is required
               </div>
             )}
             {isStudent ? (

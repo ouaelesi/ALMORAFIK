@@ -19,7 +19,7 @@ export const addQuestion = async (req, res) => {
     title: req.body.title,
     question: req.body.question,
     creator: req.body.creator ? req.body.creator : req.body.fullName,
-    tags: req.body.tags.split(","),
+    tags: req.body.tags?.split(","),
     files: req.body.files,
     creatorEmail: req.body.creatorEmail
       ? req.body.creatorEmail

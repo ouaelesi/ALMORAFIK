@@ -1,11 +1,20 @@
 import { IsLoggedIn } from "../../utils/IsLoggedIn";
 import questionModal from "../../models/question";
 import userQuestionsActions from "../../models/userQuestionActions";
+import { getToken } from "next-auth/jwt";
 
 // Save && unsave Question
 export const saveQuestion = async (req, res) => {
   try {
-    const userEmail = await IsLoggedIn(req);
+    // const userEmail = await IsLoggedIn(req);
+    const secret = process.env.NEXTAUTH_SECRET;
+  const token = await getToken({ req, secret });
+
+  if (!token) {
+    return res.status(401).send({ message: "Unauthorized" });
+  }
+
+  const userEmail = token.email;
 
     if (!userEmail) {
       res.status(400).send({ message: "User Not Logged In!" });
@@ -27,12 +36,13 @@ export const saveQuestion = async (req, res) => {
 
     if (!existingSavedQuestion) {
       const newSavedQuestion = new userQuestionsActions({
-        userId: userEmail.email,
+        userId: userEmail,
         questionId: req.query.id,
         saved: true,
       });
 
       const savedData = await newSavedQuestion.save();
+      console.log("savedData", savedData);
       res.send(savedData);
     } else {
       if (existingSavedQuestion.saved && existingSavedQuestion.note === 0) {
@@ -88,15 +98,18 @@ export const isQuestionSaved = async (req, res) => {
 
 // get the saved questions of a user
 export const getUserSavedQuestions = async (req, res) => {
-  if (!(await IsLoggedIn(req))) {
-    res.status(400).send({ message: "User Not Logged In!" });
-    return;
-  }
+  const secret = process.env.NEXTAUTH_SECRET;
+  const token = await getToken({ req, secret });
 
-  const userEmail = await IsLoggedIn(req);
+  if (!token) {
+    return res.status(401).send({ message: "Unauthorized" });
+  }
+  
+
+  const userEmail = token.email;
 
   userQuestionsActions
-    .find({ userId: userEmail.email })
+    .find({ userId: userEmail })
     .then((data) => {
       const questionIds = data.map((question) => question.questionId);
       questionModal

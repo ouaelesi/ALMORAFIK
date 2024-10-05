@@ -61,7 +61,7 @@ const Links = ({ classNames }) => {
   const [navData, setNavData] = useState(headerData);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [dropdownOpen2, setDropdownOpen2] = useState(false);
-  const [notifications, setNotifications] = useState([]);
+  const [notifications, setNotifications] = useState([]);//TODO : handle when it's empty
   const dropdownRef = useRef(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState(null);
@@ -75,11 +75,13 @@ const Links = ({ classNames }) => {
     fetch(`/api/notifications/${notification._id}`, {
       method: "PATCH",
     });
-    setNotifications((prevNotifications) =>
+    if (notifications && notifications.length > 0) {
+      setNotifications((prevNotifications) =>
       prevNotifications.map((n) =>
         n._id === notification._id ? { ...n, read: true } : n
       )
-    );
+      );
+    }
     toggleModal();
   };
 

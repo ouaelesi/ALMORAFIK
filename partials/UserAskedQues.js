@@ -5,6 +5,7 @@ import QuestionBox from "./QuestionBox";
 import { questionsArData } from "../data/TemporaryData/staticData/arab/questionsPage";
 import { questionsEngData } from "../data/TemporaryData/staticData/eng/questionsPage";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 
 const UserAskedQues = () => {
   const { locale } = useRouter();
@@ -12,7 +13,9 @@ const UserAskedQues = () => {
   // state
   const [questionsData, setQuestionsData] = useState(questionsArData);
 
-  const { user } = useContext(AuthContext);
+  // const { user } = useContext(AuthContext);
+  const {data:session}= useSession()
+  const user = session?.user;
   const [data, setData] = useState(null);
   const [isLoading, setLoading] = useState(false);
 

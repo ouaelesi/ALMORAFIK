@@ -2,9 +2,16 @@ import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
+import wilaya from "../data/TemporaryData/staticData/eng/wilaya";
+import wilayaAr from "../data/TemporaryData/staticData/arab/wilayaAr";
+import specialities from "../data/TemporaryData/staticData/eng/specialities";
+import specialitiesAr from "../data/TemporaryData/staticData/arab/specialitiesAr";
 
-const SignUP = ({ staticData }) => {
+const SignUP = ({ staticData, isStudent }) => {
   const { locale } = useRouter();
+
+  const wilayas = locale === "arab" ? wilayaAr : wilaya;
+  const specialitiesList = locale === "arab" ? specialitiesAr : specialities;
 
   const {
     register,
@@ -19,13 +26,21 @@ const SignUP = ({ staticData }) => {
 
   const onSubmit = async (data) => {
     setBackErrors([]);
+    const role = isStudent ? "student" : "teacher";
+    const formData = new FormData();
+    formData.append('userName', data.userName);
+    formData.append('email', data.email);
+    formData.append('hashPassword', data.hashPassword);
+    formData.append('wilaya', data.wilaya);
+    formData.append('speciality', data.speciality);
+    formData.append('level', data.level);
+    formData.append('role', role);
+    formData.append('fileType', "profilePictures");
+    formData.append('profilePicture', data.profilePicture[0]);
+
     const res = await fetch("/api/users", {
       method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+      body: formData,
     });
 
     if (res.ok) {
@@ -34,7 +49,6 @@ const SignUP = ({ staticData }) => {
         email: data.email,
         password: data.hashPassword,
       });
-
       if (result.error) {
         setBackErrors([result.error]);
       } else {
@@ -135,6 +149,118 @@ const SignUP = ({ staticData }) => {
               <div className="text-danger fs-6 fw-light">
                 The MinLength Must Be 8 chars
               </div>
+            )}
+            {staticData.signUp.profilePicture}
+            <input
+              className={`form-control ${
+                locale === "arab" ? "text-end" : "text-start"
+              } ${
+                errors.profilePicture
+                  ? "border-danger text-danger"
+                  : "border-muted text-dark"
+              }`}
+              placeholder={staticData.signUp.profilePicturePlace}
+              name="profilePicture"
+              type="file"
+              {...register("profilePicture", { required: true })}
+            ></input>
+            {errors.profilePicture && (
+              <div className="text-danger fs-6 fw-light">
+                The Profile Picture is required
+              </div>
+            )}
+            {isStudent ? (
+              <>
+                {staticData.signUp.wilaya}
+                <select
+                  className={`form-control ${
+                    locale === "arab" ? "text-end" : "text-start"
+                  } ${
+                    errors.wilaya
+                      ? "border-danger text-danger"
+                      : "border-muted text-dark"
+                  }`}
+                  name="wilaya"
+                  {...register("wilaya", { required: true })}
+                >
+                  {wilayas.map((wilaya, index) => (
+                    <option key={index} value={wilaya.name}>
+                      {wilaya.name}
+                    </option>
+                  ))}
+                </select>
+                {errors.wilaya && (
+                  <div className="text-danger fs-6 fw-light">
+                    The Wilaya is required
+                  </div>
+                )}
+                {staticData.signUp.level}
+                <select
+                  className={`form-control ${
+                    locale === "arab" ? "text-end" : "text-start"
+                  } ${
+                    errors.level
+                      ? "border-danger text-danger"
+                      : "border-muted text-dark"
+                  }`}
+                  name="level"
+                  {...register("level", { required: true })}
+                >
+                  <option value="1AS">1AS</option>
+                  <option value="2AS">2AS</option>
+                  <option value="3AS">3AS</option>
+                </select>
+                {errors.level && (
+                  <div className="text-danger fs-6 fw-light">
+                    The Level is required
+                  </div>
+                )}
+                {staticData.signUp.speciality}
+                <select
+                  className={`form-control ${
+                    locale === "arab" ? "text-end" : "text-start"
+                  } ${
+                    errors.speciality
+                      ? "border-danger text-danger"
+                      : "border-muted text-dark"
+                  }`}
+                  name="speciality"
+                  {...register("speciality", { required: true })}
+                >
+                  {specialitiesList.map((speciality, index) => (
+                    <option key={index} value={speciality.value}>
+                      {speciality.name}
+                    </option>
+                  ))}
+                </select>
+                {errors.speciality && (
+                  <div className="text-danger fs-6 fw-light">
+                    The Speciality is required
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                {staticData.signUp.justification}
+                <input
+                  className={`form-control ${
+                    locale === "arab" ? "text-end" : "text-start"
+                  } ${
+                    errors.justification
+                      ? "border-danger text-danger"
+                      : "border-muted text-dark"
+                  }`}
+                  placeholder={staticData.signUp.justificationPlace}
+                  name="justification"
+                  type="file"
+                  {...register("justification", { required: true })}
+                ></input>
+                {errors.justification && (
+                  <div className="text-danger fs-6 fw-light">
+                    The Justification is required
+                  </div>
+                )}
+              </>
             )}
             <button
               disabled={!isValid || !isDirty}

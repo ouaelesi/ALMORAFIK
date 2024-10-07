@@ -15,6 +15,7 @@ import {
   faSquareRootVariable,
   faX,
 } from "@fortawesome/free-solid-svg-icons";
+import { useSession } from "next-auth/react";
 
 const AnswerQuestion = () => {
   const { locale } = useRouter();
@@ -31,7 +32,7 @@ const AnswerQuestion = () => {
       : setQuestionsData(questionsEngData);
   }, [locale]);
 
-  const { user } = useContext(AuthContext);
+  const { data: session, status } = useSession();
   const [questionData, setquestionData] = useState({});
   const [answers, setanswers] = useState(null);
   const [isLoading, setLoading] = useState(false);
@@ -71,10 +72,10 @@ const AnswerQuestion = () => {
 
     console.log(answerText);
 
-    if (user) {
+    if (status === "authenticated") {
       createAnswer({
         answer: answerText,
-        creator: user ? user.email : "",
+        creator: session.user ? session.user.email : "",
         question: questionData._id,
         sharedFile: String,
         likes: 0,
@@ -226,6 +227,8 @@ const AnswerQuestion = () => {
           <div className="">
             {answers
               .sort((a, b) => {
+                if (a.pinned && !b.pinned) return -1;
+                if (!a.pinned && b.pinned) return 1;
                 return a.likes === b.likes ? 0 : a.likes < b.likes ? 1 : -1;
               })
               .map((elem, key) => (
@@ -233,6 +236,7 @@ const AnswerQuestion = () => {
                   data={elem}
                   key={key}
                   staticData={questionsData}
+                  pinned={elem.pinned ? true : false}
                 ></BoxAnswer>
               ))}
           </div>
@@ -345,7 +349,7 @@ const AnswerQuestion = () => {
                 </button>
               </div>
               <button type="submit" className=" px-3 py-2 my-2 rounded ask_btn">
-                {user
+                {status === "authenticated"
                   ? questionsData.questionAnswers.action
                   : questionsData.questionAnswers.condition}
               </button>

@@ -6,6 +6,7 @@ import {
   faCaretDown,
   faPen,
   faTrashCan,
+  faThumbtack,
 } from "@fortawesome/free-solid-svg-icons";
 import { faCircleUser } from "@fortawesome/free-regular-svg-icons";
 import AuthContext from "../utils/AuthContext";
@@ -63,6 +64,12 @@ const BoxAnswer = (props) => {
 
   return (
     <div className="my-4">
+      {props.pinned && (
+        <div className="pinned-marker">
+          <FontAwesomeIcon icon={faThumbtack} className="text-warning" />
+          <span className="ml-2">Pinned</span>
+        </div>
+      )}
       <div
         className={`d-flex gap-2 ${locale == "arab" ? "flex-row-reverse" : ""}`}
       >

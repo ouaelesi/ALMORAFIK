@@ -19,6 +19,7 @@ const Questions = ({ questions }) => {
 
   // state
   const [questionsData, setQuestionsData] = useState(questionsArData);
+  const [userPhotos, setUserPhotos] = useState({});
 
   useEffect(() => {
     locale === "arab"
@@ -45,8 +46,25 @@ const Questions = ({ questions }) => {
         setData(data);
         setMaxPages(Math.floor((data.length - 1) / QuetionsPerPage) + 1);
         setLoading(false);
+        fetchUserPhotos(data);
       });
   }, []);
+
+  const fetchUserPhotos = async (questions) => {
+    const userIds = questions.map((question) => question.creatorEmail);
+    const uniqueUserIds = [...new Set(userIds)];
+    const userPhotos = {};
+
+    await Promise.all(
+      uniqueUserIds.map(async (userId) => {
+        const res = await fetch(`/api/users/${userId}`);
+        const userData = await res.json();
+        userPhotos[userId] = userData.photo;
+      })
+    );
+
+    setUserPhotos(userPhotos);
+  };
 
   // todo remove this and sidplay questions
 
@@ -115,13 +133,6 @@ const Questions = ({ questions }) => {
         <div className="Questions_section ">
           <QuestionsMenu data={questionsData}></QuestionsMenu>
           {data
-            // .sort((a, b) => {
-            //   return a.likeCount === b.likeCount
-            //     ? 0
-            //     : a.likeCount < b.likeCount
-            //     ? 1
-            //     : -1;
-            // })
             .map(
               (elem, key) =>
                 IsOnCurrentPage(key) && (
@@ -129,7 +140,7 @@ const Questions = ({ questions }) => {
                     key={elem._id}
                     id={elem._id}
                     Time={elem.createdAt}
-                    user_photo={elem.user_photo}
+                    user_photo={userPhotos[elem.creatorEmail]}
                     creator={elem.creator}
                     creatorEmail={elem.creatorEmail}
                     More_details={elem.More_details}

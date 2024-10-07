@@ -28,8 +28,10 @@ import {
   WhatsappIcon,
 } from "next-share";
 
+import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+
 const QuestionBox = (props) => {
-  //
   const { locale } = useRouter();
 
   const [numLikes, setNumLikes] = useState(props.number_of_likes);
@@ -109,6 +111,12 @@ const QuestionBox = (props) => {
     }
     return null;
   };
+
+  // Filter image files
+  const imageFiles = props.files?.filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file));
+
+  // Filter other files
+  const otherFiles = props.files?.filter(file => !/\.(jpg|jpeg|png|gif)$/i.test(file));
 
   return (
     <div className="QuestionBox my-3 px-md-5 py-2 px-3  border-secondary">
@@ -221,6 +229,36 @@ const QuestionBox = (props) => {
           >
             {props.More_details}
           </p>
+
+          {/* Image Carousel */}
+          {imageFiles?.length > 0 && (
+            <div className="my-3">
+              <Carousel showThumbs={false} infiniteLoop useKeyboardArrows>
+                {imageFiles.map((file, index) => (
+                  <div key={index} >
+                    <img src={file} alt={`Image ${index + 1}`}  />
+                  </div>
+                ))}
+              </Carousel>
+            </div>
+          )}
+
+          {/* Other Files */}
+          {otherFiles?.length > 0 && (
+            <div className="my-3">
+              <h5>Attached Files:</h5>
+              <ul>
+                {otherFiles.map((file, index) => (
+                  <li key={index}>
+                    <a href={file} target="_blank" rel="noopener noreferrer">
+                      {file.split('/').pop()}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           <div className="rounded-3">
             <div
               className={`d-flex   ${

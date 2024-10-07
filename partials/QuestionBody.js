@@ -6,6 +6,9 @@ import { useForm } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { questionsArData } from "../data/TemporaryData/staticData/arab/questionsPage";
 import { questionsEngData } from "../data/TemporaryData/staticData/eng/questionsPage";
+import { useSession } from "next-auth/react";
+import { MODE } from "../utils/prod";
+import axios from "axios";
 import {
   faComment,
   faPlus,
@@ -13,9 +16,6 @@ import {
   faX,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { MODE } from "../utils/prod";
-import axios from "axios";
-import { useSession } from "next-auth/react";
 
 const QuestionBody = ({ staticData }) => {
   const { locale } = useRouter();
@@ -37,7 +37,6 @@ const QuestionBody = ({ staticData }) => {
 
   // const { user } = useContext(AuthContext);
   const {data:session , status}=useSession();
-  const user = session.user;
 
   const [isUpdateBoxs, updateBoxs] = useState(false);
 
@@ -126,17 +125,20 @@ const QuestionBody = ({ staticData }) => {
   const [isSubmiting, setIsSubmiting] = useState(false);
   //
   useEffect(() => {
-    user ? setValue("creator", user.userName) : setValue("creator", null);
-    user
-      ? setValue("creatorEmail", user.email)
-      : setValue("creatorEmail", null);
-    setValue("selectedFile", "");
-    setValue("likeCount", 0);
-    setValue("createdAt", new Date());
-    setValue("answers", []);
+    if (status === "authenticated") {
+      const user = session.user;
+      user ? setValue("creator", user.userName) : setValue("creator", null);
+      user
+        ? setValue("creatorEmail", user.email)
+        : setValue("creatorEmail", null);
+      setValue("selectedFile", "");
+      setValue("likeCount", 0);
+      setValue("createdAt", new Date());
+      setValue("answers", []);
 
-    console.log("the values", getValues());
-  }, [isSubmiting, user]);
+      console.log("the values", getValues());
+    }
+  }, [isSubmiting, session, status]);
 
   //handle chnages & submit
   const handleSubmit = (e) => {
@@ -165,14 +167,25 @@ const QuestionBody = ({ staticData }) => {
   };
 
   const createQuestion = async () => {
+    const formData = new FormData();
+    const values = getValues();
+    formData.append('fileType', 'questionFile'); 
+    for (const key in values) {
+      formData.append(key, values[key]);
+    }
+    const files = document.getElementById('files').files;
+    for (let i = 0; i < files.length; i++) {
+      formData.append('files', files[i]);
+    }
+  
     try {
-      const res = await axios.post("/api/questions", getValues(), {
+      const res = await axios.post("/api/questions", formData, {
         headers: {
           Accept: "application/json",
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
         },
       });
-
+  
       if (MODE === "pre-Launch") {
         router.push("/questionAdded");
       } else {
@@ -365,6 +378,8 @@ const QuestionBody = ({ staticData }) => {
                 <option value="math">Math</option>
               </select>
 
+
+
               {/* <p className="QuestionTitle mb-0 mt-2">{staticData.tags}</p>
               <p className="QuestionEXP mb-2">{staticData.tagsDescription}</p>
               <input
@@ -384,6 +399,16 @@ const QuestionBody = ({ staticData }) => {
                   * The Title must be greater then 3 chars
                 </label>
               )} */}
+              <p className="QuestionTitle my-2">{staticData.files}</p>
+
+              <input
+                type="file"
+                id="files"
+                name="files"
+                multiple
+                className="form-control"
+              />
+
               <button className="btn review_btn" type="submit">
                 {staticData.action}
               </button>

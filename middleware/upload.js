@@ -6,7 +6,7 @@ const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     
     const fileType = req.body.fileType || 'others';
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads', fileType);
+    const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'tmp' ,fileType);
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }

@@ -99,7 +99,7 @@ export const signUp = async (req, res) => {
 
   const roleUser = await Role.findOne({ name: role || "student" });
 
-  const profilePictureUrl = req.file ? `/uploads/profilePictures/${req.file.filename}` : '';
+  const profilePictureUrl = req.file ? `/uploads/tmp/profilePictures/${req.file.filename}` : '';
 
   const user = new userModel({
     userName,

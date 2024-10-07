@@ -772,3 +772,17 @@ pre {
   font-size: 12px;
   margin-top: 5px;
 }
+
+.carousel-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 500px; /* Set a fixed height for the images */
+  overflow: hidden;
+}
+
+.carousel-image {
+  height: 100%;
+  width: auto;
+  object-fit: cover; /* Ensure the image maintains its aspect ratio and covers the container */
+}

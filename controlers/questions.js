@@ -15,12 +15,16 @@ export const addQuestion = async (req, res) => {
     return;
   }
 
+
+  const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+  const files = req.files ? req.files.map(file => `${baseUrl}/uploads/${file.path.split('public/uploads/')[1]}`) : [];
+
   const question = new questionModel({
     title: req.body.title,
     question: req.body.question,
     creator: req.body.creator ? req.body.creator : req.body.fullName,
     tags: req.body.tags?.split(","),
-    files: req.body.files,
+    files: files,
     creatorEmail: req.body.creatorEmail
       ? req.body.creatorEmail
       : req.body.fullName,

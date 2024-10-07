@@ -4,8 +4,7 @@ import fs from 'fs';
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    console.log("from middelware", req.body);
-    console.log("from middelware , file", req.file);
+    
     const fileType = req.body.fileType || 'others';
     const uploadDir = path.join(process.cwd(), 'public', 'uploads', fileType);
     if (!fs.existsSync(uploadDir)) {

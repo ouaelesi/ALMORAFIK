@@ -216,6 +216,7 @@ const AnswerQuestion = () => {
           number_of_answers={questionData.answers.length}
           number_of_likes={questionData.likeCount}
           title={questionData.title}
+          files={questionData.files}
           staticData={questionsData}
         ></QuestionBox>
         <div className="AnswersBox my-3 px-md-5 py-2 px-3 border-2 border-secondary   ">

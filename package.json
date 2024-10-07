@@ -30,11 +30,14 @@
     "mongoose": "^6.12.2",
     "multer": "^1.4.5-lts.1",
     "next": "^13.4.12",
+    "next-auth": "^4.24.7",
     "next-connect": "^0.13.0",
     "next-i18next": "^14.0.0",
     "next-pwa": "^5.6.0",
     "next-share": "^0.27.0",
     "npm": "^10.2.5",
+    "pusher": "^5.2.0",
+    "pusher-js": "^8.4.0-rc2",
     "react": "^18.2.0",
     "react-confetti": "^6.1.0",
     "react-dom": "^18.2.0",
@@ -43,7 +46,9 @@
     "react-mathquill": "^1.0.3",
     "react-parallax-tilt": "^1.7.171",
     "react-router-dom": "^5.3.0",
-    "reactstrap": "^8.10.0"
+    "reactstrap": "^8.10.0",
+    "socket.io": "^4.8.0",
+    "socket.io-client": "^4.8.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.2",

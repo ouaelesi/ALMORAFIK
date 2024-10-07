@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import { sign } from "jsonwebtoken";
 import { serialize } from "cookie";
 import * as jose from "jose";
+import Role from "../models/role.js"
 
 // login required
 const loginReaquired = (req, res, next) => {
@@ -70,6 +71,69 @@ export const getUsers = (req, res) => {
   userModel.find().then((users) => {
     res.send(users);
   });
+};
+
+// signup 
+
+export const signUp = async (req, res) => {
+  if (req.method !== "POST") {
+    return res.status(405).end(); 
+  }
+
+  console.log(req.body);
+
+  const { userName, email, hashPassword, wilaya, speciality, level, role } = req.body;
+
+  console.log(req.body);
+
+  if (!userName || !email || !hashPassword) {
+    return res.status(400).send({ message: "All fields are required" });
+  }
+
+  const existingUser = await userModel.findOne({ email });
+  if (existingUser) {
+    return res.status(409).send({ message: "This email already exists" });
+  }
+
+  const hashedPassword = bcrypt.hashSync(hashPassword, 10);
+
+  const roleUser = await Role.findOne({ name: role || "student" });
+
+  const profilePictureUrl = req.file ? `/uploads/profilePictures/${req.file.filename}` : '';
+
+  const user = new userModel({
+    userName,
+    email,
+    hashPassword: hashedPassword,
+    wilaya,
+    speciality,
+    level,
+    role: roleUser._id,
+    photo: profilePictureUrl,
+  });
+  await user.save();
+
+  const token = await new jose.SignJWT({
+    exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30, // 30 days
+    username: userName,
+    email,
+    userId: user._id,
+  })
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime("30d")
+    .sign(new TextEncoder().encode(process.env.SECRET || "secret"));
+
+  const serialized = serialize("OursiteJWT", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV !== "development",
+    sameSite: "strict",
+    maxAge: 60 * 60 * 24 * 30,
+    path: "/",
+  });
+
+  res.setHeader("Set-Cookie", serialized);
+  res.status(200).send(user);
 };
 
 // add user

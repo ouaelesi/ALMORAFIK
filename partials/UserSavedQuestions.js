@@ -5,6 +5,7 @@ import QuestionBox from "./QuestionBox";
 import { questionsArData } from "../data/TemporaryData/staticData/arab/questionsPage";
 import { questionsEngData } from "../data/TemporaryData/staticData/eng/questionsPage";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 
 const UserSavedQuestions = () => {
   const { locale } = useRouter();
@@ -12,7 +13,9 @@ const UserSavedQuestions = () => {
   // state
   const [questionsData, setQuestionsData] = useState(questionsArData);
 
-  const { user } = useContext(AuthContext);
+  // const { user } = useContext(AuthContext);
+  const { data: session } = useSession();
+  const user = session?.user;
   const [data, setData] = useState(null);
   const [isLoading, setLoading] = useState(false);
 
@@ -55,7 +58,7 @@ const UserSavedQuestions = () => {
         <hr />
       </div> */}
 
-      {data.map((elem, key) => (
+      {data && data.map((elem, key) => (
         <QuestionBox
           key={key}
           id={elem._id}
@@ -70,6 +73,7 @@ const UserSavedQuestions = () => {
           number_of_likes={elem.likeCount}
           title={elem.title}
           staticData={questionsData}
+          saved={true}
         />
       ))}
     </div>

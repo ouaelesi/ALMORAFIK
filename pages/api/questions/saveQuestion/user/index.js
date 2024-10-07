@@ -1,4 +1,5 @@
 import dbConnection from "../../../../../utils/dbConnect";
+import { getUserSavedQuestions } from "../../../../../controlers/questionActions/saveQuestions";
 
 dbConnection();
 const ques = async (req, res) => {
@@ -6,7 +7,7 @@ const ques = async (req, res) => {
 
   switch (method) {
     case "GET":
-      // getUserSavedQuestions(req, res);
+      getUserSavedQuestions(req, res);
       
       break;
     case "POST":

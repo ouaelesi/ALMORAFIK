@@ -1,35 +1,17 @@
-import React, { useContext, useEffect, useState } from "react";
-import {
-  Nav,
-  Navbar,
-  NavbarBrand,
-  NavbarToggler,
-  Collapse,
-  NavItem,
-  Button,
-  NavLink,
-} from "reactstrap";
+import React, { useEffect, useState, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCircleUser,
-  faRightFromBracket,
-  faBars,
-  faX,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCircleUser, faBell, faRightFromBracket, faBars, faCircle } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
-import AuthContext from "../utils/AuthContext";
+import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import LangSwitcher from "./shared/LangSwitcher";
-
 import { headerData } from "../data/TemporaryData/staticData/arab/headerData";
-import {
-  headerDataEng,
-  hederDataEng,
-} from "../data/TemporaryData/staticData/eng/headerDataEng";
+import { headerDataEng } from "../data/TemporaryData/staticData/eng/headerDataEng";
+import Modal from "./Modal";
+import Pusher from 'pusher-js';
 
-const Header = ({ token }) => {
+const Header = () => {
   const { locale } = useRouter();
-
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => setIsOpen(!isOpen);
@@ -39,7 +21,7 @@ const Header = ({ token }) => {
       <div
         className={` ${
           locale === "arab" ? "flex-row-reverse" : ""
-        } d-flex    justify-content-between py-3 w-100`}
+        } d-flex justify-content-between py-3 w-100`}
       >
         <Link href="/" className="px-2">
           <img
@@ -52,7 +34,7 @@ const Header = ({ token }) => {
             width="145px"
           />
         </Link>
-        <Links token={token} classNames="d-none d-md-flex w-100" />
+        <Links classNames="d-none d-md-flex w-100" />
         <div className="d-block d-md-none" onClick={toggle}>
           <FontAwesomeIcon
             icon={isOpen ? faX : faBars}
@@ -62,7 +44,7 @@ const Header = ({ token }) => {
       </div>
       {isOpen && (
         <div className="w-100">
-          <Links token={token} classNames="d-block d-md-none" />
+          <Links classNames="d-block d-md-none" />
         </div>
       )}
     </div>
@@ -71,53 +53,114 @@ const Header = ({ token }) => {
 
 export default Header;
 
-const Links = ({ token, classNames }) => {
-  // next router
+const Links = ({ classNames }) => {
   const router = useRouter();
   const { locale } = useRouter();
-
-  //state
-
+  const { data: session, status } = useSession();
   const [navData, setNavData] = useState(headerData);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [dropdownOpen2, setDropdownOpen2] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [profilePicture, setProfilePicture] = useState(null);
+  const dropdownRef = useRef(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedNotification, setSelectedNotification] = useState(null);
 
-  const { login, user } = useContext(AuthContext);
-  const userLogOut = async (e) => {
-    e.preventDefault();
-    const res = await fetch("/api/users/logout", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({}),
+  const toggleModal = () => setModalOpen(!modalOpen);
+
+  const handleNotificationClick = (notification) => {
+    setSelectedNotification(notification);
+    fetch(`/api/notifications/${notification._id}`, {
+      method: "PATCH",
     });
-    if (res.status === 200) {
-      router.push("/");
-      router.reload("/");
-    } else {
-      const err = ErrorMessage;
-      err.push("Something went wrong ");
+    if (notifications && notifications.length > 0) {
+      setNotifications((prevNotifications) =>
+        prevNotifications.map((n) =>
+          n._id === notification._id ? { ...n, read: true } : n
+        )
+      );
     }
+    toggleModal();
   };
+
   useEffect(() => {
-    if (!user) login(token);
-  }, [token, user, login]);
+    if (status === 'authenticated' && session?.user?.id) {
+      const pusher = new Pusher('c136048a3b3fdd39b363', {
+        cluster: 'eu',
+        authEndpoint: '/api/pusher/auth',
+        auth: {
+          headers: {
+            contentType: "application/json",
+          },
+        },
+      });
+
+      const channel = pusher.subscribe(`private-user-${session.user.id}`);
+      console.log('Subscribed to pusher channel', channel);
+
+      channel.bind('new-notification', (notification) => {
+        setNotifications((prevNotifications) => [notification, ...prevNotifications]);
+        console.log('New notification received', notification);
+      });
+
+      return () => {
+        pusher.unsubscribe(`private-user-${session.user.id}`);
+      };
+    }
+  }, [session, status]);
 
   useEffect(() => {
     locale === "arab" ? setNavData(headerData) : setNavData(headerDataEng);
   }, [locale]);
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      fetchNotifications();
+      fetchUserProfilePicture();
+    }
+  }, [status]);
+
+  const fetchNotifications = async () => {
+    const res = await fetch(`/api/notifications/${session.user.id}`);
+    const data = await res.json();
+    setNotifications(data);
+  };
+
+  const fetchUserProfilePicture = async () => {
+    const res = await fetch(`/api/users/${session.user.email}`);
+    const data = await res.json();
+    console.log(res);
+    setProfilePicture(data.photo);
+  };
+
+  const handleSignOut = async (e) => {
+    console.log("signing out");
+    e.preventDefault();
+    setDropdownOpen(false);
+    await signOut({ redirect: false });
+    router.push("/");
+  };
+
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
+
+  const toggleDropdown2 = () => {
+    setDropdownOpen2(!dropdownOpen2);
+  };
+
   return (
     <div
       className={` ${
         locale === "arab" ? "flex-row-reverse" : ""
-      }    justify-content-between   d-block  w-100   ${classNames}`}
+      } justify-content-between d-block w-100 ${classNames}`}
     >
       <div
         className={` ${
           locale === "arab" ? "flex-row-reverse" : ""
-        } d-md-flex  d-block  justify-content-around w-100 w-md-100     `}
+        } d-md-flex d-block justify-content-around w-100 w-md-100`}
       >
-        <Link href="./" className="navlink text-dark   d-block">
+        <Link href="./" className="navlink text-dark d-block">
           {navData.links.home}
         </Link>
         <Link href="/questions" className="navlink text-dark d-block">
@@ -136,65 +179,103 @@ const Links = ({ token, classNames }) => {
       <div
         className={` ${
           locale === "arab" ? "flex-row-reverse" : ""
-        } d-md-flex  w-md-fit  mx-auto   justify-content-between`}
+        } d-md-flex w-md-fit mx-auto justify-between items-center`}
       >
-        {/* <div className="mx-3 mt-1">
-          {!user && (
-            <Link href="/logIn" className="d-flex justify-content-center">
-              <Button className="signbutton login ">
-                {" "}
-                {navData.actions.login}
-              </Button>
-            </Link>
-          )}
-        </div> */}
-        {/* <div className="mx-3 mt-1">
-          {!user && (
-            <Link href="/signUp" className=" d-flex justify-content-center">
-              <Button className="signbutton signup">
-                {" "}
-                {navData.actions.signup}
-              </Button>
-            </Link>
-          )}
-        </div> */}
-        <div className="mx-2 mt-1">
-          {user && (
-            <div
-              className={` pt-2 d-flex gap-2
-               ${locale === "arab" ? " flex-row-reverse" : ""}
-               `}
-            >
-              <Link
-                href="/Profil"
-                className={`d-flex gap-2 justify-content-center text-dark fs-6  underline ${
-                  locale === "arab" ? "flex-row-reverse" : ""
-                }`}
-              >
-                {navData.actions.profile}
+        <div className="mx-2 mt-1 relative">
+          {status === "authenticated" && session?.user && (
+            <div className="d-flex align-items-center" ref={dropdownRef}>
+              {profilePicture ? (
+                <img
+                  src={profilePicture}
+                  alt="Profile Picture"
+                  className="rounded-full h-9 w-14 cursor-pointer border-2 border-gray-300"
+                  onClick={toggleDropdown}
+                />
+              ) : (
                 <FontAwesomeIcon
                   icon={faCircleUser}
-                  style={{ marginTop: 2, fontSize: 20 }}
+                  style={{ fontSize: 30, cursor: "pointer" }}
+                  onClick={toggleDropdown}
                 />
-              </Link>
-
-              <Link
-                href="/Profil"
-                className={`d-flex gap-2 justify-content-center text-dark fs-6  underline ${
-                  locale === "arab" ? "flex-row-reverse" : ""
-                }`}
-                onClick={(e) => userLogOut(e)}
-              >
-                <div className="fs-6  underline"> {navData.actions.logOut}</div>
-                <FontAwesomeIcon
-                  icon={faRightFromBracket}
-                  style={{ marginTop: 2, fontSize: 20 }}
-                />
-              </Link>
+              )}
+              {dropdownOpen && (
+                <div
+                  className={`absolute top-full mt-2 w-48 bg-white shadow-lg rounded-md z-10 ${
+                    locale === "arab" ? "left-auto" : "right-0"
+                  }`}
+                >
+                  <Link
+                    href="/Profil"
+                    className="block rounded-t-md px-4 py-2 text-gray-800 hover:bg-blue-100"
+                    onClick={() => setDropdownOpen(false)}
+                  >
+                    {navData.actions.profile}
+                  </Link>
+                  <div
+                    className="block rounded-b-md px-4 py-2 text-gray-800 hover:bg-red-100 hover:text-red-600 cursor-pointer"
+                    onClick={handleSignOut}
+                  >
+                    {navData.actions.logOut}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
-        <div className="mx-2  mt-1">
+        <div className="mx-2 mt-1 relative items-center justify-center">
+          {status === "authenticated" && session?.user && (
+            <div className="d-flex items-center justify-center" ref={dropdownRef}>
+              <FontAwesomeIcon
+                icon={faBell}
+                style={{ fontSize: 20, cursor: "pointer" }}
+                onClick={toggleDropdown2}
+              />
+              {dropdownOpen2 && (
+                <div
+                  className={`absolute top-full mt-2 w-fit bg-white shadow-lg rounded-md z-10 ${
+                    locale === "arab" ? "left-0" : "right-0"
+                  }`}
+                >
+                  {notifications.length > 0 ? (
+                    notifications.map((notification, index) => (
+                      <div
+                        key={index}
+                        className={`block font-normal text-sm px-4 py-2 text-gray-800 hover:bg-gray-100 cursor-pointer ${!notification.read ? "bg-red-100" : ""}`}
+                        onClick={() => handleNotificationClick(notification)}
+                      >
+                        {notification.title}
+                        {!notification.read && (
+                          <FontAwesomeIcon
+                            icon={faCircle}
+                            className="text-red-500 ml-3"
+                          />
+                        )}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="block px-4 py-2 text-gray-800">
+                      No notifications
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {modalOpen && selectedNotification && (
+                <Modal onClose={toggleModal}>
+                  <div className="p-4">
+                    <p>{selectedNotification.message}</p>
+                    <div className="mt-4">
+                      <Link className="text-blue-500 hover:underline" href={`/questions/${selectedNotification.questionId}`} onClick={()=>{setModalOpen(false);setDropdownOpen2(false)}}>
+                        View Question
+                      </Link>
+                    </div>
+                  </div>
+                </Modal>
+              )}
+            </div>
+          )}
+        </div>
+        <div className="mx-2 mt-1">
           <LangSwitcher />
         </div>
       </div>

@@ -15,6 +15,7 @@ import {
 
 import { MODE } from "../utils/prod";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 
 const QuestionBody = ({ staticData }) => {
   const { locale } = useRouter();
@@ -34,7 +35,9 @@ const QuestionBody = ({ staticData }) => {
     formState: { errors, isDirty, isValid },
   } = useForm({ mode: "onTouched" });
 
-  const { user } = useContext(AuthContext);
+  // const { user } = useContext(AuthContext);
+  const {data:session , status}=useSession();
+  const user = session.user;
 
   const [isUpdateBoxs, updateBoxs] = useState(false);
 
@@ -362,7 +365,7 @@ const QuestionBody = ({ staticData }) => {
                 <option value="math">Math</option>
               </select>
 
-              <p className="QuestionTitle mb-0 mt-2">{staticData.tags}</p>
+              {/* <p className="QuestionTitle mb-0 mt-2">{staticData.tags}</p>
               <p className="QuestionEXP mb-2">{staticData.tagsDescription}</p>
               <input
                 className={`
@@ -380,7 +383,7 @@ const QuestionBody = ({ staticData }) => {
                 <label className="text-danger fs-6 block">
                   * The Title must be greater then 3 chars
                 </label>
-              )}
+              )} */}
               <button className="btn review_btn" type="submit">
                 {staticData.action}
               </button>

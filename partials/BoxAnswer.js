@@ -6,7 +6,8 @@ import {
   faCaretDown,
   faPen,
   faTrashCan,
-  faThumbtack,
+  faGraduationCap,
+  faBook
 } from "@fortawesome/free-solid-svg-icons";
 import { faCircleUser } from "@fortawesome/free-regular-svg-icons";
 import AuthContext from "../utils/AuthContext";
@@ -62,12 +63,17 @@ const BoxAnswer = (props) => {
     return null;
   };
 
+  const isArabic = (text) => {
+    const arabicPattern = /[\u0600-\u06FF]/;
+    return arabicPattern.test(text);
+  };
+
   return (
-    <div className="my-4">
+    <div className={`my-4 p-2 ${props.pinned ? "bg-yellow-100":""}`}>
       {props.pinned && (
-        <div className="pinned-marker">
-          <FontAwesomeIcon icon={faThumbtack} className="text-warning" />
-          <span className="ml-2">Pinned</span>
+        <div className="pinned-marker mb-2">
+          <FontAwesomeIcon icon={faGraduationCap} className="text-warning" />
+          <span className="ml-2">Top answer</span>
         </div>
       )}
       <div
@@ -107,13 +113,17 @@ const BoxAnswer = (props) => {
           />
         </div>
         <div className="px-2 w-100 ">
-          <div className="bg-light px-3 py-2  rounded-3 border">
+          <div
+            className={`px-3 py-2 rounded-3 border ${
+              props.pinned ? " bg-[#ffeb3b]" : "bg-light"
+            }`}
+          >
             {props.data.answer.split("|||").map((elem, key) =>
               key % 2 === 0 ? (
                 <pre
                   key={key}
                   style={{
-                    direction: "rtl",
+                    direction: isArabic(elem) ? "rtl" : "ltr",
                     whiteSpace: "pre-wrap",
                   }}
                 >

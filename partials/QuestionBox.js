@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import router from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -28,8 +28,8 @@ import {
   WhatsappIcon,
 } from "next-share";
 
-import { Carousel } from "react-responsive-carousel";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
+import ImageGallery from 'react-image-gallery';
+import "react-image-gallery/styles/css/image-gallery.css";
 
 const QuestionBox = (props) => {
   const { locale } = useRouter();
@@ -118,6 +118,71 @@ const QuestionBox = (props) => {
   // Filter other files
   const otherFiles = props.files?.filter(file => !/\.(jpg|jpeg|png|gif)$/i.test(file));
 
+  const isArabic = (text) => {
+    const arabicPattern = /[\u0600-\u06FF]/;
+    return arabicPattern.test(text);
+  };
+
+  const imageGalleryRef = useRef(null);
+
+  const renderImageGallery = () => {
+    if (!imageFiles || imageFiles.length === 0) return null;
+
+    const images = imageFiles.map(file => ({
+      original: file,
+      thumbnail: file,
+    }));
+
+    const additionalImagesCount = images.length - 4;
+
+    const handleImageClick = (index) => {
+      setShowGallery(true);
+      setStartIndex(index);
+      setTimeout(() => {
+        if (imageGalleryRef.current) {
+          imageGalleryRef.current.fullScreen();
+        }
+      }, 100);
+    };
+
+    return (
+      <div className="image-gallery-container">
+        {!showGallery && (
+        <div className="main-image">
+          <img src={images[0].original} alt="Main" onClick={() => handleImageClick(0)} />
+        </div>)}
+        {!showGallery && (
+        <div className="stacked-images">
+          {images.slice(1, 4).map((image, index) => (
+            <div key={index} className="stacked-image">
+              <img src={image.original} alt={`Stacked ${index + 1}`} onClick={() => handleImageClick(index + 1)} />
+            </div>
+          ))}
+          {additionalImagesCount > 0 && (
+            <div className="stacked-image more-images-container">
+              <div className="more-images" onClick={() => handleImageClick(4)}>
+                +{additionalImagesCount}
+              </div>
+            </div>
+          )}
+        </div>)}
+        {showGallery && (
+          <ImageGallery
+            ref={imageGalleryRef}
+            items={images}
+            showThumbnails={false}
+            startIndex={startIndex}
+            useWindowKeyDown={true}
+            onScreenChange={(bool) => setShowGallery(bool)}
+          />
+        )}
+      </div>
+    );
+  };
+
+  const [showGallery, setShowGallery] = useState(false);
+  const [startIndex, setStartIndex] = useState(0);
+
   return (
     <div className="QuestionBox my-3 px-md-5 py-2 px-3  border-secondary">
       <div
@@ -205,13 +270,14 @@ const QuestionBox = (props) => {
               locale === "arab" ? " text-end" : " text-start"
             }`}
             onClick={getQuestion}
+            dir={isArabic(props.Question) ? "rtl" : "ltr"}
           >
             {props.Question.split("|||").map((elem, key) =>
               key % 2 === 0 ? (
                 <pre
                   key={key}
                   style={{
-                    direction: "rtl",
+                    direction: isArabic(elem) ? "rtl" : "ltr",
                     whiteSpace: "pre-wrap",
                   }}
                 >
@@ -226,22 +292,13 @@ const QuestionBox = (props) => {
             className={`question_details ${
               locale === "arab" ? " text-end" : " text-start"
             }`}
+            dir={isArabic(props.More_details) ? "rtl" : "ltr"}
           >
             {props.More_details}
           </p>
 
           {/* Image Carousel */}
-          {imageFiles?.length > 0 && (
-            <div className="my-3">
-              <Carousel showThumbs={false} infiniteLoop useKeyboardArrows>
-                {imageFiles.map((file, index) => (
-                  <div key={index} >
-                    <img src={file} alt={`Image ${index + 1}`}  />
-                  </div>
-                ))}
-              </Carousel>
-            </div>
-          )}
+          {renderImageGallery()}
 
           {/* Other Files */}
           {otherFiles?.length > 0 && (

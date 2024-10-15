@@ -148,24 +148,26 @@ const QuestionBox = (props) => {
     return (
       <div className="image-gallery-container">
         {!showGallery && (
-        <div className="main-image">
-          <img src={images[0].original} alt="Main" onClick={() => handleImageClick(0)} />
-        </div>)}
+          <div className="main-image">
+            <img src={images[0].original} alt="Main" onClick={() => handleImageClick(0)} />
+          </div>
+        )}
         {!showGallery && (
-        <div className="stacked-images">
+          <div className="stacked-images">
           {images.slice(1, 4).map((image, index) => (
-            <div key={index} className="stacked-image">
-              <img src={image.original} alt={`Stacked ${index + 1}`} onClick={() => handleImageClick(index + 1)} />
-            </div>
-          ))}
-          {additionalImagesCount > 0 && (
-            <div className="stacked-image more-images-container">
-              <div className="more-images" onClick={() => handleImageClick(4)}>
-                +{additionalImagesCount}
+            <div key={index} className="stacked-image-container">
+              <div className="stacked-image">
+                <img src={image.original} alt={`Stacked ${index + 1}`} onClick={() => handleImageClick(index + 1)} />
+                {index === 2 && additionalImagesCount > 0 && (
+                  <div className="overlay" onClick={()=> handleImageClick(index + 1)}>
+                    +{additionalImagesCount}
+                  </div>
+                )}
               </div>
             </div>
-          )}
-        </div>)}
+          ))}
+          </div>
+        )}
         {showGallery && (
           <ImageGallery
             ref={imageGalleryRef}

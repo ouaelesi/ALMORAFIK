@@ -1,6 +1,8 @@
 import questionModel from "../models/question";
 import answerModel from "../models/answer";
 import { IsLoggedIn } from "../utils/IsLoggedIn";
+import userQuestionsActions from "../models/userQuestionActions";
+
 // _______________________________________________________________
 // add question
 export const addQuestion = async (req, res) => {
@@ -17,12 +19,12 @@ export const addQuestion = async (req, res) => {
 
 
   const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
-  const files = req.files ? req.files.map(file => `${baseUrl}/uploads/${file.path.split('public/uploads/')[1]}`) : [];
+  const files = req.body.files 
 
   const question = new questionModel({
     title: req.body.title,
     question: req.body.question,
-    creator: req.body.creator ? req.body.creator : req.body.fullName,
+    creator: req.body.fullName ? req.body.fullName : req.body.creator,
     tags: req.body.tags?.split(","),
     files: files,
     creatorEmail: req.body.creatorEmail
@@ -98,10 +100,42 @@ export const updateQuestion = (req, res) => {
 };
 
 // Get question by id
-export const findOneQuestion = (req, res) => {
+export const findOneQuestion = async (req, res) => {
   const id = req.query.id;
   console.log(id);
-  questionModel.findById(id).then((question) => res.status(200).send(question));
+
+  try {
+    // Fetch the question details
+    const question = await questionModel.findById(id);
+
+    if (!question) {
+      return res.status(404).json({ error: "Question not found" });
+    }
+
+    // Count the votes for the question
+    const voteCount = await userQuestionsActions.aggregate([
+      { $match: { questionId: id } },
+      {
+        $group: {
+          _id: "$questionId",
+          totalVotes: { $sum: "$note" },
+        },
+      },
+    ]);
+
+    const totalVotes = voteCount.length > 0 ? voteCount[0].totalVotes : 0;
+
+    // Combine the question details and the vote count
+    const response = {
+      ...question.toObject(),
+      totalVotes,
+    };
+
+    res.status(200).json(response);
+  } catch (error) {
+    console.error("Error fetching question:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
 
 // get all questions

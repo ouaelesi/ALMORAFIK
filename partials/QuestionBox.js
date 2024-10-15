@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import router from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -28,16 +28,18 @@ import {
   WhatsappIcon,
 } from "next-share";
 
-import { Carousel } from "react-responsive-carousel";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
+import ImageGallery from 'react-image-gallery';
+import "react-image-gallery/styles/css/image-gallery.css";
+import { useSession } from "next-auth/react";
 
 const QuestionBox = (props) => {
   const { locale } = useRouter();
+  const { data: user, status } = useSession();
 
   const [numLikes, setNumLikes] = useState(props.number_of_likes);
   const [isQuestionSaved, setSaved] = useState(props.saved);
   const [myNote, setMynote] = useState(props.userNote);
-  const { user } = useContext(AuthContext);
+  
   const router = useRouter();
   useEffect(() => {}, [user]);
 
@@ -79,16 +81,37 @@ const QuestionBox = (props) => {
     setSaved(!isQuestionSaved);
   };
 
-  // save question
+  // note question (upvote or downvote)
   const noteQuestion = async (note) => {
-    setMynote(myNote + note);
-    setNumLikes(numLikes + note);
+    if (!user) {
+      router.push("/signUp");
+      return;
+    }
+
     try {
-      const repsonse = noteQuestionMut({
-        questionId: props.id,
-        note: note,
+      const response = await fetch("/api/ressources/user-actions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          _idUser: user.id,
+          _idResource: props.id,
+          voteType: note === 1 ? "upvote" : "downvote",
+        }),
       });
-    } catch {}
+
+      if (response.ok) {
+        setMynote(myNote + note);
+        setNumLikes(numLikes + note);
+      } else {
+        const errorData = await response.json();
+        alert(errorData.error);
+      }
+    } catch (error) {
+      console.error("Error voting:", error);
+      alert("An error occurred while voting. Please try again.");
+    }
   };
 
   const renderMathQuill = (latex) => {
@@ -117,6 +140,73 @@ const QuestionBox = (props) => {
 
   // Filter other files
   const otherFiles = props.files?.filter(file => !/\.(jpg|jpeg|png|gif)$/i.test(file));
+
+  const isArabic = (text) => {
+    const arabicPattern = /[\u0600-\u06FF]/;
+    return arabicPattern.test(text);
+  };
+
+  const imageGalleryRef = useRef(null);
+
+  const renderImageGallery = () => {
+    if (!imageFiles || imageFiles.length === 0) return null;
+
+    const images = imageFiles.map(file => ({
+      original: file,
+      thumbnail: file,
+    }));
+
+    const additionalImagesCount = images.length - 4;
+
+    const handleImageClick = (index) => {
+      setShowGallery(true);
+      setStartIndex(index);
+      setTimeout(() => {
+        if (imageGalleryRef.current) {
+          imageGalleryRef.current.fullScreen();
+        }
+      }, 100);
+    };
+
+    return (
+      <div className="image-gallery-container">
+        {!showGallery && (
+          <div className="main-image">
+            <img src={images[0].original} alt="Main" onClick={() => handleImageClick(0)} />
+          </div>
+        )}
+        {!showGallery && (
+          <div className="stacked-images">
+          {images.slice(1, 4).map((image, index) => (
+            <div key={index} className="stacked-image-container">
+              <div className="stacked-image">
+                <img src={image.original} alt={`Stacked ${index + 1}`} onClick={() => handleImageClick(index + 1)} />
+                {index === 2 && additionalImagesCount > 0 && (
+                  <div className="overlay" onClick={()=> handleImageClick(index + 1)}>
+                    +{additionalImagesCount}
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+          </div>
+        )}
+        {showGallery && (
+          <ImageGallery
+            ref={imageGalleryRef}
+            items={images}
+            showThumbnails={false}
+            startIndex={startIndex}
+            useWindowKeyDown={true}
+            onScreenChange={(bool) => setShowGallery(bool)}
+          />
+        )}
+      </div>
+    );
+  };
+
+  const [showGallery, setShowGallery] = useState(false);
+  const [startIndex, setStartIndex] = useState(0);
 
   return (
     <div className="QuestionBox my-3 px-md-5 py-2 px-3  border-secondary">
@@ -205,13 +295,14 @@ const QuestionBox = (props) => {
               locale === "arab" ? " text-end" : " text-start"
             }`}
             onClick={getQuestion}
+            dir={isArabic(props.Question) ? "rtl" : "ltr"}
           >
-            {props.Question.split("|||").map((elem, key) =>
+            {props.Question?.split("|||").map((elem, key) =>
               key % 2 === 0 ? (
                 <pre
                   key={key}
                   style={{
-                    direction: "rtl",
+                    direction: isArabic(elem) ? "rtl" : "ltr",
                     whiteSpace: "pre-wrap",
                   }}
                 >
@@ -226,22 +317,13 @@ const QuestionBox = (props) => {
             className={`question_details ${
               locale === "arab" ? " text-end" : " text-start"
             }`}
+            dir={isArabic(props.More_details) ? "rtl" : "ltr"}
           >
             {props.More_details}
           </p>
 
           {/* Image Carousel */}
-          {imageFiles?.length > 0 && (
-            <div className="my-3">
-              <Carousel showThumbs={false} infiniteLoop useKeyboardArrows>
-                {imageFiles.map((file, index) => (
-                  <div key={index} >
-                    <img src={file} alt={`Image ${index + 1}`}  />
-                  </div>
-                ))}
-              </Carousel>
-            </div>
-          )}
+          {renderImageGallery()}
 
           {/* Other Files */}
           {otherFiles?.length > 0 && (

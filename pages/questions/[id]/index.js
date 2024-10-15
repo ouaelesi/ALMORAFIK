@@ -214,7 +214,7 @@ const AnswerQuestion = () => {
           Question={questionData.question}
           tags={questionData.tags}
           number_of_answers={questionData.answers.length}
-          number_of_likes={questionData.likeCount}
+          number_of_likes={questionData.totalVotes}
           title={questionData.title}
           files={questionData.files}
           staticData={questionsData}

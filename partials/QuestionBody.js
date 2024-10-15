@@ -15,10 +15,30 @@ import {
   faSquareRootVariable,
   faX,
 } from "@fortawesome/free-solid-svg-icons";
+import { useEdgeStore } from '../lib/edgestore';
 
+const uploadFilesToEdgeStore = async (files, edgestore) => {
+  const fileUrls = [];
+  for (let i = 0; i < files.length; i++) {
+    try {
+      const res = await edgestore.publicFiles.upload({
+        file: files[i],
+        onProgressChange: (progress) => {
+          console.log(`Uploading file ${i + 1}/${files.length}:`, progress);
+        },
+      });
+      fileUrls.push(res.url);
+    } catch (error) {
+      console.error(`Error uploading file ${i + 1}:`, error);
+      throw error;
+    }
+  }
+  return fileUrls;
+};
 
 const QuestionBody = ({ staticData }) => {
   const { locale } = useRouter();
+  const { edgestore } = useEdgeStore();
 
   const [questionsData, setQuestionsData] = useState(questionsArData);
 
@@ -35,8 +55,7 @@ const QuestionBody = ({ staticData }) => {
     formState: { errors, isDirty, isValid },
   } = useForm({ mode: "onTouched" });
 
-  // const { user } = useContext(AuthContext);
-  const {data:session , status}=useSession();
+  const { data: session, status } = useSession();
 
   const [isUpdateBoxs, updateBoxs] = useState(false);
 
@@ -53,7 +72,7 @@ const QuestionBody = ({ staticData }) => {
           required="true"
           id="answerInput"
           placeholder=""
-          className={`Question_text border px-3 py-2 outline-none  rounded w-100 h-32 ${
+          className={`Question_text border px-3 py-2 outline-none rounded w-100 h-32 ${
             locale == "arab" ? "text-end" : "text-start"
           }`}
           style={{ direction: locale === "arab" ? "rtl" : "ltr" }}
@@ -71,7 +90,7 @@ const QuestionBody = ({ staticData }) => {
         <div className="" key={_id}>
           <div className="d-flex justify-between">
             <div
-              className="bg-dark text-white  px-1  w-fit ml-3"
+              className="bg-dark text-white px-1 w-fit ml-3"
               style={{
                 fontSize: 10,
                 borderRadius: "5px 5px 0 0",
@@ -113,7 +132,7 @@ const QuestionBody = ({ staticData }) => {
             onChange={(mathField) => {
               handleChange(_id, mathField.latex());
             }}
-            className={` border px-3 py-2 outline-none  rounded w-100 `}
+            className={`border px-3 py-2 outline-none rounded w-100`}
           />
         </div>
       );
@@ -123,7 +142,7 @@ const QuestionBody = ({ staticData }) => {
 
   // States
   const [isSubmiting, setIsSubmiting] = useState(false);
-  //
+
   useEffect(() => {
     if (status === "authenticated") {
       const user = session.user;
@@ -140,7 +159,7 @@ const QuestionBody = ({ staticData }) => {
     }
   }, [isSubmiting, session, status]);
 
-  //handle chnages & submit
+  //handle changes & submit
   const handleSubmit = (e) => {
     e.preventDefault();
     let questionText = "";
@@ -167,25 +186,28 @@ const QuestionBody = ({ staticData }) => {
   };
 
   const createQuestion = async () => {
-    const formData = new FormData();
     const values = getValues();
-    formData.append('fileType', 'questionFile'); 
-    for (const key in values) {
-      formData.append(key, values[key]);
-    }
-    const files = document.getElementById('files').files;
-    for (let i = 0; i < files.length; i++) {
-      formData.append('files', files[i]);
-    }
-  
+    values.fullName = session.user.email;
+
+    const files = document.getElementById("files").files;
+    let fileUrls = [];
+
     try {
-      const res = await axios.post("/api/questions", formData, {
+      // Upload files to Edge Store
+      fileUrls = await uploadFilesToEdgeStore(files, edgestore);
+
+      console.log("File URLs:", fileUrls);
+      // Add file URLs to values
+      values.files = fileUrls;
+
+      // Send form data to backend
+      const res = await axios.post("/api/questions", values, {
         headers: {
           Accept: "application/json",
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json",
         },
       });
-  
+
       if (MODE === "pre-Launch") {
         router.push("/questionAdded");
       } else {
@@ -206,6 +228,11 @@ const QuestionBody = ({ staticData }) => {
     setQuestionBoxs(values);
   };
 
+  const isArabic = (text) => {
+    const arabicPattern = /[\u0600-\u06FF]/;
+    return arabicPattern.test(text);
+  };
+
   return (
     <div>
       {isSubmiting ? (
@@ -215,23 +242,8 @@ const QuestionBody = ({ staticData }) => {
       ) : (
         <div>
           <div className="ASKYOURQUES">{staticData.bigTitle}</div>
-          <div className="QuestionBody  border-2 border-secondary">
+          <div className="QuestionBody border-2 border-secondary">
             <form onSubmit={handleSubmit}>
-              {/* _____________________________________________________________________ */}
-              <p className="QuestionTitle mb-2">{staticData.fullName}</p>
-              <input
-                className={`${locale === "arab" ? "text-end" : "text-start"} ${
-                  errors.title
-                    ? "border mb-3 border-danger text-danger"
-                    : "border"
-                } form-control`}
-                name="fullName"
-                id="fullName"
-                required="true"
-                {...register("fullName", { required: true, minLength: 8 })}
-              ></input>
-              {/* _____________________________________________________________________ */}
-
               <p className="QuestionTitle mb-0 mt-2">{staticData.title}</p>
               <p className="QuestionEXP mb-2">{staticData.titleDescription}</p>
               <input
@@ -250,26 +262,15 @@ const QuestionBody = ({ staticData }) => {
               )}
               <p className="QuestionTitle mb-0 mt-2">{staticData.body}</p>
               <p className="QuestionEXP mb-2">{staticData.bodyDescription}</p>
-              {/* <textarea
-                className={`${locale === "arab" ? "text-end" : "text-start"} ${
-                  errors.question
-                    ? "border border-danger text-danger"
-                    : "border"
-                } form-control Question_text`}
-                name="question"
-                id="question"
-                required="true"
-                rows="6"
-                {...register("question", { required: true, minLength: 20 })}
-              ></textarea> */}
+
               {questionBoxs?.map((elem, key) => (
                 <div key={elem._id} className="d-flex my-2">
                   {key != 0 && (
                     <div
-                      className=" border-t border-l border-b p-1 px-2 mt-4 w-fit h-fit cursor-pointer"
+                      className="border-t border-l border-b p-1 px-2 mt-4 w-fit h-fit cursor-pointer"
                       style={{
                         fontSize: 7,
-                        borderRadius: " 7px  0 0 7px",
+                        borderRadius: "7px 0 0 7px",
                         fontFamily: "monospace",
                       }}
                       onClick={() => {
@@ -290,12 +291,12 @@ const QuestionBody = ({ staticData }) => {
 
               <div
                 className={`d-flex gap-2 mb-5 ${
-                  locale === "arab" ? " flex-row-reverse" : ""
+                  locale === "arab" ? "flex-row-reverse" : ""
                 }`}
               >
                 <button
-                  className={`btn bg-light border d-flex gap-2  ${
-                    locale === "arab" ? " flex-row-reverse" : ""
+                  className={`btn bg-light border d-flex gap-2 ${
+                    locale === "arab" ? "flex-row-reverse" : ""
                   }`}
                   type="button"
                   onClick={() => {
@@ -313,7 +314,7 @@ const QuestionBody = ({ staticData }) => {
                           }
                           required="true"
                           placeholder=""
-                          className={` border px-3 py-2 outline-none  rounded w-100 h-32 ${
+                          className={`border px-3 py-2 outline-none rounded w-100 h-32 ${
                             locale == "arab" ? "text-end" : "text-start"
                           }`}
                           style={{
@@ -333,10 +334,10 @@ const QuestionBody = ({ staticData }) => {
                     style={{ fontSize: "15", marginTop: 5 }}
                     className="text-dark"
                   />
-                </button>{" "}
+                </button>
                 <button
-                  className={`btn bg-light border d-flex gap-2  ${
-                    locale === "arab" ? " flex-row-reverse" : ""
+                  className={`btn bg-light border d-flex gap-2 ${
+                    locale === "arab" ? "flex-row-reverse" : ""
                   }`}
                   type="button"
                   onClick={() => {
@@ -378,27 +379,6 @@ const QuestionBody = ({ staticData }) => {
                 <option value="math">Math</option>
               </select>
 
-
-
-              {/* <p className="QuestionTitle mb-0 mt-2">{staticData.tags}</p>
-              <p className="QuestionEXP mb-2">{staticData.tagsDescription}</p>
-              <input
-                className={`
-                ${locale === "arab" ? "text-end" : "text-start"}
-                ${
-                  errors.tags ? "border border-danger text-danger" : "border"
-                } form-control `}
-                name="tags"
-                required="true"
-                id="QuestionTitle"
-                placeholder="math , science ,..."
-                {...register("tags", { required: true, minLength: 3 })}
-              ></input>
-              {errors.tags && (
-                <label className="text-danger fs-6 block">
-                  * The Title must be greater then 3 chars
-                </label>
-              )} */}
               <p className="QuestionTitle my-2">{staticData.files}</p>
 
               <input

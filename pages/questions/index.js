@@ -19,7 +19,9 @@ const Questions = () => {
   const [isLoading, setLoading] = useState(false);
   const [visibleCount, setVisibleCount] = useState(5); // Initial number of questions to display
   const [hasMore, setHasMore] = useState(true); // To track if more questions are available
+  const [seenQuestions, setSeenQuestions] = useState(new Set()); // Track seen questions
   const observer = useRef();
+  const visibilityTimers = useRef({});
 
   useEffect(() => {
     // Update questions data based on locale
@@ -100,6 +102,34 @@ const Questions = () => {
     [isLoading, hasMore, data.length]
   );
 
+  const questionRef = useCallback(
+    (node, id, title) => {
+      if (isLoading) return; // Do not observe if currently loading
+      if (observer.current) observer.current.disconnect(); // Disconnect previous observer
+
+      observer.current = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            // Start a timer when the question enters the viewport
+            visibilityTimers.current[id] = setTimeout(() => {
+              setSeenQuestions(prevSeenQuestions => {
+                const newSeenQuestions = new Set(prevSeenQuestions).add(id);
+                console.log(`Question viewed: ${title}`); 
+                return newSeenQuestions;
+              });
+            }, 1000);
+          } else {
+            // Clear the timer if the question leaves the viewport before 2 seconds
+            clearTimeout(visibilityTimers.current[id]);
+          }
+        });
+      });
+
+      if (node) observer.current.observe(node); // Observe the new node
+    },
+    [isLoading]
+  );
+
   // Handle questions launched state
   if (!questionsLaunched)
     return (
@@ -172,47 +202,40 @@ const Questions = () => {
         <div className="Questions_section ">
           <QuestionsMenu data={questionsData}></QuestionsMenu>
           {visibleQuestions.map((elem, index) => {
+            const questionElement = (
+              <QuestionBox
+                key={elem._id}
+                id={elem._id}
+                Time={elem.createdAt}
+                user_photo={userPhotos[elem.creatorEmail]}
+                creator={elem.creator}
+                creatorEmail={elem.creatorEmail}
+                More_details={elem.More_details}
+                Question={elem.question}
+                tags={elem.tags}
+                number_of_answers={elem.answers.length}
+                number_of_likes={elem.sumNotes}
+                title={elem.title}
+                staticData={questionsData}
+                saved={elem.saved}
+                userNote={elem.userNote}
+              />
+            );
+
             if (index === visibleQuestions.length - 1) {
               // Attach the ref to the last question element
               return (
-                <div ref={lastQuestionRef} key={elem._id}>
-                  <QuestionBox
-                    id={elem._id}
-                    Time={elem.createdAt}
-                    user_photo={userPhotos[elem.creatorEmail]}
-                    creator={elem.creator}
-                    creatorEmail={elem.creatorEmail}
-                    More_details={elem.More_details}
-                    Question={elem.question}
-                    tags={elem.tags}
-                    number_of_answers={elem.answers.length}
-                    number_of_likes={elem.sumNotes}
-                    title={elem.title}
-                    staticData={questionsData}
-                    saved={elem.saved}
-                    userNote={elem.userNote}
-                  />
+                <div ref={node => lastQuestionRef(node)} key={elem._id}>
+                  <div ref={node => questionRef(node, elem._id, elem.title)}>
+                    {questionElement}
+                  </div>
                 </div>
               );
             } else {
               return (
-                <QuestionBox
-                  key={elem._id}
-                  id={elem._id}
-                  Time={elem.createdAt}
-                  user_photo={userPhotos[elem.creatorEmail]}
-                  creator={elem.creator}
-                  creatorEmail={elem.creatorEmail}
-                  More_details={elem.More_details}
-                  Question={elem.question}
-                  tags={elem.tags}
-                  number_of_answers={elem.answers.length}
-                  number_of_likes={elem.sumNotes}
-                  title={elem.title}
-                  staticData={questionsData}
-                  saved={elem.saved}
-                  userNote={elem.userNote}
-                />
+                <div ref={node => questionRef(node, elem._id, elem.title)} key={elem._id}>
+                  {questionElement}
+                </div>
               );
             }
           })}

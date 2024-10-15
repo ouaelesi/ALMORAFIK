@@ -30,14 +30,16 @@ import {
 
 import ImageGallery from 'react-image-gallery';
 import "react-image-gallery/styles/css/image-gallery.css";
+import { useSession } from "next-auth/react";
 
 const QuestionBox = (props) => {
   const { locale } = useRouter();
+  const { data: user, status } = useSession();
 
   const [numLikes, setNumLikes] = useState(props.number_of_likes);
   const [isQuestionSaved, setSaved] = useState(props.saved);
   const [myNote, setMynote] = useState(props.userNote);
-  const { user } = useContext(AuthContext);
+  
   const router = useRouter();
   useEffect(() => {}, [user]);
 
@@ -79,16 +81,37 @@ const QuestionBox = (props) => {
     setSaved(!isQuestionSaved);
   };
 
-  // save question
+  // note question (upvote or downvote)
   const noteQuestion = async (note) => {
-    setMynote(myNote + note);
-    setNumLikes(numLikes + note);
+    if (!user) {
+      router.push("/signUp");
+      return;
+    }
+
     try {
-      const repsonse = noteQuestionMut({
-        questionId: props.id,
-        note: note,
+      const response = await fetch("/api/ressources/user-actions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          _idUser: user.id,
+          _idResource: props.id,
+          voteType: note === 1 ? "upvote" : "downvote",
+        }),
       });
-    } catch {}
+
+      if (response.ok) {
+        setMynote(myNote + note);
+        setNumLikes(numLikes + note);
+      } else {
+        const errorData = await response.json();
+        alert(errorData.error);
+      }
+    } catch (error) {
+      console.error("Error voting:", error);
+      alert("An error occurred while voting. Please try again.");
+    }
   };
 
   const renderMathQuill = (latex) => {
@@ -274,7 +297,7 @@ const QuestionBox = (props) => {
             onClick={getQuestion}
             dir={isArabic(props.Question) ? "rtl" : "ltr"}
           >
-            {props.Question.split("|||").map((elem, key) =>
+            {props.Question?.split("|||").map((elem, key) =>
               key % 2 === 0 ? (
                 <pre
                   key={key}

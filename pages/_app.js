@@ -24,6 +24,7 @@ import {
   Rubik,
 } from "next/font/google";
 import { useRouter } from "next/router";
+import { EdgeStoreProvider } from '../lib/edgestore';
 
 //  If loading a variable font, you don't need to specify the font weight
 const mada = Noto_Sans_Arabic({ subsets: ["arabic"] });
@@ -38,6 +39,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <SessionProvider session={pageProps.session}>
       <AuthProvider>
+      <EdgeStoreProvider>
         <Head>
           <meta name="msapplication-TileImage" content="/thumbnail.png"></meta>
           <meta property="og:site_name" content="SA9SINI WebSite"></meta>
@@ -73,6 +75,7 @@ function MyApp({ Component, pageProps }) {
           <Component {...pageProps} />
           <Footer />
         </main>
+        </EdgeStoreProvider>
       </AuthProvider>
     </SessionProvider>
   );

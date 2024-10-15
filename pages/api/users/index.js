@@ -14,7 +14,6 @@ const apiRoute = nextConnect({
   },
 });
 
-apiRoute.use(upload.single('profilePicture'));
 
 apiRoute.get((req, res) => {
   try {
@@ -29,9 +28,3 @@ apiRoute.post((req, res) => {
 });
 
 export default apiRoute;
-
-export const config = {
-  api: {
-    bodyParser: false, // Disallow body parsing, since we're using multer
-  },
-};

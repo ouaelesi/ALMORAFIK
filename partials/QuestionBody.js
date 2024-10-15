@@ -15,9 +15,30 @@ import {
   faSquareRootVariable,
   faX,
 } from "@fortawesome/free-solid-svg-icons";
+import { useEdgeStore } from '../lib/edgestore';
+
+const uploadFilesToEdgeStore = async (files, edgestore) => {
+  const fileUrls = [];
+  for (let i = 0; i < files.length; i++) {
+    try {
+      const res = await edgestore.publicFiles.upload({
+        file: files[i],
+        onProgressChange: (progress) => {
+          console.log(`Uploading file ${i + 1}/${files.length}:`, progress);
+        },
+      });
+      fileUrls.push(res.url);
+    } catch (error) {
+      console.error(`Error uploading file ${i + 1}:`, error);
+      throw error;
+    }
+  }
+  return fileUrls;
+};
 
 const QuestionBody = ({ staticData }) => {
   const { locale } = useRouter();
+  const { edgestore } = useEdgeStore();
 
   const [questionsData, setQuestionsData] = useState(questionsArData);
 
@@ -165,23 +186,25 @@ const QuestionBody = ({ staticData }) => {
   };
 
   const createQuestion = async () => {
-    const formData = new FormData();
     const values = getValues();
-    formData.append("fullName", session.user.email);
-    formData.append("fileType", "questionFile");
-    for (const key in values) {
-      formData.append(key, values[key]);
-    }
+    values.fullName = session.user.email;
+
     const files = document.getElementById("files").files;
-    for (let i = 0; i < files.length; i++) {
-      formData.append("files", files[i]);
-    }
+    let fileUrls = [];
 
     try {
-      const res = await axios.post("/api/questions", formData, {
+      // Upload files to Edge Store
+      fileUrls = await uploadFilesToEdgeStore(files, edgestore);
+
+      console.log("File URLs:", fileUrls);
+      // Add file URLs to values
+      values.files = fileUrls;
+
+      // Send form data to backend
+      const res = await axios.post("/api/questions", values, {
         headers: {
           Accept: "application/json",
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json",
         },
       });
 
@@ -221,19 +244,6 @@ const QuestionBody = ({ staticData }) => {
           <div className="ASKYOURQUES">{staticData.bigTitle}</div>
           <div className="QuestionBody border-2 border-secondary">
             <form onSubmit={handleSubmit}>
-              {/* <p className="QuestionTitle mb-2">{staticData.fullName}</p> */}
-              {/* <input
-                className={`${locale === "arab" ? "text-end" : "text-start"} ${
-                  errors.title
-                    ? "border mb-3 border-danger text-danger"
-                    : "border"
-                } form-control`}
-                name="fullName"
-                id="fullName"
-                required="true"
-                {...register("fullName", { required: true, minLength: 8 })}
-              ></input> */}
-
               <p className="QuestionTitle mb-0 mt-2">{staticData.title}</p>
               <p className="QuestionEXP mb-2">{staticData.titleDescription}</p>
               <input

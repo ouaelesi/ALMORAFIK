@@ -1,58 +1,50 @@
-import resourceUserActions from "../../../models/ressources/resourceUserActions";
+import userQuestionsActions from "../../../models/userQuestionActions";
+import { getToken  } from "next-auth/jwt";
 
-// Add a youtub channel
 export const noteResource = async (req, res) => {
-  // todo activate the login verivication
-  //   if (!(await IsLoggedIn(req))) {
-  //     res.status(400).send({ message: "User Not Logged In!" });
-  //     return;
-  //   }
-  if (!req.body) {
-    res.status(400).send({ message: "request empty!!", data: req.body });
-    return;
+  const { _idResource:questionId, voteType } = req.body; // voteType can be 'upvote' or 'downvote'
+
+  if (!["upvote", "downvote"].includes(voteType)) {
+    return res.status(400).json({ error: "Invalid vote type" });
   }
 
-  let userAction = await resourceUserActions.findOne({
-    _idUser: req.body._idUser,
-    _idResource: req.body._idResource,
-  });
+  try {
+    // Check if the user is authenticated
+    const secret = process.env.NEXTAUTH_SECRET;
+    const session = await getToken({ req, secret });
 
-  if (userAction) {
-    resourceUserActions
-      .updateOne(
-        { _idUser: req.body._idUser, _idResource: req.body._idResource },
-        { $set: { note: req.body.note } }
-      )
-      .then((data) =>
-        res.status(200).send({
-          message: "note saved successfuly",
-        })
-      )
-      .catch((err) => {
-        res.status(500).send({
-          message: err.message || "some errors occured",
-        });
-      });
-  } else {
-    const reUserAction = new resourceUserActions({
-      _idUser: req.body._idUser,
-      _idResource: req.body._idResource,
-      note: req.body.note,
+    if (!session) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const userId = session.id; 
+
+    // Check if the user has already voted on this resource
+    const existingVote = await userQuestionsActions.findOne({ userId, questionId });
+    console.log(userId,questionId,existingVote);
+
+    if (existingVote) {
+      return res.status(400).json({ error: "User has already voted on this resource" });
+    }
+
+    // Create a new vote
+    const newVote = new userQuestionsActions({
+      userId,
+      questionId,
+      note: voteType === "upvote" ? 1 : -1,
     });
-    console.log("here 3");
-    reUserAction
-      .save()
-      .then((data) =>
-        res.status(200).send({
-          message: "note saved successfuly",
-          data: data,
-        })
-      )
-      .catch((err) => {
-        res.status(500).send({
-          message: err.message || "some errors occured",
-        });
-      });
+
+    await newVote.save();
+
+    // Fetch the question and add to it (if needed)
+    // const question = await Question.findById(_idResource); // Assuming you have a Question model
+    // question.votes += voteType === "upvote" ? 1 : -1;
+    // await question.save();
+
+    res.status(200).json({ message: "Vote recorded successfully" });
+  } catch (error) {
+    console.error("Error recording vote:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 

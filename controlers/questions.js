@@ -2,6 +2,7 @@ import questionModel from "../models/question";
 import answerModel from "../models/answer";
 import { IsLoggedIn } from "../utils/IsLoggedIn";
 import userQuestionsActions from "../models/userQuestionActions";
+import ViewedQuestion from "../models/ViewedQuestion";
 
 // _______________________________________________________________
 // add question
@@ -139,15 +140,27 @@ export const findOneQuestion = async (req, res) => {
 };
 
 // get all questions
-// get all questions
-// get all questions
 export const findQuestion = async (req, res) => {
   try {
-    let userEmail = await IsLoggedIn(req);
+    let userEmail = await IsLoggedIn(req);//TODO:change logic according to next-auth
 
     userEmail = userEmail ? userEmail : "";
 
+    // First, get viewed question IDs for this user
+    const viewedQuestions = await ViewedQuestion.find({
+      userId: userEmail.id
+    }).select('questionId -_id');
+
+    const viewedQuestionIds = viewedQuestions.map(vq => 
+      new mongoose.Types.ObjectId(vq.questionId)
+    );
+
     const questionsWithActions = await questionModel.aggregate([
+      {
+        $match: {
+          _id: { $nin: viewedQuestionIds }
+        }
+      },
       {
         $lookup: {
           from: "userquestionsactions",
@@ -159,7 +172,7 @@ export const findQuestion = async (req, res) => {
             {
               $match: {
                 $expr: { $eq: ["$questionId", "$$questionId"] },
-                userId: userEmail.email, // Assuming you have the user's ID in userEmail.email
+                userId: userEmail.email, 
                 saved: true,
               },
             },
@@ -324,4 +337,34 @@ export const seachQuestions = (req, res) => {
     .sort({ score: { $meta: "textScore" } })
     .then((questions) => res.send(questions))
     .catch((err) => res.send(err.message));
+};
+
+export const trackViewedQuestion = async (req, res) => {
+  const { userId, questionId } = req.body;
+  try {
+    await ViewedQuestion.findOneAndUpdate(
+      { userId, questionId },
+      { $set: { viewedAt: new Date() } },
+      { upsert: true }
+    );
+    res.status(200).json({ message: 'Question viewed successfully' });
+  } catch (error) {
+    console.error('Error tracking viewed question:',error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+//TODO : use it after
+export const cleanupOldViewedRecords = async (daysToKeep = 30) => {
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - daysToKeep);
+  
+  try {
+    await ViewedQuestion.deleteMany({
+      viewedAt: { $lt: cutoffDate }
+    });
+  } catch (error) {
+    console.error('Error cleaning up old records:');
+    throw error;
+  }
 };

@@ -7,10 +7,12 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
 import Tilt from "react-parallax-tilt";
+import { useSession } from "next-auth/react";
 
 const Questions = () => {
   const [questionsLaunched, launchQuestions] = useState(true);
   const { locale } = useRouter();
+  const { data: session } = useSession();
 
   // State
   const [questionsData, setQuestionsData] = useState(questionsArData);
@@ -22,6 +24,7 @@ const Questions = () => {
   const [seenQuestions, setSeenQuestions] = useState(new Set()); // Track seen questions
   const observer = useRef();
   const visibilityTimers = useRef({});
+  const trackingInProgress = useRef(new Set());
 
   useEffect(() => {
     // Update questions data based on locale
@@ -102,30 +105,71 @@ const Questions = () => {
     [isLoading, hasMore, data.length]
   );
 
+  // Modified questionRef with view tracking
   const questionRef = useCallback(
     (node, id, title) => {
-      if (isLoading) return; // Do not observe if currently loading
-      if (observer.current) observer.current.disconnect(); // Disconnect previous observer
+      if (isLoading || !node) return;
 
-      observer.current = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            // Start a timer when the question enters the viewport
-            visibilityTimers.current[id] = setTimeout(() => {
-              setSeenQuestions(prevSeenQuestions => {
-                const newSeenQuestions = new Set(prevSeenQuestions).add(id);
-                console.log(`Question viewed: ${title}`); 
-                return newSeenQuestions;
-              });
-            }, 1000);
-          } else {
-            // Clear the timer if the question leaves the viewport before 2 seconds
-            clearTimeout(visibilityTimers.current[id]);
-          }
-        });
-      });
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              // Start timer when question enters viewport
+              visibilityTimers.current[id] = setTimeout(async () => {
+                // Check if we're already tracking this question
+                if (trackingInProgress.current.has(id)) return;
+                
+                // Add to tracking set to prevent duplicate calls
+                trackingInProgress.current.add(id);
+                console.log(`Question viewed: ${title}`);
+                try {
+                  // Call the tracking API
+                  const response = await fetch('/api/questions/viewed', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      questionId: id,
+                      userId: session.user.id,
+                    }),
+                  });
 
-      if (node) observer.current.observe(node); // Observe the new node
+                  if (response.ok) {
+                    setSeenQuestions(prevSeenQuestions => {
+                      const newSeenQuestions = new Set(prevSeenQuestions).add(id);
+                      console.log(`Question viewed and tracked: ${title}`);
+                      return newSeenQuestions;
+                    });
+                  } else {
+                    console.error('Failed to track question view');
+                  }
+                } catch (error) {
+                  console.error('Error tracking question view:', error);
+                } finally {
+                  // Remove from tracking set after attempt (whether successful or not)
+                  trackingInProgress.current.delete(id);
+                }
+              }, 1000); // 1 second visibility threshold
+            } else {
+              // Clear the timer if question leaves viewport
+              clearTimeout(visibilityTimers.current[id]);
+            }
+          });
+        },
+        {
+          threshold: 0.5, // Question is considered viewed when 50% visible
+          rootMargin: '0px' // No margin
+        }
+      );
+
+      observer.observe(node);
+
+      // Cleanup
+      return () => {
+        observer.disconnect();
+        clearTimeout(visibilityTimers.current[id]);
+      };
     },
     [isLoading]
   );

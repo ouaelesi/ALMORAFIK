@@ -39,6 +39,8 @@ const QuestionBox = (props) => {
   const [numLikes, setNumLikes] = useState(props.number_of_likes);
   const [isQuestionSaved, setSaved] = useState(props.saved);
   const [myNote, setMynote] = useState(props.userNote);
+  const [isEditing, setIsEditing] = useState(false);
+const [editedQuestion, setEditedQuestion] = useState(props.Question);
   
   const router = useRouter();
   useEffect(() => {}, [user]);
@@ -60,7 +62,37 @@ const QuestionBox = (props) => {
   };
 
   const editQuestion = () => {
-    alert("Will be available Soon !");
+    setIsEditing(true);
+  };
+
+  const handleEditChange = (e, index) => {
+    const parts = editedQuestion.split("|||");
+    parts[index] = e.target.value;
+    setEditedQuestion(parts.join("|||"));
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`/api/questions/${props.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ question: editedQuestion }),
+      });
+  
+      if (response.ok) {
+        setIsEditing(false);
+        // router.reload();
+      } else {
+        const errorData = await response.json();
+        alert(errorData.error);
+      }
+    } catch (error) {
+      console.error("Error updating question:", error);
+      alert("An error occurred while updating the question. Please try again.");
+    }
   };
 
   const supQuestion = async (id) => {
@@ -133,6 +165,30 @@ const QuestionBox = (props) => {
       );
     }
     return null;
+  };
+
+  const renderEditableMathQuill = (latex, index) => {
+    if (typeof window !== "undefined") {
+      const {
+        addStyles,
+        EditableMathField,
+      } = require("react-mathquill");
+      addStyles();
+      return (
+        <EditableMathField
+          latex={latex}
+          onChange={(mathField) => handleLatexChange(mathField.latex(), index)}
+          className={`text-light bg-dark border px-3 py-2 outline-none border-dark rounded w-100 my-2`}
+        />
+      );
+    }
+    return null;
+  };
+
+  const handleLatexChange = (latex, index) => {
+    const parts = editedQuestion.split("|||");
+    parts[index] = latex;
+    setEditedQuestion(parts.join("|||"));
   };
 
   // Filter image files
@@ -290,29 +346,59 @@ const QuestionBox = (props) => {
           >
             {props.title}
           </div>
-          <p
-            className={`bg-light p-3  rounded-3 border cursor-pointer ${
-              locale === "arab" ? " text-end" : " text-start"
-            }`}
-            onClick={getQuestion}
-            dir={isArabic(props.Question) ? "rtl" : "ltr"}
-          >
-            {props.Question?.split("|||").map((elem, key) =>
-              key % 2 === 0 ? (
-                <pre
-                  key={key}
-                  style={{
-                    direction: isArabic(elem) ? "rtl" : "ltr",
-                    whiteSpace: "pre-wrap",
-                  }}
-                >
-                  {elem}
-                </pre>
-              ) : (
-                renderMathQuill(elem)
-              )
-            )}
-          </p>
+          
+          {isEditing ? (
+  <form onSubmit={handleEditSubmit}>
+    {editedQuestion.split("|||").map((elem, key) =>
+      key % 2 === 0 ? (
+        <textarea
+          key={key}
+          className="form-control"
+          value={elem}
+          onChange={(e) => handleEditChange(e, key)}
+          rows="5"
+        />
+      ) : (
+        renderEditableMathQuill(elem, key)
+      )
+    )}
+    <button type="submit" className="btn btn-primary mt-2">
+      Save
+    </button>
+    <button
+      type="button"
+      className="btn btn-secondary mt-2"
+      onClick={() => setIsEditing(false)}
+    >
+      Cancel
+    </button>
+  </form>
+) : (
+  <p
+    className={`bg-light p-3 rounded-3 border cursor-pointer ${
+      locale === "arab" ? "text-end" : "text-start"
+    }`}
+    onClick={getQuestion}
+    dir={isArabic(props.Question) ? "rtl" : "ltr"}
+  >
+    {props.Question?.split("|||").map((elem, key) =>
+      key % 2 === 0 ? (
+        <pre
+          key={key}
+          style={{
+            direction: isArabic(elem) ? "rtl" : "ltr",
+            whiteSpace: "pre-wrap",
+          }}
+        >
+          {elem}
+        </pre>
+      ) : (
+        renderMathQuill(elem)
+      )
+    )}
+  </p>
+)}
+
           <p
             className={`question_details ${
               locale === "arab" ? " text-end" : " text-start"

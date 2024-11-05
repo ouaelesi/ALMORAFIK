@@ -7,6 +7,7 @@ import {
   faTrashCan,
   faPen,
   faBookmark as solidBookMark,
+  faWarning,
 } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark, faCircleUser } from "@fortawesome/free-regular-svg-icons";
 import { useRouter } from "next/router";
@@ -218,6 +219,28 @@ const [sections, setSections] = useState(initializeSections(props.Question));
   // Filter other files
   const otherFiles = props.files?.filter(file => !/\.(jpg|jpeg|png|gif)$/i.test(file));
 
+  const signalerQuestion = async () => {
+    try {
+      const response = await fetch(`/api/questions/report`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ questionId: props.id }),
+      });
+
+      if (response.ok) {
+        alert("Question reported successfully.");
+      } else {
+        const errorData = await response.json();
+        alert(errorData.error);
+      }
+    } catch (error) {
+      console.error("Error reporting question:", error);
+      alert("An error occurred while reporting the question. Please try again.");
+    }
+  };
+
   const isArabic = (text) => {
     const arabicPattern = /[\u0600-\u06FF]/;
     return arabicPattern.test(text);
@@ -247,12 +270,17 @@ const [sections, setSections] = useState(initializeSections(props.Question));
 
     return (
       <div className="image-gallery-container">
-        {!showGallery && (
+        {!showGallery && images.length === 1 && (
+          <div className=" flex justify-center w-full">
+            <img src={images[0].original} alt="Main" onClick={() => handleImageClick(0)} />
+          </div>
+        )}
+        {!showGallery && images.length>=2 && (
           <div className="main-image">
             <img src={images[0].original} alt="Main" onClick={() => handleImageClick(0)} />
           </div>
         )}
-        {!showGallery && (
+        {!showGallery && images.length>=2 && (
           <div className="stacked-images">
           {images.slice(1, 4).map((image, index) => (
             <div key={index} className="stacked-image-container">
@@ -544,6 +572,12 @@ const [sections, setSections] = useState(initializeSections(props.Question));
                 onClick={() => supQuestion(props.id)}
               >
                 <FontAwesomeIcon icon={faTrashCan} />
+              </button>
+              <button
+                className="btn border mx-1"
+                onClick={signalerQuestion}
+              >
+                <FontAwesomeIcon icon={faWarning} color="red" />
               </button>
             </div>
           )}

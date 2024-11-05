@@ -15,6 +15,14 @@ const postSchema = new mongoose.Schema({
     type: [String],
     default: [],
   },
+  status: {
+    type: String,
+    enum: ["default", "suspended", "approved", "blocked"],
+    default: "default",
+  },
+
+  
+
 });
 
 let question =

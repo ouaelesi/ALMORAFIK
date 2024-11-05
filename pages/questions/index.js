@@ -2,7 +2,10 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import QuestionsMenu from "../../partials/QuestionsMenu";
 import QuestionBox from "../../partials/QuestionBox";
 import fetch from "isomorphic-unfetch";
-import { questionsArData, questionsEngData } from "../../data/TemporaryData/staticData/arab/questionsPage";
+import {
+  questionsArData,
+  questionsEngData,
+} from "../../data/TemporaryData/staticData/arab/questionsPage";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
@@ -112,22 +115,22 @@ const Questions = () => {
 
       const observer = new IntersectionObserver(
         (entries) => {
-          entries.forEach(entry => {
+          entries.forEach((entry) => {
             if (entry.isIntersecting) {
               // Start timer when question enters viewport
               visibilityTimers.current[id] = setTimeout(async () => {
                 // Check if we're already tracking this question
                 if (trackingInProgress.current.has(id)) return;
-                
+
                 // Add to tracking set to prevent duplicate calls
                 trackingInProgress.current.add(id);
                 console.log(`Question viewed: ${title}`);
                 try {
                   // Call the tracking API
-                  const response = await fetch('/api/questions/viewed', {
-                    method: 'POST',
+                  const response = await fetch("/api/questions/viewed", {
+                    method: "POST",
                     headers: {
-                      'Content-Type': 'application/json',
+                      "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
                       questionId: id,
@@ -136,16 +139,18 @@ const Questions = () => {
                   });
 
                   if (response.ok) {
-                    setSeenQuestions(prevSeenQuestions => {
-                      const newSeenQuestions = new Set(prevSeenQuestions).add(id);
+                    setSeenQuestions((prevSeenQuestions) => {
+                      const newSeenQuestions = new Set(prevSeenQuestions).add(
+                        id
+                      );
                       console.log(`Question viewed and tracked: ${title}`);
                       return newSeenQuestions;
                     });
                   } else {
-                    console.error('Failed to track question view');
+                    console.error("Failed to track question view");
                   }
                 } catch (error) {
-                  console.error('Error tracking question view:', error);
+                  console.error("Error tracking question view:", error);
                 } finally {
                   // Remove from tracking set after attempt (whether successful or not)
                   trackingInProgress.current.delete(id);
@@ -159,7 +164,7 @@ const Questions = () => {
         },
         {
           threshold: 0.5, // Question is considered viewed when 50% visible
-          rootMargin: '0px' // No margin
+          rootMargin: "0px", // No margin
         }
       );
 
@@ -269,23 +274,30 @@ const Questions = () => {
             if (index === visibleQuestions.length - 1) {
               // Attach the ref to the last question element
               return (
-                <div ref={node => lastQuestionRef(node)} key={elem._id}>
-                  <div ref={node => questionRef(node, elem._id, elem.title)}>
+                <div ref={(node) => lastQuestionRef(node)} key={elem._id}>
+                  <div ref={(node) => questionRef(node, elem._id, elem.title)}>
                     {questionElement}
                   </div>
                 </div>
               );
             } else {
               return (
-                <div ref={node => questionRef(node, elem._id, elem.title)} key={elem._id}>
+                <div
+                  ref={(node) => questionRef(node, elem._id, elem.title)}
+                  key={elem._id}
+                >
                   {questionElement}
                 </div>
               );
             }
           })}
-          {isLoading && <div className="text-center my-4">Loading more questions...</div>}
+          {isLoading && (
+            <div className="text-center my-4">Loading more questions...</div>
+          )}
           {!hasMore && (
-            <p className="text-center my-4">You have reached the end of the questions.</p>
+            <p className="text-center my-4">
+              You have reached the end of the questions.
+            </p>
           )}
         </div>
       </div>

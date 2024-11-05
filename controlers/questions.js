@@ -35,7 +35,7 @@ export const addQuestion = async (req, res) => {
   question
     .save()
     .then((data) => {
-      res.send(data);
+      res.status(201).send(data);
     })
     .catch((err) => {
       res.status(500).send({

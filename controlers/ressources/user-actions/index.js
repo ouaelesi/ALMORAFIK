@@ -21,18 +21,26 @@ export const noteResource = async (req, res) => {
 
     // Check if the user has already voted on this resource
     const existingVote = await userQuestionsActions.findOne({ userId, questionId });
-    console.log(userId,questionId,existingVote);
+    console.log(userId, questionId, existingVote);
 
     if (existingVote) {
+      if ((existingVote.note === 1 && voteType === "upvote") || (existingVote.note === -1 && voteType === "downvote")) {
       return res.status(400).json({ error: "User has already voted on this resource" });
-    }
-
-    // Create a new vote
-    const newVote = new userQuestionsActions({
+      } else {
+      // Update the existing vote
+      existingVote.note = voteType === "upvote" ? 1 : -1;
+      await existingVote.save();
+      return res.status(200).json({ message: "Vote updated successfully" });
+      }
+    } else {
+      // Create a new vote
+      const newVote = new userQuestionsActions({
       userId,
       questionId,
       note: voteType === "upvote" ? 1 : -1,
-    });
+      });
+      await newVote.save();
+    }
 
     await newVote.save();
 

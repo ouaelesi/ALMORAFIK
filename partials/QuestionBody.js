@@ -207,13 +207,18 @@ const QuestionBody = ({ staticData }) => {
           "Content-Type": "application/json",
         },
       });
-
-      if (MODE === "pre-Launch") {
-        router.push("/questionAdded");
-      } else {
-        console.log("this is the response: ", res);
-        router.push("/questions/" + res.data._id);
+      if (res.status === 201) {
+        console.log("Question created successfully:", res.data);
+        setIsSubmiting(false);
+        if (MODE === "pre-Launch") {
+          router.push("/questionAdded/" + res.data._id);
+        } else {
+          console.log("this is the response: ", res);
+          router.push("/questions/" + res.data._id);
+        }
       }
+      
+
     } catch (err) {
       console.log(err.message);
     }

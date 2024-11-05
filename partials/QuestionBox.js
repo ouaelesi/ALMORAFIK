@@ -7,6 +7,7 @@ import {
   faTrashCan,
   faPen,
   faBookmark as solidBookMark,
+  faWarning,
 } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark, faCircleUser } from "@fortawesome/free-regular-svg-icons";
 import { useRouter } from "next/router";
@@ -39,7 +40,20 @@ const QuestionBox = (props) => {
   const [numLikes, setNumLikes] = useState(props.number_of_likes);
   const [isQuestionSaved, setSaved] = useState(props.saved);
   const [myNote, setMynote] = useState(props.userNote);
-  
+  const [isEditing, setIsEditing] = useState(false);
+const [editedQuestion, setEditedQuestion] = useState(props.Question);
+const initializeSections = (question) => {
+  const parts = question.split("|||");
+  return parts.map((part, index) => {
+    if (index % 2 === 0) {
+      return { type: "text", content: part };
+    } else {
+      return { type: "latex", content: part };
+    }
+  });
+};
+
+const [sections, setSections] = useState(initializeSections(props.Question));
   const router = useRouter();
   useEffect(() => {}, [user]);
 
@@ -60,7 +74,46 @@ const QuestionBox = (props) => {
   };
 
   const editQuestion = () => {
-    alert("Will be available Soon !");
+    setIsEditing(true);
+  };
+
+  const handleEditChange = (e, index) => {
+    const updatedSections = [...sections];
+    updatedSections[index].content = e.target.value;
+    setSections(updatedSections);
+    setEditedQuestion(updatedSections.map((section) => section.content).join("|||"));
+  };
+
+  const addTextArea = () => {
+    setSections([...sections, { type: "text", content: "" }]);
+  };
+  
+  const addLatexArea = () => {
+    setSections([...sections, { type: "latex", content: "" }]);
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`/api/questions/${props.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ question: editedQuestion }),
+      });
+  
+      if (response.ok) {
+        setIsEditing(false);
+        // router.reload();
+      } else {
+        const errorData = await response.json();
+        alert(errorData.error);
+      }
+    } catch (error) {
+      console.error("Error updating question:", error);
+      alert("An error occurred while updating the question. Please try again.");
+    }
   };
 
   const supQuestion = async (id) => {
@@ -134,12 +187,59 @@ const QuestionBox = (props) => {
     }
     return null;
   };
+  const handleLatexChange = (latex, index) => {
+    const updatedSections = [...sections];
+    updatedSections[index].content = latex;
+    setSections(updatedSections);
+    setEditedQuestion(updatedSections.map((section) => section.content).join("|||"));
+  };
+
+  const renderEditableMathQuill = (latex, index) => {
+    if (typeof window !== "undefined") {
+      const {
+        addStyles,
+        EditableMathField,
+      } = require("react-mathquill");
+      addStyles();
+      return (
+        <EditableMathField
+          latex={latex}
+          onChange={(mathField) => handleLatexChange(mathField.latex(), index)}
+          className={`text-light bg-dark border px-3 py-2 outline-none border-dark rounded w-100 my-2`}
+        />
+      );
+    }
+    return null;
+  };
+
 
   // Filter image files
   const imageFiles = props.files?.filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file));
 
   // Filter other files
   const otherFiles = props.files?.filter(file => !/\.(jpg|jpeg|png|gif)$/i.test(file));
+
+  const signalerQuestion = async () => {
+    try {
+      const response = await fetch(`/api/questions/report`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ questionId: props.id }),
+      });
+
+      if (response.ok) {
+        alert("Question reported successfully.");
+      } else {
+        const errorData = await response.json();
+        alert(errorData.error);
+      }
+    } catch (error) {
+      console.error("Error reporting question:", error);
+      alert("An error occurred while reporting the question. Please try again.");
+    }
+  };
 
   const isArabic = (text) => {
     const arabicPattern = /[\u0600-\u06FF]/;
@@ -170,12 +270,17 @@ const QuestionBox = (props) => {
 
     return (
       <div className="image-gallery-container">
-        {!showGallery && (
+        {!showGallery && images.length === 1 && (
+          <div className=" flex justify-center w-full">
+            <img src={images[0].original} alt="Main" onClick={() => handleImageClick(0)} />
+          </div>
+        )}
+        {!showGallery && images.length>=2 && (
           <div className="main-image">
             <img src={images[0].original} alt="Main" onClick={() => handleImageClick(0)} />
           </div>
         )}
-        {!showGallery && (
+        {!showGallery && images.length>=2 && (
           <div className="stacked-images">
           {images.slice(1, 4).map((image, index) => (
             <div key={index} className="stacked-image-container">
@@ -290,29 +395,64 @@ const QuestionBox = (props) => {
           >
             {props.title}
           </div>
-          <p
-            className={`bg-light p-3  rounded-3 border cursor-pointer ${
-              locale === "arab" ? " text-end" : " text-start"
-            }`}
-            onClick={getQuestion}
-            dir={isArabic(props.Question) ? "rtl" : "ltr"}
-          >
-            {props.Question?.split("|||").map((elem, key) =>
-              key % 2 === 0 ? (
-                <pre
-                  key={key}
-                  style={{
-                    direction: isArabic(elem) ? "rtl" : "ltr",
-                    whiteSpace: "pre-wrap",
-                  }}
-                >
-                  {elem}
-                </pre>
-              ) : (
-                renderMathQuill(elem)
-              )
-            )}
-          </p>
+          
+          {isEditing ? (
+  <form onSubmit={handleEditSubmit}>
+    {sections.map((section, key) =>
+      section.type === "latex" ? (
+        renderEditableMathQuill(section.content, key)
+      ) : (
+        <textarea
+          key={key}
+          className="form-control"
+          value={section.content}
+          onChange={(e) => handleEditChange(e, key)}
+          rows="5"
+        />
+      )
+    )}
+    <button type="button" className="btn btn-secondary mt-2" onClick={addTextArea}>
+      Add Text Area
+    </button>
+    <button type="button" className="btn btn-secondary mt-2" onClick={addLatexArea}>
+      Add LaTeX Area
+    </button>
+    <button type="submit" className="btn btn-primary mt-2">
+      Save
+    </button>
+    <button
+      type="button"
+      className="btn btn-secondary mt-2"
+      onClick={() => setIsEditing(false)}
+    >
+      Cancel
+    </button>
+  </form>
+) : (
+  <p
+    className={`bg-light p-3 rounded-3 border cursor-pointer ${
+      locale === "arab" ? "text-end" : "text-start"
+    }`}
+    onClick={getQuestion}
+    dir={isArabic(props.Question) ? "rtl" : "ltr"}
+  >
+    {sections.map((section, key) =>
+      section.type === "latex" ? (
+        renderMathQuill(section.content)
+      ) : (
+        <pre
+          key={key}
+          style={{
+            direction: isArabic(section.content) ? "rtl" : "ltr",
+            whiteSpace: "pre-wrap",
+          }}
+        >
+          {section.content}
+        </pre>
+      )
+    )}
+  </p>
+)}
           <p
             className={`question_details ${
               locale === "arab" ? " text-end" : " text-start"
@@ -432,6 +572,12 @@ const QuestionBox = (props) => {
                 onClick={() => supQuestion(props.id)}
               >
                 <FontAwesomeIcon icon={faTrashCan} />
+              </button>
+              <button
+                className="btn border mx-1"
+                onClick={signalerQuestion}
+              >
+                <FontAwesomeIcon icon={faWarning} color="red" />
               </button>
             </div>
           )}

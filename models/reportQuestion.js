@@ -13,6 +13,7 @@ const questionReportSchema = new mongoose.Schema({
   },
   reason: {
     type: String,
+    enum: ["spam", "inappropriate", "other"],
     required: true,
   },
   message: {

@@ -36,12 +36,16 @@ import { useSession } from "next-auth/react";
 const QuestionBox = (props) => {
   const { locale } = useRouter();
   const { data: user, status } = useSession();
+  console.log("user:",user)
 
   const [numLikes, setNumLikes] = useState(props.number_of_likes);
   const [isQuestionSaved, setSaved] = useState(props.saved);
   const [myNote, setMynote] = useState(props.userNote);
   const [isEditing, setIsEditing] = useState(false);
-const [editedQuestion, setEditedQuestion] = useState(props.Question);
+  const [editedQuestion, setEditedQuestion] = useState(props.Question);
+  const [showModal, setShowModal] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+  const [reportMessage, setReportMessage] = useState("");
 const initializeSections = (question) => {
   const parts = question.split("|||");
   return parts.map((part, index) => {
@@ -220,25 +224,7 @@ const [sections, setSections] = useState(initializeSections(props.Question));
   const otherFiles = props.files?.filter(file => !/\.(jpg|jpeg|png|gif)$/i.test(file));
 
   const signalerQuestion = async () => {
-    try {
-      const response = await fetch(`/api/questions/report`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ questionId: props.id }),
-      });
-
-      if (response.ok) {
-        alert("Question reported successfully.");
-      } else {
-        const errorData = await response.json();
-        alert(errorData.error);
-      }
-    } catch (error) {
-      console.error("Error reporting question:", error);
-      alert("An error occurred while reporting the question. Please try again.");
-    }
+    setShowModal(true);
   };
 
   const isArabic = (text) => {
@@ -312,6 +298,35 @@ const [sections, setSections] = useState(initializeSections(props.Question));
 
   const [showGallery, setShowGallery] = useState(false);
   const [startIndex, setStartIndex] = useState(0);
+
+  const handleReportSubmit = async () => {
+    try {
+      const response = await fetch(`/api/questions/report`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          questionId: props.id,
+          reason: reportReason,
+          message: reportMessage,
+          userId: user.user.id,
+          date: new Date().toISOString(),
+        }),
+      });
+  
+      if (response.ok) {
+        alert("Question reported successfully.");
+        setShowModal(false);
+      } else {
+        const errorData = await response.json();
+        alert(errorData.error);
+      }
+    } catch (error) {
+      console.error("Error reporting question:", error);
+      alert("An error occurred while reporting the question. Please try again.");
+    }
+  };
 
   return (
     <div className="QuestionBox my-3 px-md-5 py-2 px-3  border-secondary">
@@ -583,6 +598,42 @@ const [sections, setSections] = useState(initializeSections(props.Question));
           )}
         </div>
       </div>
+
+      {/* //////////////////// */}
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded shadow-lg w-96">
+            <h2 className="text-xl mb-4">Report Question</h2>
+            <label className="block mb-2">Reason:</label>
+            <select
+              className="form-control mb-4"
+              value={reportReason}
+              onChange={(e) => setReportReason(e.target.value)}
+            >
+              <option value="">Select a reason</option>
+              <option value="Inappropriate">Inappropriate content</option>
+              <option value="Spam">Spam</option>
+              <option value="Harassment">Harassment</option>
+              <option value="Other">Other</option>
+            </select>
+            <label className="block mb-2">Message:</label>
+            <textarea
+              className="form-control mb-4"
+              placeholder="Enter your message"
+              value={reportMessage}
+              onChange={(e) => setReportMessage(e.target.value)}
+              rows="5"
+            />
+            <button className="btn btn-primary mr-2" onClick={handleReportSubmit}>
+              Submit
+            </button>
+            <button className="btn btn-secondary" onClick={() => setShowModal(false)}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

@@ -1,5 +1,5 @@
-import dbConnect from "../../../utils/dbConnect";
-import questionReportModel from "../../../models/questionReport"; // Adjust the path as needed
+import dbConnect from "../../../../utils/dbConnect";
+import questionReportModel from "../../../../models/reportQuestion"; 
 import { getSession } from "next-auth/react";
 
 dbConnect();
@@ -10,10 +10,10 @@ export default async (req, res) => {
   switch (method) {
     case "POST":
       try {
-        const session = await getSession({ req });
-        if (!session) {
-          return res.status(401).json({ error: "Unauthorized" });
-        }
+        // const session = await getSession({ req });
+        // if (!session) {
+        //   return res.status(401).json({ error: "Unauthorized" });
+        // }
 
         const { questionId, reason } = req.body;
 

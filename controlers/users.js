@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import { sign } from "jsonwebtoken";
 import { serialize } from "cookie";
 import * as jose from "jose";
+import Role from "../models/role.js"
 
 // login required
 const loginReaquired = (req, res, next) => {
@@ -73,14 +74,16 @@ export const getUsers = (req, res) => {
 };
 
 // signup 
+
 export const signUp = async (req, res) => {
+  console.log("arrived",req.body);
   if (req.method !== "POST") {
     return res.status(405).end(); 
   }
 
-  const { userName, email, hashPassword } = req.body;
 
-  console.log(req.body);
+  const { userName, email, hashPassword, wilaya, speciality, level, role , profilePictureUrl } = req.body;
+
 
   if (!userName || !email || !hashPassword) {
     return res.status(400).send({ message: "All fields are required" });
@@ -93,12 +96,20 @@ export const signUp = async (req, res) => {
 
   const hashedPassword = bcrypt.hashSync(hashPassword, 10);
 
+  const roleUser = await Role.findOne({ name: role || "student" });
+
+  // const profilePictureUrl = req.file ? `/uploads/profilePictures/${req.file.filename}` : '';
+
   const user = new userModel({
     userName,
     email,
     hashPassword: hashedPassword,
+    wilaya,
+    speciality,
+    level,
+    role: roleUser._id,
+    photo: profilePictureUrl,
   });
-
   await user.save();
 
   const token = await new jose.SignJWT({

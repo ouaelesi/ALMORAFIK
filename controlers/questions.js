@@ -1,7 +1,13 @@
 import questionModel from "../models/question";
 import answerModel from "../models/answer";
 import { IsLoggedIn } from "../utils/IsLoggedIn";
-// ______________________________________________________________
+import userQuestionsActions from "../models/userQuestionActions";
+import ViewedQuestion from "../models/ViewedQuestion";
+import { getToken  } from "next-auth/jwt";
+import mongoose from "mongoose";
+
+
+// _______________________________________________________________
 // add question
 export const addQuestion = async (req, res) => {
   //todo: activate the auth checks
@@ -15,12 +21,17 @@ export const addQuestion = async (req, res) => {
     return;
   }
 
+
+  const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+  const files = req.body.files 
+
   const question = new questionModel({
     title: req.body.title,
     question: req.body.question,
-    creator: req.body.creator ? req.body.creator : req.body.fullName,
-    tags: req.body.tags.split(","),
-    files: req.body.files,
+    creator: req.body.fullName ? req.body.fullName : req.body.creator,
+    tags: req.body.tags?.split(","),
+    module: req.body?.module,
+    files: files,
     creatorEmail: req.body.creatorEmail
       ? req.body.creatorEmail
       : req.body.fullName,
@@ -28,7 +39,7 @@ export const addQuestion = async (req, res) => {
   question
     .save()
     .then((data) => {
-      res.send(data);
+      res.status(201).send(data);
     })
     .catch((err) => {
       res.status(500).send({
@@ -94,22 +105,68 @@ export const updateQuestion = (req, res) => {
 };
 
 // Get question by id
-export const findOneQuestion = (req, res) => {
+export const findOneQuestion = async (req, res) => {
   const id = req.query.id;
   console.log(id);
-  questionModel.findById(id).then((question) => res.status(200).send(question));
+
+  try {
+    // Fetch the question details
+    const question = await questionModel.findById(id);
+
+    if (!question) {
+      return res.status(404).json({ error: "Question not found" });
+    }
+
+    // Count the votes for the question
+    const voteCount = await userQuestionsActions.aggregate([
+      { $match: { questionId: id } },
+      {
+        $group: {
+          _id: "$questionId",
+          totalVotes: { $sum: "$note" },
+        },
+      },
+    ]);
+
+    const totalVotes = voteCount.length > 0 ? voteCount[0].totalVotes : 0;
+
+    // Combine the question details and the vote count
+    const response = {
+      ...question.toObject(),
+      totalVotes,
+    };
+
+    res.status(200).json(response);
+  } catch (error) {
+    console.error("Error fetching question:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
 
 // get all questions
-// get all questions
-// get all questions
 export const findQuestion = async (req, res) => {
   try {
-    let userEmail = await IsLoggedIn(req);
+    let userEmail = await getToken({req, secret: process.env.NEXTAUTH_SECRET});
 
     userEmail = userEmail ? userEmail : "";
 
+    // First, get viewed question IDs for this user
+    const viewedQuestions = await ViewedQuestion.find({
+      userId: userEmail.id
+    }).select('questionId -_id');
+    // console.log("user id is :",userEmail);
+    console.log("viewed questions are :",viewedQuestions);
+
+    const viewedQuestionIds = viewedQuestions.map(vq => 
+      new mongoose.Types.ObjectId(vq.questionId)
+    );
+
     const questionsWithActions = await questionModel.aggregate([
+      // {
+      //   $match: {
+      //     _id: { $nin: viewedQuestionIds }
+      //   }
+      // },
       {
         $lookup: {
           from: "userquestionsactions",
@@ -121,7 +178,7 @@ export const findQuestion = async (req, res) => {
             {
               $match: {
                 $expr: { $eq: ["$questionId", "$$questionId"] },
-                userId: userEmail.email, // Assuming you have the user's ID in userEmail.email
+                userId: userEmail.email, 
                 saved: true,
               },
             },
@@ -198,9 +255,14 @@ export const findQuestion = async (req, res) => {
           userNote: { $first: "$userNote.note" },
         },
       },
+      {
+        $addFields: {
+          viewed: { $in: ["$_id", viewedQuestionIds] },
+        },
+      },
     ]);
 
-    console.log(questionsWithActions);
+    // console.log(questionsWithActions);
 
     res.send(questionsWithActions);
   } catch (err) {
@@ -286,4 +348,34 @@ export const seachQuestions = (req, res) => {
     .sort({ score: { $meta: "textScore" } })
     .then((questions) => res.send(questions))
     .catch((err) => res.send(err.message));
+};
+
+export const trackViewedQuestion = async (req, res) => {
+  const { userId, questionId } = req.body;
+  try {
+    await ViewedQuestion.findOneAndUpdate(
+      { userId, questionId },
+      { $set: { viewedAt: new Date() } },
+      { upsert: true }
+    );
+    res.status(200).json({ message: 'Question viewed successfully' });
+  } catch (error) {
+    console.error('Error tracking viewed question:',error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+//TODO : use it after
+export const cleanupOldViewedRecords = async (daysToKeep = 30) => {
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - daysToKeep);
+  
+  try {
+    await ViewedQuestion.deleteMany({
+      viewedAt: { $lt: cutoffDate }
+    });
+  } catch (error) {
+    console.error('Error cleaning up old records:');
+    throw error;
+  }
 };

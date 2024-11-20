@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 
 const postSchema = mongoose.Schema({
-  answer: String,
-  creator: String,
+  answer:{type:String , required:true},
+  creator:{type:String , required:true},
+  pinned:{type:Boolean , default:false},
   question: String,
   sharedFile: String,
   likes: {

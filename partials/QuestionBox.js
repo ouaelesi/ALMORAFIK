@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import router from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -7,6 +7,7 @@ import {
   faTrashCan,
   faPen,
   faBookmark as solidBookMark,
+  faWarning,
 } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark, faCircleUser } from "@fortawesome/free-regular-svg-icons";
 import { useRouter } from "next/router";
@@ -28,14 +29,35 @@ import {
   WhatsappIcon,
 } from "next-share";
 
+import ImageGallery from 'react-image-gallery';
+import "react-image-gallery/styles/css/image-gallery.css";
+import { useSession } from "next-auth/react";
+
 const QuestionBox = (props) => {
-  //
   const { locale } = useRouter();
+  const { data: user, status } = useSession();
+  // console.log("user:",user)
 
   const [numLikes, setNumLikes] = useState(props.number_of_likes);
   const [isQuestionSaved, setSaved] = useState(props.saved);
   const [myNote, setMynote] = useState(props.userNote);
-  const { user } = useContext(AuthContext);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedQuestion, setEditedQuestion] = useState(props.Question);
+  const [showModal, setShowModal] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+  const [reportMessage, setReportMessage] = useState("");
+const initializeSections = (question) => {
+  const parts = question.split("|||");
+  return parts.map((part, index) => {
+    if (index % 2 === 0) {
+      return { type: "text", content: part };
+    } else {
+      return { type: "latex", content: part };
+    }
+  });
+};
+
+const [sections, setSections] = useState(initializeSections(props.Question));
   const router = useRouter();
   useEffect(() => {}, [user]);
 
@@ -56,7 +78,46 @@ const QuestionBox = (props) => {
   };
 
   const editQuestion = () => {
-    alert("Will be available Soon !");
+    setIsEditing(true);
+  };
+
+  const handleEditChange = (e, index) => {
+    const updatedSections = [...sections];
+    updatedSections[index].content = e.target.value;
+    setSections(updatedSections);
+    setEditedQuestion(updatedSections.map((section) => section.content).join("|||"));
+  };
+
+  const addTextArea = () => {
+    setSections([...sections, { type: "text", content: "" }]);
+  };
+  
+  const addLatexArea = () => {
+    setSections([...sections, { type: "latex", content: "" }]);
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`/api/questions/${props.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ question: editedQuestion }),
+      });
+  
+      if (response.ok) {
+        setIsEditing(false);
+        // router.reload();
+      } else {
+        const errorData = await response.json();
+        alert(errorData.error);
+      }
+    } catch (error) {
+      console.error("Error updating question:", error);
+      alert("An error occurred while updating the question. Please try again.");
+    }
   };
 
   const supQuestion = async (id) => {
@@ -77,16 +138,37 @@ const QuestionBox = (props) => {
     setSaved(!isQuestionSaved);
   };
 
-  // save question
+  // note question (upvote or downvote)
   const noteQuestion = async (note) => {
-    setMynote(myNote + note);
-    setNumLikes(numLikes + note);
+    if (!user) {
+      router.push("/signUp");
+      return;
+    }
+
     try {
-      const repsonse = noteQuestionMut({
-        questionId: props.id,
-        note: note,
+      const response = await fetch("/api/ressources/user-actions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          _idUser: user.id,
+          _idResource: props.id,
+          voteType: note === 1 ? "upvote" : "downvote",
+        }),
       });
-    } catch {}
+
+      if (response.ok) {
+        setMynote(myNote + note);
+        setNumLikes(numLikes + note);
+      } else {
+        const errorData = await response.json();
+        alert(errorData.error);
+      }
+    } catch (error) {
+      console.error("Error voting:", error);
+      alert("An error occurred while voting. Please try again.");
+    }
   };
 
   const renderMathQuill = (latex) => {
@@ -109,6 +191,194 @@ const QuestionBox = (props) => {
     }
     return null;
   };
+  const handleLatexChange = (latex, index) => {
+    const updatedSections = [...sections];
+    updatedSections[index].content = latex;
+    setSections(updatedSections);
+    setEditedQuestion(updatedSections.map((section) => section.content).join("|||"));
+  };
+
+  const renderEditableMathQuill = (latex, index) => {
+    if (typeof window !== "undefined") {
+      const {
+        addStyles,
+        EditableMathField,
+      } = require("react-mathquill");
+      addStyles();
+      return (
+        <EditableMathField
+          latex={latex}
+          onChange={(mathField) => handleLatexChange(mathField.latex(), index)}
+          className={`text-light bg-dark border px-3 py-2 outline-none border-dark rounded w-100 my-2`}
+        />
+      );
+    }
+    return null;
+  };
+
+
+  // Filter image files
+  const imageFiles = props.files?.filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file));
+
+  // Filter other files
+  const otherFiles = props.files?.filter(file => !/\.(jpg|jpeg|png|gif)$/i.test(file));
+
+  const signalerQuestion = async () => {
+    setShowModal(true);
+  };
+
+  const isArabic = (text) => {
+    const arabicPattern = /[\u0600-\u06FF]/;
+    return arabicPattern.test(text);
+  };
+
+  const imageGalleryRef = useRef(null);
+
+  const renderImageGallery = () => {
+    if (!imageFiles || imageFiles.length === 0) return null;
+
+    const images = imageFiles.map(file => ({
+      original: file,
+      thumbnail: file,
+    }));
+
+    const additionalImagesCount = images.length - 4;
+
+    const handleImageClick = (index) => {
+      setShowGallery(true);
+      setStartIndex(index);
+      setTimeout(() => {
+        if (imageGalleryRef.current) {
+          imageGalleryRef.current.fullScreen();
+        }
+      }, 100);
+    };
+
+    return (
+      <div className="image-gallery-container">
+        {!showGallery && images.length === 1 && (
+          <div className=" flex justify-center w-full h-64">
+            <img src={images[0].original} alt="Main" onClick={() => handleImageClick(0)} />
+          </div>
+        )}
+        {!showGallery && images.length === 2 && (
+          <div className="flex gap-1 w-full">
+            <div className="w-1/2 h-96">
+              <img 
+                src={images[0].original} 
+                alt="First" 
+                onClick={() => handleImageClick(0)} 
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="w-1/2 h-96">
+              <img 
+                src={images[1].original} 
+                alt="Second" 
+                onClick={() => handleImageClick(1)} 
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+        )}
+
+        {!showGallery && images.length === 3 && (
+          <div className="flex gap-1 w-full">
+            <div className="w-1/2 h-96">
+              <img 
+                src={images[0].original} 
+                alt="Main" 
+                onClick={() => handleImageClick(0)} 
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="w-1/2 flex flex-col gap-1">
+              <div className="h-48">
+                <img 
+                  src={images[1].original} 
+                  alt="Stacked 1" 
+                  onClick={() => handleImageClick(1)} 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="h-48">
+                <img 
+                  src={images[2].original} 
+                  alt="Stacked 2" 
+                  onClick={() => handleImageClick(2)} 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {!showGallery && images.length>3 && (
+          <div className="main-image h-96">
+            <img src={images[0].original} alt="Main" onClick={() => handleImageClick(0)} />
+          </div>
+        )}
+        {!showGallery && images.length>2 && (
+          <div className="stacked-images">
+          {images.slice(1, 4).map((image, index) => (
+            <div key={index} className="stacked-image-container">
+              <div className="stacked-image h-32">
+                <img src={image.original} alt={`Stacked ${index + 1}`} onClick={() => handleImageClick(index + 1)} />
+                {index === 2 && additionalImagesCount > 0 && (
+                  <div className="overlay" onClick={()=> handleImageClick(index + 1)}>
+                    +{additionalImagesCount}
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+          </div>
+        )}
+        {showGallery && (
+          <ImageGallery
+            ref={imageGalleryRef}
+            items={images}
+            showThumbnails={false}
+            startIndex={startIndex}
+            useWindowKeyDown={true}
+            onScreenChange={(bool) => setShowGallery(bool)}
+          />
+        )}
+      </div>
+    );
+  };
+
+  const [showGallery, setShowGallery] = useState(false);
+  const [startIndex, setStartIndex] = useState(0);
+
+  const handleReportSubmit = async () => {
+    try {
+      const response = await fetch(`/api/questions/report`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          questionId: props.id,
+          reason: reportReason,
+          message: reportMessage,
+          userId: user.user.id,
+          date: new Date().toISOString(),
+        }),
+      });
+  
+      if (response.ok) {
+        alert("Question reported successfully.");
+        setShowModal(false);
+      } else {
+        const errorData = await response.json();
+        alert(errorData.error);
+      }
+    } catch (error) {
+      console.error("Error reporting question:", error);
+      alert("An error occurred while reporting the question. Please try again.");
+    }
+  };
 
   return (
     <div className="QuestionBox my-3 px-md-5 py-2 px-3  border-secondary">
@@ -122,11 +392,11 @@ const QuestionBox = (props) => {
             locale === "arab" ? "flex-row-reverse" : ""
           }`}
         >
-          <FontAwesomeIcon
+          {!props.user_photo ? <FontAwesomeIcon
             icon={faCircleUser}
             style={{ fontSize: "30", marginRight: 10 }}
             className="text-dark"
-          />
+          />: <img src={props.user_photo} className="rounded-full h-9 w-9 cursor-pointer border-2 border-gray-300" />}
           <div
             className={`pt-1 d-flex gap-2  ${
               locale === "arab" ? "flex-row-reverse" : ""
@@ -192,35 +462,92 @@ const QuestionBox = (props) => {
           >
             {props.title}
           </div>
-          <p
-            className={`bg-light p-3  rounded-3 border cursor-pointer ${
-              locale === "arab" ? " text-end" : " text-start"
-            }`}
-            onClick={getQuestion}
-          >
-            {props.Question.split("|||").map((elem, key) =>
-              key % 2 === 0 ? (
-                <pre
-                  key={key}
-                  style={{
-                    direction: "rtl",
-                    whiteSpace: "pre-wrap",
-                  }}
-                >
-                  {elem}
-                </pre>
-              ) : (
-                renderMathQuill(elem)
-              )
-            )}
-          </p>
+          
+          {isEditing ? (
+  <form onSubmit={handleEditSubmit}>
+    {sections.map((section, key) =>
+      section.type === "latex" ? (
+        renderEditableMathQuill(section.content, key)
+      ) : (
+        <textarea
+          key={key}
+          className="form-control"
+          value={section.content}
+          onChange={(e) => handleEditChange(e, key)}
+          rows="5"
+        />
+      )
+    )}
+    <button type="button" className="btn btn-secondary mt-2" onClick={addTextArea}>
+      Add Text Area
+    </button>
+    <button type="button" className="btn btn-secondary mt-2" onClick={addLatexArea}>
+      Add LaTeX Area
+    </button>
+    <button type="submit" className="btn btn-primary mt-2">
+      Save
+    </button>
+    <button
+      type="button"
+      className="btn btn-secondary mt-2"
+      onClick={() => setIsEditing(false)}
+    >
+      Cancel
+    </button>
+  </form>
+) : (
+  <p
+    className={`bg-light p-3 rounded-3 border cursor-pointer ${
+      locale === "arab" ? "text-end" : "text-start"
+    }`}
+    onClick={getQuestion}
+    dir={isArabic(props.Question) ? "rtl" : "ltr"}
+  >
+    {sections.map((section, key) =>
+      section.type === "latex" ? (
+        renderMathQuill(section.content)
+      ) : (
+        <pre
+          key={key}
+          style={{
+            direction: isArabic(section.content) ? "rtl" : "ltr",
+            whiteSpace: "pre-wrap",
+          }}
+        >
+          {section.content}
+        </pre>
+      )
+    )}
+  </p>
+)}
           <p
             className={`question_details ${
               locale === "arab" ? " text-end" : " text-start"
             }`}
+            dir={isArabic(props.More_details) ? "rtl" : "ltr"}
           >
             {props.More_details}
           </p>
+
+          {/* Image Carousel */}
+          {renderImageGallery()}
+
+          {/* Other Files */}
+          {otherFiles?.length > 0 && (
+            <div className="my-3">
+              <h5>Attached Files:</h5>
+              <ul>
+                {otherFiles.map((file, index) => (
+                  <li key={index}>
+                    <a href={file} target="_blank" rel="noopener noreferrer">
+                      {file.split('/').pop()}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           <div className="rounded-3">
             <div
               className={`d-flex   ${
@@ -313,10 +640,52 @@ const QuestionBox = (props) => {
               >
                 <FontAwesomeIcon icon={faTrashCan} />
               </button>
+              <button
+                className="btn border mx-1"
+                onClick={signalerQuestion}
+              >
+                <FontAwesomeIcon icon={faWarning} color="red" />
+              </button>
             </div>
           )}
         </div>
       </div>
+
+      {/* //////////////////// */}
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded shadow-lg w-96">
+            <h2 className="text-xl mb-4">Report Question</h2>
+            <label className="block mb-2">Reason:</label>
+            <select
+              className="form-control mb-4"
+              value={reportReason}
+              onChange={(e) => setReportReason(e.target.value)}
+            >
+              <option value="">Select a reason</option>
+              <option value="Inappropriate">Inappropriate content</option>
+              <option value="Spam">Spam</option>
+              <option value="Harassment">Harassment</option>
+              <option value="Other">Other</option>
+            </select>
+            <label className="block mb-2">Message:</label>
+            <textarea
+              className="form-control mb-4"
+              placeholder="Enter your message"
+              value={reportMessage}
+              onChange={(e) => setReportMessage(e.target.value)}
+              rows="5"
+            />
+            <button className="btn btn-primary mr-2" onClick={handleReportSubmit}>
+              Submit
+            </button>
+            <button className="btn btn-secondary" onClick={() => setShowModal(false)}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

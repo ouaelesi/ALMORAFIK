@@ -3,7 +3,7 @@ import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
-import userModel from "../../../models/user"; // Adjust the import path as necessary
+import userModel from "../../../models/user"; 
 
 export default NextAuth({
   providers: [
@@ -25,7 +25,6 @@ export default NextAuth({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       async profile(profile) {
-        // Find or create user in your database
         let user = await userModel.findOne({ email: profile.email });
         if (!user) {
           user = await userModel.create({
@@ -42,17 +41,17 @@ export default NextAuth({
         clientId: process.env.FACEBOOK_CLIENT_ID,
         clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
         async profile(profile) {
-          // Find or create user in your database
           let user = await userModel.findOne({ email: profile.email });
           if (!user) {
-            user = await userModel.create({
-              userName: profile.name,
-              email: profile.email,
-              facebookId: profile.id,
-              hashPassword: bcrypt.hashSync(profile.id, 10)
-            });
+            const defaultRole = await Role.findOne({ name: "student" }); 
+          user = await userModel.create({
+            userName: profile.name,
+            email: profile.email,
+            googleId: profile.sub,
+            role: defaultRole._id,
+          });
           }
-          return { ...user.toObject(), id: user._id };
+          return { ...user.toObject(), id: user._id, role: user.role.name };
         }
       })
   ],
@@ -61,11 +60,13 @@ export default NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.role = user.role;
       }
       return token;
     },
     async session({ session, token }) {
       session.user.id = token.id;
+      session.user.role = token.role;
       return session;
     }
   },

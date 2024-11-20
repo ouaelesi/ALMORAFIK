@@ -36,7 +36,7 @@ import { useSession } from "next-auth/react";
 const QuestionBox = (props) => {
   const { locale } = useRouter();
   const { data: user, status } = useSession();
-  console.log("user:",user)
+  // console.log("user:",user)
 
   const [numLikes, setNumLikes] = useState(props.number_of_likes);
   const [isQuestionSaved, setSaved] = useState(props.saved);
@@ -257,20 +257,72 @@ const [sections, setSections] = useState(initializeSections(props.Question));
     return (
       <div className="image-gallery-container">
         {!showGallery && images.length === 1 && (
-          <div className=" flex justify-center w-full">
+          <div className=" flex justify-center w-full h-64">
             <img src={images[0].original} alt="Main" onClick={() => handleImageClick(0)} />
           </div>
         )}
-        {!showGallery && images.length>=2 && (
-          <div className="main-image">
+        {!showGallery && images.length === 2 && (
+          <div className="flex gap-1 w-full">
+            <div className="w-1/2 h-96">
+              <img 
+                src={images[0].original} 
+                alt="First" 
+                onClick={() => handleImageClick(0)} 
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="w-1/2 h-96">
+              <img 
+                src={images[1].original} 
+                alt="Second" 
+                onClick={() => handleImageClick(1)} 
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+        )}
+
+        {!showGallery && images.length === 3 && (
+          <div className="flex gap-1 w-full">
+            <div className="w-1/2 h-96">
+              <img 
+                src={images[0].original} 
+                alt="Main" 
+                onClick={() => handleImageClick(0)} 
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="w-1/2 flex flex-col gap-1">
+              <div className="h-48">
+                <img 
+                  src={images[1].original} 
+                  alt="Stacked 1" 
+                  onClick={() => handleImageClick(1)} 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="h-48">
+                <img 
+                  src={images[2].original} 
+                  alt="Stacked 2" 
+                  onClick={() => handleImageClick(2)} 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {!showGallery && images.length>3 && (
+          <div className="main-image h-96">
             <img src={images[0].original} alt="Main" onClick={() => handleImageClick(0)} />
           </div>
         )}
-        {!showGallery && images.length>=2 && (
+        {!showGallery && images.length>2 && (
           <div className="stacked-images">
           {images.slice(1, 4).map((image, index) => (
             <div key={index} className="stacked-image-container">
-              <div className="stacked-image">
+              <div className="stacked-image h-32">
                 <img src={image.original} alt={`Stacked ${index + 1}`} onClick={() => handleImageClick(index + 1)} />
                 {index === 2 && additionalImagesCount > 0 && (
                   <div className="overlay" onClick={()=> handleImageClick(index + 1)}>

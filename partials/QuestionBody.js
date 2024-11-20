@@ -188,6 +188,7 @@ const QuestionBody = ({ staticData }) => {
   const createQuestion = async () => {
     const values = getValues();
     values.fullName = session.user.email;
+    values.module = "math";//dummy data for testing
 
     const files = document.getElementById("files").files;
     let fileUrls = [];
@@ -377,6 +378,8 @@ const QuestionBody = ({ staticData }) => {
                 className={`${locale === "arab" ? "text-end" : "text-start"} ${
                   errors.title ? "border border-danger text-danger" : "border"
                 } form-control`}
+                id="module"
+                name="module"
               >
                 <option disabled selected value="">
                   {staticData.subject}

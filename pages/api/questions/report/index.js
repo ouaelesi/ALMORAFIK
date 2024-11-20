@@ -1,5 +1,5 @@
 import dbConnect from "../../../../utils/dbConnect";
-import questionReportModel from "../../../../models/reportQuestion"; 
+import questionReportModel from "../../../../models/reportQuestion";
 import { getSession } from "next-auth/react";
 
 dbConnect();

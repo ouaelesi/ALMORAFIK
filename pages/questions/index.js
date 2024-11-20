@@ -11,6 +11,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Tilt from "react-parallax-tilt";
 import { useSession } from "next-auth/react";
+import { calculateScore } from "../../utils/calculateRecommendationScore";
 
 const Questions = () => {
   const [questionsLaunched, launchQuestions] = useState(true);
@@ -46,7 +47,16 @@ const Questions = () => {
           throw new Error("Failed to fetch questions");
         }
         const fetchedData = await res.json();
-        setData(fetchedData);
+        // setData(fetchedData);
+        console.log("user session", session.user);
+        const scoredQuestions = fetchedData.map(question => ({
+          ...question,
+          score: calculateScore(question, session.user)
+        }));
+        console.log("scoredQuestions =====   ", scoredQuestions);
+        const sortedQuestions = scoredQuestions.sort((a, b) => b.score - a.score);
+        setData(sortedQuestions);
+
         setLoading(false);
         fetchUserPhotos(fetchedData);
       } catch (error) {
@@ -54,9 +64,10 @@ const Questions = () => {
         setLoading(false);
       }
     };
-
-    fetchData();
-  }, []);
+    if(session?.user){
+      fetchData();
+    }
+  }, [session]);
 
   const fetchUserPhotos = async (questions) => {
     const userEmails = questions.map((question) => question.creatorEmail);
@@ -111,8 +122,8 @@ const Questions = () => {
   // Modified questionRef with view tracking
   const questionRef = useCallback(
     (node, id, title) => {
-      if (isLoading || !node) return;
-
+      if (isLoading || !node || seenQuestions.has(id)) return;
+  
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
@@ -121,7 +132,7 @@ const Questions = () => {
               visibilityTimers.current[id] = setTimeout(async () => {
                 // Check if we're already tracking this question
                 if (trackingInProgress.current.has(id)) return;
-
+  
                 // Add to tracking set to prevent duplicate calls
                 trackingInProgress.current.add(id);
                 console.log(`Question viewed: ${title}`);
@@ -137,12 +148,10 @@ const Questions = () => {
                       userId: session.user.id,
                     }),
                   });
-
+  
                   if (response.ok) {
                     setSeenQuestions((prevSeenQuestions) => {
-                      const newSeenQuestions = new Set(prevSeenQuestions).add(
-                        id
-                      );
+                      const newSeenQuestions = new Set(prevSeenQuestions).add(id);
                       console.log(`Question viewed and tracked: ${title}`);
                       return newSeenQuestions;
                     });
@@ -167,16 +176,16 @@ const Questions = () => {
           rootMargin: "0px", // No margin
         }
       );
-
+  
       observer.observe(node);
-
+  
       // Cleanup
       return () => {
         observer.disconnect();
         clearTimeout(visibilityTimers.current[id]);
       };
     },
-    [isLoading]
+    [isLoading, seenQuestions]
   );
 
   // Handle questions launched state
@@ -242,8 +251,18 @@ const Questions = () => {
   // Handle case when no data is available
   if (!data.length) return <p>No questions available.</p>;
 
+  // Filter out viewed questions
+  let unviewedQuestions = data.filter(question => !question.viewed);
+
+  // Check if the number of unviewed questions is less than 10
+  if (unviewedQuestions.length < 10) {
+    // Include viewed questions to ensure at least 10 questions
+    const viewedQuestions = data.filter(question => question.viewed);
+    unviewedQuestions = unviewedQuestions.concat(viewedQuestions.slice(0, 10 - unviewedQuestions.length));
+  }
+
   // Slice the data based on visibleCount
-  const visibleQuestions = data.slice(0, visibleCount);
+  const visibleQuestions = unviewedQuestions.slice(0, visibleCount);
 
   return (
     <div>
@@ -268,6 +287,7 @@ const Questions = () => {
                 staticData={questionsData}
                 saved={elem.saved}
                 userNote={elem.userNote}
+                files={elem.files}
               />
             );
 

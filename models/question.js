@@ -20,6 +20,21 @@ const postSchema = new mongoose.Schema({
     enum: ["default", "suspended", "approved", "blocked"],
     default: "default",
   },
+  speciality: {
+    type: String,
+    enum: [
+      "mathematics",
+      "experimental_sciences",
+      "technical_maths",
+      "literature_and_philosophy",
+      "management_and_economics",
+      "foreign_languages"
+    ],
+    default: "mathematics",
+  },
+  module:{
+    type: String,
+  }
 
   
 

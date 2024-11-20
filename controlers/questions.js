@@ -3,6 +3,9 @@ import answerModel from "../models/answer";
 import { IsLoggedIn } from "../utils/IsLoggedIn";
 import userQuestionsActions from "../models/userQuestionActions";
 import ViewedQuestion from "../models/ViewedQuestion";
+import { getToken  } from "next-auth/jwt";
+import mongoose from "mongoose";
+
 
 // _______________________________________________________________
 // add question
@@ -27,6 +30,7 @@ export const addQuestion = async (req, res) => {
     question: req.body.question,
     creator: req.body.fullName ? req.body.fullName : req.body.creator,
     tags: req.body.tags?.split(","),
+    module: req.body?.module,
     files: files,
     creatorEmail: req.body.creatorEmail
       ? req.body.creatorEmail
@@ -142,7 +146,7 @@ export const findOneQuestion = async (req, res) => {
 // get all questions
 export const findQuestion = async (req, res) => {
   try {
-    let userEmail = await IsLoggedIn(req);//TODO:change logic according to next-auth
+    let userEmail = await getToken({req, secret: process.env.NEXTAUTH_SECRET});
 
     userEmail = userEmail ? userEmail : "";
 
@@ -150,17 +154,19 @@ export const findQuestion = async (req, res) => {
     const viewedQuestions = await ViewedQuestion.find({
       userId: userEmail.id
     }).select('questionId -_id');
+    // console.log("user id is :",userEmail);
+    console.log("viewed questions are :",viewedQuestions);
 
     const viewedQuestionIds = viewedQuestions.map(vq => 
       new mongoose.Types.ObjectId(vq.questionId)
     );
 
     const questionsWithActions = await questionModel.aggregate([
-      {
-        $match: {
-          _id: { $nin: viewedQuestionIds }
-        }
-      },
+      // {
+      //   $match: {
+      //     _id: { $nin: viewedQuestionIds }
+      //   }
+      // },
       {
         $lookup: {
           from: "userquestionsactions",
@@ -249,9 +255,14 @@ export const findQuestion = async (req, res) => {
           userNote: { $first: "$userNote.note" },
         },
       },
+      {
+        $addFields: {
+          viewed: { $in: ["$_id", viewedQuestionIds] },
+        },
+      },
     ]);
 
-    console.log(questionsWithActions);
+    // console.log(questionsWithActions);
 
     res.send(questionsWithActions);
   } catch (err) {

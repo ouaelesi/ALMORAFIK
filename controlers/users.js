@@ -76,15 +76,14 @@ export const getUsers = (req, res) => {
 // signup 
 
 export const signUp = async (req, res) => {
+  console.log("arrived",req.body);
   if (req.method !== "POST") {
     return res.status(405).end(); 
   }
 
-  console.log(req.body);
 
-  const { userName, email, hashPassword, wilaya, speciality, level, role } = req.body;
+  const { userName, email, hashPassword, wilaya, speciality, level, role , profilePictureUrl } = req.body;
 
-  console.log(req.body);
 
   if (!userName || !email || !hashPassword) {
     return res.status(400).send({ message: "All fields are required" });
@@ -99,7 +98,7 @@ export const signUp = async (req, res) => {
 
   const roleUser = await Role.findOne({ name: role || "student" });
 
-  const profilePictureUrl = req.file ? `/uploads/profilePictures/${req.file.filename}` : '';
+  // const profilePictureUrl = req.file ? `/uploads/profilePictures/${req.file.filename}` : '';
 
   const user = new userModel({
     userName,

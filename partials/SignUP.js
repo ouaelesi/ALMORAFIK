@@ -6,10 +6,11 @@ import wilaya from "../data/TemporaryData/staticData/eng/wilaya";
 import wilayaAr from "../data/TemporaryData/staticData/arab/wilayaAr";
 import specialities from "../data/TemporaryData/staticData/eng/specialities";
 import specialitiesAr from "../data/TemporaryData/staticData/arab/specialitiesAr";
+import { useEdgeStore } from '../lib/edgestore';
 
 const SignUP = ({ staticData, isStudent }) => {
   const { locale } = useRouter();
-
+  const { edgestore } = useEdgeStore();
   const wilayas = locale === "arab" ? wilayaAr : wilaya;
   const specialitiesList = locale === "arab" ? specialitiesAr : specialities;
 
@@ -21,44 +22,84 @@ const SignUP = ({ staticData, isStudent }) => {
   } = useForm({ mode: "onTouched" });
 
   const [backErrors, setBackErrors] = useState([]);
-
+  const [profilePicture, setProfilePicture] = useState(null);
   const router = useRouter();
 
   const onSubmit = async (data) => {
-    setBackErrors([]);
-    const role = isStudent ? "student" : "teacher";
-    const formData = new FormData();
-    formData.append('userName', data.userName);
-    formData.append('email', data.email);
-    formData.append('hashPassword', data.hashPassword);
-    formData.append('wilaya', data.wilaya);
-    formData.append('speciality', data.speciality);
-    formData.append('level', data.level);
-    formData.append('role', role);
-    formData.append('fileType', "profilePictures");
-    formData.append('profilePicture', data.profilePicture[0]);
+  setBackErrors([]);
+  const role = isStudent ? "student" : "teacher";
 
+  // Upload profile picture to Edge Store
+  let profilePictureUrl = "";
+  const uploadProfilePicture = async () => {
+    if (profilePicture) {
+      try {
+        console.log("Uploading profile picture...");
+        const res = await edgestore.publicFiles.upload({
+          file: profilePicture,
+        });
+        console.log("Profile picture uploaded:", res.url);
+        return res.url;
+      } catch (error) {
+        console.error("Error uploading profile picture:", error);
+        setBackErrors(["Error uploading profile picture"]);
+        throw error;
+      }
+    }
+    return "";
+  };
+
+  try {
+    // Start the profile picture upload and form submission concurrently
+    console.log("Starting profile picture upload...");
+    const [uploadedUrl] = await Promise.all([uploadProfilePicture()]);
+
+    profilePictureUrl = uploadedUrl;
+    console.log("Profile picture URL:", profilePictureUrl);
+
+    const formData = {
+      userName: data.userName,
+      email: data.email,
+      hashPassword: data.hashPassword,
+      wilaya: data.wilaya,
+      speciality: data.speciality,
+      level: data.level,
+      role: role,
+      profilePictureUrl: profilePictureUrl,
+    };
+
+    console.log("Submitting form data:", formData);
     const res = await fetch("/api/users", {
       method: "POST",
-      body: formData,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
     });
+    console.log("Fetch response status:", res.status);
 
     if (res.ok) {
+      console.log("Form submission successful");
       const result = await signIn("credentials", {
         redirect: false,
         email: data.email,
         password: data.hashPassword,
       });
       if (result.error) {
+        console.error("Sign-in error:", result.error);
         setBackErrors([result.error]);
       } else {
         router.push("/");
       }
     } else {
       const errorData = await res.json();
+      console.error("Form submission error:", errorData.message);
       setBackErrors([errorData.message]);
     }
-  };
+  } catch (error) {
+    console.error("Error during form submission:", error);
+  }
+};
 
   return (
     <div>
@@ -162,7 +203,8 @@ const SignUP = ({ staticData, isStudent }) => {
               placeholder={staticData.signUp.profilePicturePlace}
               name="profilePicture"
               type="file"
-              {...register("profilePicture", { required: true })}
+              {...register("profilePicture", { required: false})}
+              onChange={(e) => setProfilePicture(e.target.files[0])}
             ></input>
             {errors.profilePicture && (
               <div className="text-danger fs-6 fw-light">
